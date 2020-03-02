@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>SpringMVC(Day2) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">SpringMVC(Day2)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            SpringMVC(Day2)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "SpringMVC">SpringMVC</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.9k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/11/23</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="REST风格：参考-https-blog-csdn-net-qq-38016931-article-details-81268123"><a href="#REST风格：参考-https-blog-csdn-net-qq-38016931-article-details-81268123" class="headerlink" title="REST风格：参考:https://blog.csdn.net/qq_38016931/article/details/81268123"></a>REST风格：参考:<a href="https://blog.csdn.net/qq_38016931/article/details/81268123" target="_blank" rel="noopener">https://blog.csdn.net/qq_38016931/article/details/81268123</a></h1><h2 id="在HTTP协议中，有四个常用的表示操作方式的动词："><a href="#在HTTP协议中，有四个常用的表示操作方式的动词：" class="headerlink" title="在HTTP协议中，有四个常用的表示操作方式的动词："></a>在HTTP协议中，有四个常用的表示操作方式的动词：</h2><ol>
+<li>GET  获取</li>
+<li>POST  增加</li>
+<li>PUT  修改</li>
+<li>DELETE  删除<br>正好对应数据库中的增删改查操作</li>
+</ol>
+<hr>
+<h2 id="SpringMVC给我们提供了HiddenHttpMethodFilter可以将post请求转化为put和delete请求！"><a href="#SpringMVC给我们提供了HiddenHttpMethodFilter可以将post请求转化为put和delete请求！" class="headerlink" title="SpringMVC给我们提供了HiddenHttpMethodFilter可以将post请求转化为put和delete请求！"></a>SpringMVC给我们提供了HiddenHttpMethodFilter可以将post请求转化为put和delete请求！</h2><ol>
+<li><p>工作原理:在发送请求时拦截请求，获取一个名为“_method”代表的是请求方式的参数，如果检测到请求方式是post，然后再检测表单是否有代表（）的隐藏域的参数，然后再将其转化为put或者delete，</p>
+</li>
+<li><p>配置过滤器filter：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;HiddenHttpMethodFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.web.filter.HiddenHttpMethodFilter&lt;/filter-class&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;HiddenHttpMethodFilter&lt;/filter-name&gt;</span><br><span class="line">    &lt;!--过滤所有请求！--&gt;</span><br><span class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前端页面发送请求:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. 头文件:</span><br><span class="line"> &lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot;</span><br><span class="line">    pageEncoding=&quot;UTF-8&quot; isErrorPage=&quot;true&quot;%&gt;</span><br><span class="line">    多加一句话：isErrorPage设置为true，默认为false</span><br><span class="line"></span><br><span class="line">    &lt;!--REST发送get请求！--&gt;</span><br><span class="line">    &lt;form action=&quot;/testREST/1&quot; method=&quot;get&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;测试 REST 的get请求！&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">    &lt;br&gt;&lt;br&gt;</span><br><span class="line">    &lt;!--REST发送post请求！--&gt;</span><br><span class="line">    &lt;form action=&quot;/testREST&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;测试 REST 的post请求！&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">    &lt;br&gt;&lt;br&gt;</span><br><span class="line">    &lt;!--REST发送delete请求！--&gt;</span><br><span class="line">    &lt;form action=&quot;/testREST/1&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;%--需要加上一个隐藏域--%&gt;</span><br><span class="line">        &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;DELETE&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;测试 REST 的delete请求！&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">    &lt;br&gt;&lt;br&gt;</span><br><span class="line">    &lt;!--REST发送put请求！--&gt;</span><br><span class="line">    &lt;form action=&quot;/testREST/1&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;%--需要加上一个隐藏域--%&gt;</span><br><span class="line">        &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;PUT&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;测试 REST 的put请求！&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Controller添加四个方法:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//添加REST使用到的四个方法！</span><br><span class="line"> @RequestMapping(value = &quot;/testREST/&#123;id&#125;&quot;,method = RequestMethod.GET)</span><br><span class="line"> public String testRestGet(@PathVariable Integer id) &#123;</span><br><span class="line">     System.out.println(&quot;testRestGet &quot; + id);</span><br><span class="line">     return &quot;success&quot;;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> @RequestMapping(value = &quot;/testREST&quot;,method = RequestMethod.POST)</span><br><span class="line"> public String testRestPost() &#123;</span><br><span class="line">     System.out.println(&quot;testRestPost &quot;);</span><br><span class="line">     return &quot;success&quot;;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> @RequestMapping(value = &quot;/testREST/&#123;id&#125;&quot;,method = RequestMethod.DELETE)</span><br><span class="line"> public String testRestDelete(@PathVariable Integer id) &#123;</span><br><span class="line">     System.out.println(&quot;testRestDelete &quot; + id);</span><br><span class="line">     return &quot;success&quot;;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> @RequestMapping(value = &quot;/testREST/&#123;id&#125;&quot;,method = RequestMethod.PUT)</span><br><span class="line"> public String testRestPut(@PathVariable Integer id) &#123;</span><br><span class="line">     System.out.println(&quot;testRestPut &quot; + id);</span><br><span class="line">     return &quot;success&quot;;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h2 id="拦截器interpreter"><a href="#拦截器interpreter" class="headerlink" title="拦截器interpreter"></a>拦截器interpreter</h2><h3 id="通过拦截器可以进行权限验证、记录请求信息的日志、判断用户是否登录等。通常拦截器类可以通过两种方式来定义。"><a href="#通过拦截器可以进行权限验证、记录请求信息的日志、判断用户是否登录等。通常拦截器类可以通过两种方式来定义。" class="headerlink" title="通过拦截器可以进行权限验证、记录请求信息的日志、判断用户是否登录等。通常拦截器类可以通过两种方式来定义。"></a>通过拦截器可以进行权限验证、记录请求信息的日志、判断用户是否登录等。通常拦截器类可以通过两种方式来定义。</h3><ol>
+<li>通过实现HandlerInterceptor接口，或继承HandlerInterceptor接口的实现类（如HandlerInterceptorAdapter）来定义。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class UserInterceptor implements HandlerInterceptor &#123;</span><br><span class="line"></span><br><span class="line">    //1. PreHandler</span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123;</span><br><span class="line">        //1. 获取URL,拦截除了login.jsp以外的页面</span><br><span class="line">        String url = request.getRequestURI();</span><br><span class="line">        if(url.indexOf(&quot;/login&quot;) &gt;= 0)&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //2. 获取Session</span><br><span class="line">        HttpSession session = request.getSession();</span><br><span class="line">        User user = (User) session.getAttribute(&quot;USER_INFO&quot;);</span><br><span class="line">        //判断session中是否有用户信息</span><br><span class="line">        if(user != null)&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //3. 对被拦截的页面进行提示并转发到登录页面(网页地址不变)</span><br><span class="line">//        request.setAttribute(&quot;msg&quot;,&quot;你尚未登录,请先登录&quot;);</span><br><span class="line">//        request.getRequestDispatcher(&quot;login&quot;).forward(request,response);</span><br><span class="line">//        return false;</span><br><span class="line">        response.sendRedirect(&quot;error&quot;);</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,</span><br><span class="line">                           ModelAndView modelAndView) throws Exception &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span><br><span class="line">            throws Exception &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h2 id="Spring-mvc-xml配置拦截器"><a href="#Spring-mvc-xml配置拦截器" class="headerlink" title="Spring_mvc.xml配置拦截器"></a>Spring_mvc.xml配置拦截器</h2><ol>
+<li>拦截所有路径请求:&lt;mvc:mapping path=”/**”/&gt;</li>
+<li>开放某些页面:&lt;mvc:exclude-mapping path=”/error”/&gt;</li>
+<li>拦截指定路径下的请求:<bean class="Interceptor.UserInterceptor"></bean><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 配置拦截器   --&gt;</span><br><span class="line">&lt;mvc:interceptors&gt;</span><br><span class="line">    &lt;mvc:interceptor&gt;</span><br><span class="line">    &lt;!--拦截所有路径下的请求--&gt;</span><br><span class="line">        &lt;mvc:mapping path=&quot;/**&quot;/&gt;</span><br><span class="line">        &lt;!--开放错误页面 --&gt;</span><br><span class="line">        &lt;mvc:exclude-mapping path=&quot;/error&quot;/&gt;</span><br><span class="line">        &lt;!-- 拦截指定路径下的请求 --&gt;</span><br><span class="line">            &lt;bean class=&quot;Interceptor.UserInterceptor&quot;&gt;&lt;/bean&gt;</span><br><span class="line">    &lt;/mvc:interceptor&gt;</span><br><span class="line">&lt;/mvc:interceptors&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h2 id="案例-使用Interceptor判断用户是否登录"><a href="#案例-使用Interceptor判断用户是否登录" class="headerlink" title="案例:使用Interceptor判断用户是否登录"></a>案例:使用Interceptor判断用户是否登录</h2><ol>
+<li><p>导入jar包</p>
+<ol>
+<li>Spring核心包：core/web/webmvc/oxm/tx/jdbc/context/test</li>
+<li>Mybatis核心包:mybatis/mybatis-spring</li>
+<li>MySql包:mysql</li>
+<li>数据库:C3P0/Druid</li>
+<li>jackson</li>
+<li>jstl</li>
+<li>servlet</li>
+</ol>
+</li>
+<li><p>JavaBean:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class User &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private String password;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getPassword() &#123;</span><br><span class="line">        return password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setPassword(String password) &#123;</span><br><span class="line">        this.password = password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;User&#123;&quot; +</span><br><span class="line">                &quot;name=&apos;&quot; + name + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, password=&apos;&quot; + password + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Controller:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class UserController &#123;</span><br><span class="line"></span><br><span class="line">    //1. 浏览器发送get请求到login.jsp</span><br><span class="line">    @RequestMapping(&quot;/login&quot;)</span><br><span class="line">    public String getToLogin()&#123;</span><br><span class="line">        return &quot;login&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //2. 浏览器发送get请求到success.jsp</span><br><span class="line">    @RequestMapping(&quot;/success&quot;)</span><br><span class="line">    public String getToSuccess()&#123;</span><br><span class="line">        return &quot;success&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //3.浏览器发送get请求到index.jsp</span><br><span class="line">    @RequestMapping(&quot;/index&quot;)</span><br><span class="line">    public String getToIndex()&#123;</span><br><span class="line">        return &quot;index&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //4. 浏览器发送get请求到error.jsp</span><br><span class="line">    @RequestMapping(&quot;/error&quot;)</span><br><span class="line">    public String getToError()&#123;</span><br><span class="line">        return &quot;error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //5. 表单提交post</span><br><span class="line">    @RequestMapping(&quot;/FormSubmit&quot;)</span><br><span class="line">    public String postToLogin(User user, Model model, HttpSession httpSession) &#123;</span><br><span class="line">        //1. 获取表单数据</span><br><span class="line">        String username = user.getName();</span><br><span class="line">        String password = user.getPassword();</span><br><span class="line"></span><br><span class="line">        //2. 判断用户是否存在数据库中</span><br><span class="line">        if((username!=null &amp;&amp; username.equals(&quot;张三&quot;)) &amp;&amp; (password!=null &amp;&amp; password.equals(&quot;123&quot;)))&#123;</span><br><span class="line">            //1. 用户存在,将数据存入Session,重定向到主页index.jsp</span><br><span class="line">            httpSession.setAttribute(&quot;USER_INFO&quot;,user);</span><br><span class="line">            return &quot;redirect:success&quot;;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            //2. 用户不存在</span><br><span class="line">            model.addAttribute(&quot;msg&quot;,&quot;用户名或密码错误&quot;);</span><br><span class="line">            return &quot;login&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //6. 退出</span><br><span class="line">    @RequestMapping(&quot;/logout&quot;)</span><br><span class="line">    public String LogOut(HttpSession httpSession)&#123;</span><br><span class="line">        // 清除Session</span><br><span class="line">        httpSession.invalidate();</span><br><span class="line">        return &quot;redirect:login&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Interceptor:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class UserInterceptor implements HandlerInterceptor &#123;</span><br><span class="line"></span><br><span class="line">    //1. PreHandler</span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123;</span><br><span class="line">        //1. 获取URL,拦截除了login.jsp以外的页面</span><br><span class="line">        String url = request.getRequestURI();</span><br><span class="line">        if(url.indexOf(&quot;/login&quot;) &gt;= 0)&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //2. 获取Session</span><br><span class="line">        HttpSession session = request.getSession();</span><br><span class="line">        User user = (User) session.getAttribute(&quot;USER_INFO&quot;);</span><br><span class="line">        //判断session中是否有用户信息</span><br><span class="line">        if(user != null)&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //3. 对被拦截的页面进行提示并转发到登录页面(网页地址不变)</span><br><span class="line">//        request.setAttribute(&quot;msg&quot;,&quot;你尚未登录,请先登录&quot;);</span><br><span class="line">//        request.getRequestDispatcher(&quot;login&quot;).forward(request,response);</span><br><span class="line">//        return false;</span><br><span class="line">        response.sendRedirect(&quot;error&quot;);</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,</span><br><span class="line">                           ModelAndView modelAndView) throws Exception &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span><br><span class="line">            throws Exception &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>login.jsp</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;$&#123;msg&#125;&lt;/h1&gt;</span><br><span class="line">&lt;h2 align=&quot;center&quot;&gt;登录&lt;/h2&gt;&lt;hr&gt;</span><br><span class="line">&lt;div align=&quot;center&quot;&gt;</span><br><span class="line">    &lt;form action=&quot;$&#123;pageContext.request.contextPath&#125;/FormSubmit&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;table&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;用户名&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">            &lt;tr height=&quot;50px&quot;&gt;</span><br><span class="line">                &lt;td&gt;密码&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">        &lt;/table&gt;</span><br><span class="line">        &lt;div align=&quot;center&quot;&gt;</span><br><span class="line">            &lt;input style=&quot;margin-left:33px&quot; type=&quot;submit&quot;  value=&quot;登录&quot;/&gt;</span><br><span class="line">            &lt;input type=&quot;reset&quot;  value=&quot;忘记密码&quot;/&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;&lt;body&gt;</span><br><span class="line">&lt;h1&gt;$&#123;msg&#125;&lt;/h1&gt;</span><br><span class="line">&lt;h2 align=&quot;center&quot;&gt;登录&lt;/h2&gt;&lt;hr&gt;</span><br><span class="line">&lt;div align=&quot;center&quot;&gt;</span><br><span class="line">    &lt;form action=&quot;$&#123;pageContext.request.contextPath&#125;/FormSubmit&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;table&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;用户名&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">            &lt;tr height=&quot;50px&quot;&gt;</span><br><span class="line">                &lt;td&gt;密码&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">        &lt;/table&gt;</span><br><span class="line">        &lt;div align=&quot;center&quot;&gt;</span><br><span class="line">            &lt;input style=&quot;margin-left:33px&quot; type=&quot;submit&quot;  value=&quot;登录&quot;/&gt;</span><br><span class="line">            &lt;input type=&quot;reset&quot;  value=&quot;忘记密码&quot;/&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>success.jsp</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">    &lt;tr&gt;</span><br><span class="line">        &lt;td&gt;当前用户 $&#123;USER_INFO.name&#125;&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;&lt;a href=&quot;$&#123;pageContext.request.contextPath &#125;/logout&quot;&gt;退出&lt;/a&gt;&lt;/td&gt;</span><br><span class="line">    &lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>error.jsp</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;您尚未登录,&lt;a href=&quot;/login&quot;&gt;请先登录&lt;/a&gt;&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>spring_mvc.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd</span><br><span class="line">		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;!-- 注解扫描Controller   --&gt;</span><br><span class="line">    &lt;context:component-scan base-package=&quot;Controller&quot;&gt;&lt;/context:component-scan&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--  加载注解驱动  --&gt;</span><br><span class="line">    &lt;mvc:annotation-driven&gt;&lt;/mvc:annotation-driven&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 配置视图解析器--&gt;</span><br><span class="line">    &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/page/&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 配置拦截器   --&gt;</span><br><span class="line">    &lt;mvc:interceptors&gt;</span><br><span class="line">        &lt;mvc:interceptor&gt;</span><br><span class="line">        &lt;!--拦截所有路径下的请求--&gt;</span><br><span class="line">            &lt;mvc:mapping path=&quot;/**&quot;/&gt;</span><br><span class="line">            &lt;!--开放错误页面 --&gt;</span><br><span class="line">            &lt;mvc:exclude-mapping path=&quot;/error&quot;/&gt;</span><br><span class="line">            &lt;bean class=&quot;Interceptor.UserInterceptor&quot;&gt;&lt;/bean&gt;</span><br><span class="line">        &lt;/mvc:interceptor&gt;</span><br><span class="line">    &lt;/mvc:interceptors&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>web.xml</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE web-app PUBLIC</span><br><span class="line"> &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;</span><br><span class="line"> &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;</span><br><span class="line"></span><br><span class="line">&lt;web-app&gt;</span><br><span class="line">  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!--配置SpringMVC编码--&gt;</span><br><span class="line">  &lt;filter&gt;</span><br><span class="line">    &lt;filter-name&gt;encoding&lt;/filter-name&gt;</span><br><span class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;encoding&lt;/param-name&gt;</span><br><span class="line">      &lt;param-value&gt;UTF-8&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;!--request强制转换--&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;forceRequestEncoding&lt;/param-name&gt;</span><br><span class="line">      &lt;param-value&gt;true&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">  &lt;!--response强制转换--&gt;</span><br><span class="line">  &lt;init-param&gt;</span><br><span class="line">    &lt;param-name&gt;forceResponseEncoding&lt;/param-name&gt;</span><br><span class="line">    &lt;param-value&gt;true&lt;/param-value&gt;</span><br><span class="line">  &lt;/init-param&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">    &lt;filter-name&gt;encoding&lt;/filter-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">  &lt;/filter-mapping&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!--启动SpringMVC--&gt;</span><br><span class="line">  &lt;servlet&gt;</span><br><span class="line">    &lt;!--配置SpringMVC前端核心控制器--&gt;</span><br><span class="line">    &lt;servlet-name&gt;springMVC&lt;/servlet-name&gt;</span><br><span class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</span><br><span class="line">    &lt;!--加载SpringMVC配置文件--&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</span><br><span class="line">      &lt;param-value&gt;classpath:SpringMVC.xml&lt;/param-value&gt;</span><br><span class="line">    &lt;/init-param&gt;</span><br><span class="line">    &lt;!--服务器启动后立即加载--&gt;</span><br><span class="line">    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</span><br><span class="line">  &lt;/servlet&gt;</span><br><span class="line">  &lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;springMVC&lt;/servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;/&lt;/url-pattern&gt;</span><br><span class="line">  &lt;/servlet-mapping&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!--默认主页(在WEB-INF主目录下)--&gt;</span><br><span class="line">  &lt;welcome-file-list&gt;</span><br><span class="line">    &lt;welcome-file&gt;/WEB-INF/page/login.jsp&lt;/welcome-file&gt;</span><br><span class="line">  &lt;/welcome-file-list&gt;</span><br><span class="line"></span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h1 id="总结SpringMVC拦截器"><a href="#总结SpringMVC拦截器" class="headerlink" title="总结SpringMVC拦截器"></a>总结SpringMVC拦截器</h1><h2 id="1-转发与重定向"><a href="#1-转发与重定向" class="headerlink" title="1. 转发与重定向"></a>1. 转发与重定向</h2><ol>
+<li>重定向需要发送get请求,所以需要在controller中定义重定向请求<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//3. 退出</span><br><span class="line">@RequestMapping(&quot;/logout&quot;)</span><br><span class="line">public String LogOut(HttpSession httpSession)&#123;</span><br><span class="line">    // 清除Session</span><br><span class="line">    httpSession.invalidate();</span><br><span class="line">    return &quot;redirect:login&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//1. 浏览器发送get请求到login.jsp</span><br><span class="line">@RequestMapping(&quot;/login&quot;)</span><br><span class="line">public String getToLogin()&#123;</span><br><span class="line">    return &quot;login&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="2-拦截器错误信息提示"><a href="#2-拦截器错误信息提示" class="headerlink" title="2. 拦截器错误信息提示"></a>2. 拦截器错误信息提示</h2><ol>
+<li><p>request.getRequestDispatcher().forward(request,response)转发回原页面(其网页地址不变)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//3. 对被拦截的页面进行提示并转发到登录页面(网页地址不变)</span><br><span class="line">request.setAttribute(&quot;msg&quot;,&quot;你尚未登录,请先登录&quot;);</span><br><span class="line">request.getRequestDispatcher(&quot;login&quot;).forward(request,response);</span><br><span class="line">return false;</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;$&#123;msg&#125;&lt;/h1&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>response.sendRedirect(httpServletRequest.getContextPath() + “/error”);重定向到一个错误页面,再通过错误页面发送get请求,跳转回原页面(网页地址会改变)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//3. 对被拦截的页面进行重定向到error页面</span><br><span class="line">response.sendRedirect(&quot;error&quot;);</span><br><span class="line">return false;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;您尚未登录,&lt;a href=&quot;/login&quot;&gt;请先登录&lt;/a&gt;&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/">http://yoursite.com/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/">November 23rd 2019, 10:21:15 pm</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/">February 17th 2020, 11:29:49 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2020/02/28/SSM/SSM框架整合/" title= "SSM框架整合">
+                    <div class="nextTitle">SSM框架整合</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" title= "SpringMVC(Day1)">
+                    <div class="prevTitle">SpringMVC(Day1)</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#REST风格：参考-https-blog-csdn-net-qq-38016931-article-details-81268123"><span class="toc-number">1.</span> <span class="toc-text">REST风格：参考:https://blog.csdn.net/qq_38016931/article/details/81268123</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在HTTP协议中，有四个常用的表示操作方式的动词："><span class="toc-number">1.1.</span> <span class="toc-text">在HTTP协议中，有四个常用的表示操作方式的动词：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SpringMVC给我们提供了HiddenHttpMethodFilter可以将post请求转化为put和delete请求！"><span class="toc-number">1.2.</span> <span class="toc-text">SpringMVC给我们提供了HiddenHttpMethodFilter可以将post请求转化为put和delete请求！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拦截器interpreter"><span class="toc-number">1.3.</span> <span class="toc-text">拦截器interpreter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通过拦截器可以进行权限验证、记录请求信息的日志、判断用户是否登录等。通常拦截器类可以通过两种方式来定义。"><span class="toc-number">1.3.1.</span> <span class="toc-text">通过拦截器可以进行权限验证、记录请求信息的日志、判断用户是否登录等。通常拦截器类可以通过两种方式来定义。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-mvc-xml配置拦截器"><span class="toc-number">1.4.</span> <span class="toc-text">Spring_mvc.xml配置拦截器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#案例-使用Interceptor判断用户是否登录"><span class="toc-number">1.5.</span> <span class="toc-text">案例:使用Interceptor判断用户是否登录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结SpringMVC拦截器"><span class="toc-number">2.</span> <span class="toc-text">总结SpringMVC拦截器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-转发与重定向"><span class="toc-number">2.1.</span> <span class="toc-text">1. 转发与重定向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-拦截器错误信息提示"><span class="toc-number">2.2.</span> <span class="toc-text">2. 拦截器错误信息提示</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaSe">JavaSe</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.9k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/08/31</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="p103-p128"><a href="#p103-p128" class="headerlink" title="p103-p128"></a>p103-p128</h1><hr>
+<h2 id="跳转语句：break、continue、return。"><a href="#跳转语句：break、continue、return。" class="headerlink" title="跳转语句：break、continue、return。"></a>跳转语句：break、continue、return。</h2><h3 id="1-break语句"><a href="#1-break语句" class="headerlink" title="1. break语句"></a>1. break语句</h3><p>三种用途：第一种，终止switch语句；第二种，退出循环；第三种用作goto语句的“文明”形式。</p>
+<ol>
+<li><p>使用break语句退出循环</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test2&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        for(int i=0;i&lt;10;i++) &#123;</span><br><span class="line">            if(i == 5)break;   //i==5不包括5，因为当i=5时这一个循环就被break了。也就不会执行“i is 5”这一打印命令   </span><br><span class="line">            System.out.println(&quot;i is &quot;+i);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;Loop break&quot;);  //跳出循环，恢复到循环后的下一个语句</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">i is 0</span><br><span class="line">i is 1</span><br><span class="line">i is 2</span><br><span class="line">i is 3</span><br><span class="line">i is 4</span><br><span class="line">Loop break</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>退出while循环：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test2&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int i = 0;</span><br><span class="line">        while(i &lt; 10) &#123;</span><br><span class="line">            if(i == 5) break;</span><br><span class="line">            System.out.println(&quot;i is &quot;+i);</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;break&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">i is 0</span><br><span class="line">i is 1</span><br><span class="line">i is 2</span><br><span class="line">i is 3</span><br><span class="line">i is 4</span><br><span class="line">break</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>break只中断最内层的循环：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test2&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        for(int i=0;i&lt;3;i++) &#123;</span><br><span class="line">            System.out.print(&quot;pass &quot;+i+&quot;:&quot;);   </span><br><span class="line">            for(int j=0;j&lt;10;j++) &#123;</span><br><span class="line">                if(j == 5)break;</span><br><span class="line">                System.out.print(j+&quot; &quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();  //break到此处,即跳出一层嵌套</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;complete&quot;);  //当完成一次i的for循环就打印换行</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">pass 0:0 1 2 3 4 </span><br><span class="line">pass 1:0 1 2 3 4 </span><br><span class="line">pass 2:0 1 2 3 4 </span><br><span class="line">complete</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="2-continue语句-continue使用比较少"><a href="#2-continue语句-continue使用比较少" class="headerlink" title="2. continue语句:continue使用比较少"></a>2. continue语句:continue使用比较少</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test2&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        outer:for(int i=1;i&lt;10;i++) &#123;</span><br><span class="line">            for(int j=1;j&lt;10;j++) &#123;</span><br><span class="line">                if(i&lt;j) &#123;  //最大只能接受i和j相同的情况，例如当i=2，j=3时，执行if条件内代码，即输出换行并跳转至i的循环。当i=2，j=1时，不符              合if条件，执行打印输出i*j。if语句控制跳出循环</span><br><span class="line">                System.out.println();</span><br><span class="line">                continue outer;  //终止j的循环，跳转到outer重新进行i的循环</span><br><span class="line">                &#125;   </span><br><span class="line">            System.out.print(&quot; &quot;+(i*j));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();//最后换行</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">效果：</span><br><span class="line">1</span><br><span class="line">2 4</span><br><span class="line">3 6 9</span><br><span class="line">4 8 12 16</span><br><span class="line">5 10 15 20 25</span><br><span class="line">6 12 18 24 30 36</span><br><span class="line">7 14 21 28 35 42 49</span><br><span class="line">8 16 24 32 40 48 56 64</span><br><span class="line">9 18 27 36 45 54 63 72 81</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-return语句-return语句执行控制转移给方法的调用者，return语句会立即终止"><a href="#3-return语句-return语句执行控制转移给方法的调用者，return语句会立即终止" class="headerlink" title="3. return语句:return语句执行控制转移给方法的调用者，return语句会立即终止"></a>3. return语句:return语句执行控制转移给方法的调用者，return语句会立即终止</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test2&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        boolean t = true;</span><br><span class="line">        System.out.println(&quot;Before the return&quot;);</span><br><span class="line">        if(t)</span><br><span class="line">            return;</span><br><span class="line">        System.out.println(&quot;this won&apos;t be execute&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">效果：</span><br><span class="line">Before the return</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="类（非常重要）"><a href="#类（非常重要）" class="headerlink" title="类（非常重要）"></a>类（非常重要）</h2><h3 id="1-类与对象"><a href="#1-类与对象" class="headerlink" title="1. 类与对象"></a>1. 类与对象</h3><ol>
+<li>类定义了一种新的数据类型（引用数据类型），一旦定义了一个类，就可以使用这种新的类型创建该类型的对象。类是对象的模板，对象是类的实例。</li>
+<li>在类中定义的数据或变量称为实例变量（instance-var）,实现算法的代码包含在方法中。在类中定义的方法和变量都被成为类的成员。大多数类中，实例变量由为该类定义的方法进行操作和访问(使用构造函数和方法，尤其是private实例变量，需要构造函数来实例化，要用方法来return返回值)。方法决定了类中数据的使用方式。</li>
+<li>（个人理解：比如说人是一个类，我就是人这个类的一个实例（或者说是人这个类的一个对象），那么我的身高、体重这些变量都是唯一的数据，只属于我的数据（或者说变量）。</li>
+</ol>
+<hr>
+<ol start="4">
+<li>一个简单的类：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">    double width;  //定义width实例变量为double类型</span><br><span class="line">    double height; //定义height实例变量</span><br><span class="line">    double depth; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>上面的例子定义了一种新的数据类型为Box类引用数据类型。上面的例子只是创建了一个模板，还没有创建实际的对象（也就是没有创建具体是哪一个盒子是Box类的对象）。创建一个Box对象的语句如下：Box mybox = new Box();<br>执行上面这条语句后，mybox就变成了Box类的一个实例（mybox包含了Box类的width、height、depth等实例变量）。为了访问这些变量，需要使用(.)运算符。点运算符将对象的名称（mybox）和实例对象的名称（width、height、depth）链接在一起。例如：mybox.width = 100;<br>表示将mybox对象中包含的width变量的副本(副本指的是从Box类中复制过来的实例变量)赋值为100。</p>
+<p>Box类的完整程序：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box &#123;</span><br><span class="line">	double width;  //声明Box类的实例变量</span><br><span class="line">	double height;</span><br><span class="line">	double depth;</span><br><span class="line">&#125;</span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;  //main方法位于BoxDemo类中，命名应为BoxDemo.java</span><br><span class="line">		Box mybox = new Box();//创建了mybox这一Box，mybox对象包含了Box类的实例变量（width、height、depth）</span><br><span class="line">		double vol;</span><br><span class="line">		</span><br><span class="line">		mybox.width = 100;  //mybox对象通过点运算符 （.）来访问实例变量</span><br><span class="line">		mybox.height = 80;</span><br><span class="line">		mybox.depth = 50;</span><br><span class="line">		vol = mybox.depth*mybox.height*mybox.width;</span><br><span class="line">		System.out.println(&quot;vol is &quot;+vol);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">vol is 40000</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>每个对象都有自己独一无二的实例对象副本，一个类里的两个对象的实例对象副本互不影响:<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">	double width = 100;</span><br><span class="line">	double height = 80;</span><br><span class="line">	double depth = 50;</span><br><span class="line">&#125;</span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Box mybox1 = new Box();//声明了一个Box类的对象mybox1</span><br><span class="line">		Box mybox2 = new Box();</span><br><span class="line">		double vol;</span><br><span class="line">		</span><br><span class="line">		mybox1.depth = 100;</span><br><span class="line">		mybox1.height = 80;</span><br><span class="line">		mybox1.width = 50;</span><br><span class="line">		vol = mybox1.depth*mybox1.height*mybox1.width; //mybox1的实例变量副本与mybox2的实例变量副本互相独立</span><br><span class="line">		System.out.println(&quot;mybox1&apos;s vol is &quot;+vol);</span><br><span class="line">		</span><br><span class="line">		mybox2.depth = 80;</span><br><span class="line">		mybox2.height = 50;</span><br><span class="line">		mybox2.width = 30;</span><br><span class="line">		vol = mybox2.depth*mybox2.height*mybox2.width;</span><br><span class="line">		System.out.println(&quot;mybox2&apos;s vol is &quot;+vol);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">mybox1&apos;s vol is 400000.0</span><br><span class="line">mybox2&apos;s vol is 120000.0</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="2-声明对象"><a href="#2-声明对象" class="headerlink" title="2. 声明对象"></a>2. 声明对象</h3><p>一般形式：在声明的同时实例化对象：Box mybox = new Box()，<font color="red">右边的new Box(),是以Box为模板，在堆空间里创建一个Box类对象，Box()指调用构造方法；左边的Box mybox指的是创建了一个类的引用对象，“=”把引用对象指向刚创建的Box()对象，mybox才正式成为了Box的对象</font><br>或分成两步：先声明：Box mybox; 再实例化：mybox = new Box();<br>第一行代码声明mybox为Box类型对象的引用，第二行代码将Box类型的实例变量赋值给mybox，mybox成为了Box的对象，new运算符给对象分配了内存</p>
+<hr>
+<h3 id="3-为对象变量赋值"><a href="#3-为对象变量赋值" class="headerlink" title="3. 为对象变量赋值"></a>3. 为对象变量赋值</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Box b1 = new Box();</span><br><span class="line">Box b2 = b1</span><br></pre></td></tr></table></figure>
+
+<p>上面这一例子：b1和b2引用了同一个对象，将b1赋值给b2不会复制原对象的任何部分，而只是简单的使b2引用b1所引用的同一个对象，因此，通过b2对对象做的修改，都会引起b1有变化。同理:<br>b2可以调用b1的非私有变量</p>
+<hr>
+<h2 id="方法-重点"><a href="#方法-重点" class="headerlink" title="方法(重点)"></a>方法(重点)</h2><h3 id="1-为Box类添加方法-一般来说都会使用方法访问由类定义的实例变量-如Box类的width、height-。方法为大部分类定义了接口。实例："><a href="#1-为Box类添加方法-一般来说都会使用方法访问由类定义的实例变量-如Box类的width、height-。方法为大部分类定义了接口。实例：" class="headerlink" title="1. 为Box类添加方法:一般来说都会使用方法访问由类定义的实例变量(如Box类的width、height)。方法为大部分类定义了接口。实例："></a>1. 为Box类添加方法:一般来说都会使用方法访问由类定义的实例变量(如Box类的width、height)。方法为大部分类定义了接口。实例：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">    double width;</span><br><span class="line">    double height;</span><br><span class="line">    double depth;</span><br><span class="line"></span><br><span class="line">    void volume()&#123;  //volume方法，返回值为空，volume是Box类的方法,可以被对象调用</span><br><span class="line">        System.out.println(&quot;volume is &quot;+(width*height*depth));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Box mybox1 = new Box();</span><br><span class="line">        Box mybox2 = new Box();</span><br><span class="line">            </span><br><span class="line">        mybox1.depth = 50;</span><br><span class="line">        mybox1.height = 50;</span><br><span class="line">        mybox1.width = 50;</span><br><span class="line">        mybox1.volume();  //通过点运算符.直接调用了Box类里的方法</span><br><span class="line">            </span><br><span class="line">        mybox2.depth = 60;</span><br><span class="line">        mybox2.height = 60;</span><br><span class="line">        mybox2.width = 60;</span><br><span class="line">        mybox2.volume();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">volume is 125000.0</span><br><span class="line">volume is 216000.0</span><br></pre></td></tr></table></figure>
+
+<p>当执行mybox1.volume()方法时，跳转到volume()方法内部定义的代码，执行方法内部代码（就是打印输出）。</p>
+<hr>
+<h3 id="2-返回值"><a href="#2-返回值" class="headerlink" title="2. 返回值"></a>2. 返回值</h3><p>如果程序的另一部分需要知道Box的体积(要调用的是一个公式)，而不是显示值，那么就需要用volume方法计算体积，然后向调用者返回计算结果。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">    double width;</span><br><span class="line">    double height;</span><br><span class="line">    double depth;</span><br><span class="line">    double volume() &#123; // 指定volume返回类型为double</span><br><span class="line">        return width*height*depth;  //返回这一个语句</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当vol = mybox1.volume()调用方法后，vol变量接收了return的width<em>height</em>depth这一语句，并把引用了mybox1的具体数据代入表达式。需要注意的是：</p>
+<ol>
+<li>方法返回值的类型(也就是width、height和depth的类型）必须和方法指定的返回类型兼容(double volume())</li>
+<li>用于接收方法返回值的变量(vol的类型),也必须和方法指定的返回类型(double volume())兼容</li>
+</ol>
+<hr>
+<h3 id="3-带参数的方法"><a href="#3-带参数的方法" class="headerlink" title="3. 带参数的方法"></a>3. 带参数的方法</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">	double width;</span><br><span class="line">	double height;</span><br><span class="line">	double depth;</span><br><span class="line">	</span><br><span class="line">	void dimension(double w,double h,double d) &#123;  //w、h、d为形参</span><br><span class="line">		width = w;</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当执行mybox1.dimension(50,50,50)时，void dimension方法在(parameter-list)部分会把50分配给参数w、把50分配给参数h、把50分配给参数d，然后在方法内部通过width = w、height = h、depth = d把值赋给实例变量。</p>
+<hr>
+<h2 id="构造函数（构造函数是一种特殊的方法）"><a href="#构造函数（构造函数是一种特殊的方法）" class="headerlink" title="构造函数（构造函数是一种特殊的方法）"></a>构造函数（构造函数是一种特殊的方法）</h2><h3 id="1-使用构造器时需要记住："><a href="#1-使用构造器时需要记住：" class="headerlink" title="1. 使用构造器时需要记住："></a>1. 使用构造器时需要记住：</h3><ol>
+<li>构造器必须与类同名（如果一个源文件中有多个类，那么构造器必须与公共类同名）</li>
+<li>每个类可以有一个以上的构造器</li>
+<li>构造器可以有0个、1个或1个以上的参数</li>
+<li>构造器没有返回值</li>
+<li>构造器总是伴随着new操作一起调用。<font color="red">构造函数的作用是在创建对象之后立即初始化对象</font>,构造函数的名称和包含它的类名称相同，这就是为什么创建（实例化）对象的语句是：类名 对象 = new 类名()；因为在执行这个语句的时候，实际发生的操作是调用类的构造函数。java会为类默认创建构造函数。这就是为什么明明在之前的程序中都是用：类名 对象 = new 类名()这一语句来实例化对象，又没有构造类函数，但是却能正常执行的原因。（在没有创建构造函数的程序中，java为我们创建了一个无参构造函数(方法)，无参构造函数是所有构造函数的父类。<br>再次以Box示例：（参数化的构造函数）<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">	double width;</span><br><span class="line">	double height;</span><br><span class="line">	double depth;</span><br><span class="line">	Box(double w,double h,double d)&#123;  //形参类型为double</span><br><span class="line">		width = w;   //把w赋值给width</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">	&#125;</span><br><span class="line">	double volume() &#123;</span><br><span class="line">		return width*height*depth;   //把接收到的w、h、d返回给调用例程，返回到+mybox1.volume()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Box mybox1 = new Box(50,40,30); //实例化时调用了Box()方法，在parameter-list部分把50(实参)传给了w(形参),把40传给了h，注意，实参类型必须兼容形参类型</span><br><span class="line">		Box mybox2 = new Box(40,50,60);</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;volume1 is &quot;+mybox1.volume());</span><br><span class="line">		System.out.println(&quot;volume2 is &quot;+mybox2.volume());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><font color="red">当运行 Box mybox1 = new Box(50,40,30)语句时，调用了Box()方法，先把50、40、30传递给形参w、h、d，而后Box()方法内部再把w、h、d的值赋给width、height、depth。</font></p>
+<hr>
+<h2 id="封装-private变量需要使用setter和getter方法设置和获取"><a href="#封装-private变量需要使用setter和getter方法设置和获取" class="headerlink" title="封装:private变量需要使用setter和getter方法设置和获取"></a>封装:private变量需要使用setter和getter方法设置和获取</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">	private double width;</span><br><span class="line">	private double height;</span><br><span class="line">	private double depth;  //设置私有变量</span><br><span class="line">	</span><br><span class="line">	Box(double w,double h,double d)&#123;   //构造方法</span><br><span class="line">		width = w;</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">	&#125;</span><br><span class="line">	double volume() &#123;</span><br><span class="line">		return width*height*depth;</span><br><span class="line">	&#125;</span><br><span class="line">	double getWidth() &#123;  //封装，定义只能由getWidth()这个方法返回width的值</span><br><span class="line">		return width;</span><br><span class="line">	&#125;</span><br><span class="line">	double getHeight() &#123;</span><br><span class="line">		return height;</span><br><span class="line">	&#125;</span><br><span class="line">	double getDepth() &#123;</span><br><span class="line">		return depth;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">	Box mybox1 = new Box(30,40,50);</span><br><span class="line">	Box mybox2 = new Box(40,50,60);</span><br><span class="line">    System.out.println(&quot;mybox1&apos;s width: &quot;+mybox1.getWidh());//想要单独得到私有变量width、heigth和depth只能通过调用方法得到他们的值</span><br><span class="line">	System.out.println(&quot;volume1 is &quot;+mybox1.volume());</span><br><span class="line">	System.out.println(&quot;volume2 is &quot;+mybox2.volume());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">mybox1&apos;s width: 30</span><br><span class="line">volume1 is 30*40*50</span><br><span class="line">volume2 is 40*50*60</span><br></pre></td></tr></table></figure>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/">http://yoursite.com/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/">八月 31日 2019, 7:48:17 晚上</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/">February 12th 2020, 11:42:55 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" title= "Java学习笔记(Day 1：数组+常用语句+二分查找)">
+                    <div class="nextTitle">Java学习笔记(Day 1：数组+常用语句+二分查找)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#p103-p128"><span class="toc-number">1.</span> <span class="toc-text">p103-p128</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#跳转语句：break、continue、return。"><span class="toc-number">1.1.</span> <span class="toc-text">跳转语句：break、continue、return。</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-break语句"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. break语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-continue语句-continue使用比较少"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. continue语句:continue使用比较少</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-return语句-return语句执行控制转移给方法的调用者，return语句会立即终止"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. return语句:return语句执行控制转移给方法的调用者，return语句会立即终止</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类（非常重要）"><span class="toc-number">1.2.</span> <span class="toc-text">类（非常重要）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-类与对象"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 类与对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-声明对象"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 声明对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-为对象变量赋值"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 为对象变量赋值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-重点"><span class="toc-number">1.3.</span> <span class="toc-text">方法(重点)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-为Box类添加方法-一般来说都会使用方法访问由类定义的实例变量-如Box类的width、height-。方法为大部分类定义了接口。实例："><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 为Box类添加方法:一般来说都会使用方法访问由类定义的实例变量(如Box类的width、height)。方法为大部分类定义了接口。实例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-返回值"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 返回值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-带参数的方法"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 带参数的方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数（构造函数是一种特殊的方法）"><span class="toc-number">1.4.</span> <span class="toc-text">构造函数（构造函数是一种特殊的方法）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-使用构造器时需要记住："><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 使用构造器时需要记住：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#封装-private变量需要使用setter和getter方法设置和获取"><span class="toc-number">1.5.</span> <span class="toc-text">封装:private变量需要使用setter和getter方法设置和获取</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

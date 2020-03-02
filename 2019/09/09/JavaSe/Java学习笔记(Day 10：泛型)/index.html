@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Java学习笔记(Day 11：泛型) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Java学习笔记(Day 11：泛型)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Java学习笔记(Day 11：泛型)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Java">Java</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.2k</span>阅读时长: <span class="post-count reading-time">20 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/09/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>#p350-p386</p>
+<h2 id="今日总结："><a href="#今日总结：" class="headerlink" title="今日总结："></a>今日总结：</h2><ol>
+<li><p>泛型创建：class Gen<t>,T为类型参数，是占位符，当创建对象时，将实际类型传递给Gen</t></p>
+</li>
+<li><p>泛型实例化：<br>第一种方式：Gen&lt;类型&gt; ob = new Gen&lt;类型&gt;(parameter-list)；<br>第二种方式：Gen ob = new Gen(parameter-list);<br>第三种方式(当泛型中构造函数的参数为多个类型参数):Gen&lt;?&gt; ob = new Gen&lt;&gt;(parameter-list1,parameter-list2…)</p>
+</li>
+<li><p>泛型中可以重载构造函数(有多个不同版本的构造函数)：实例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&lt;T&gt;&#123;</span><br><span class="line">	T t,t1,t2,t3;</span><br><span class="line">	A(T o,T o1,T o2,T o3)&#123;</span><br><span class="line">		t = o;</span><br><span class="line">		t1 = o1;</span><br><span class="line">		t2 = o2;</span><br><span class="line">		t3 = o3;</span><br><span class="line">		System.out.println(&quot;四个参数：&quot;+t+&quot; &quot;+t1+&quot; &quot;+t2+&quot; &quot;+t3);</span><br><span class="line">	&#125;</span><br><span class="line">	A(T o)&#123;</span><br><span class="line">		t = o;</span><br><span class="line">		System.out.println(&quot;一个参数：&quot;+t);</span><br><span class="line">	&#125;</span><br><span class="line">	A()&#123;</span><br><span class="line">		System.out.println(&quot;没有参数：&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		A&lt;?&gt; ob1 = new A&lt;&gt;(10,&quot;this&quot;,&apos;x&apos;,1F);  //调用了A（T o,Integer i）构造函数</span><br><span class="line">		A&lt;?&gt; ob2 = new A&lt;&gt;(10);</span><br><span class="line">		A&lt;?&gt; ob3 = new A&lt;&gt;();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>泛型可以有两个类型参数：Gen&lt;T,V&gt;{},创建对象时必须传入两个类型：Gen&lt;Integer,String&gt; ob = new Gen&lt;Integer,String&gt;(10,”String传递给V”)。</p>
+</li>
+<li><p>指定T的类型（设置上界）：Gen<t extends number></t></p>
+</li>
+<li><p>通配符参数：boolean meth(Gen&lt;?&gt; ob){},“？”表示未知类型，表示和任意类型的ob进行匹配</p>
+</li>
+<li><p>泛型方法：声明形式：(修饰符)+类型参数(&lt;T （extends）&gt;)+返回类型，实例：static &lt;T extends Comparable<t>,V extends T&gt; boolean isTn(T x,V[] y)，调用：isTn(2,nums),直接传递类型值</t></p>
+</li>
+<li><p>泛型构造函数(可以将构造函数泛型化，即使它们的类不是泛型类)：声明形式：类型参数+构造函数名+(参数类型)，实例：<t extends number>Test(T arg)</t></p>
+</li>
+<li><p>泛型接口：声明形式：interface+接口名+类型参数。实现接口类的声明：class B&lt;T extends Comparable<t>&gt; implements A<t>{}</t></t></p>
+</li>
+<li><p>泛型超类：在泛型层次中，类层次的所有子类都必须向上传递超类所需要的所有类型参数(与子类的构造函数通过super方法调用构造函数类似):<br>class Gen2&lt;T,V&gt; extends Gen<t>{<br>V ob1;<br>Gen(T o){</t></p>
+<pre><code>super(o);</code></pre><p>}<br>}</p>
+</li>
+<li><p>非泛型类作为泛型超类：<br>class Gen<t> extens A{<br>T ob;<br>Gen(int i,T o){</t></p>
+<pre><code>super(i);
+ob = o;</code></pre><p>}<br>}</p>
+</li>
+<li><p>重写泛型方法（两种情况）：<br>一、子类泛型类初始化父类：（在实例化对象时指定T的类型）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&lt;T&gt;&#123;</span><br><span class="line">	T ob;</span><br><span class="line">	A(T o)&#123;</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B&lt;T&gt; extends A&lt;T&gt;&#123;		//没有明确指定父类类型参数</span><br><span class="line">	B(T o)&#123;		//构造函数参数依然是T类型</span><br><span class="line">		super(o);</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		B&lt;String&gt; ob = new B&lt;String&gt;(&quot;子类的泛型类初始化父类&quot;);			//实例化时指定T为String类型</span><br><span class="line">		System.out.println(ob.getob());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>二、子类声明时制定了父类的类型(子类不是泛型类)：class B extends A<string></string></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&lt;T&gt;&#123;</span><br><span class="line">	T ob;</span><br><span class="line">	A(T o)&#123;</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B extends A&lt;String&gt;&#123;   //子类用具体类型初始化泛型类</span><br><span class="line">	B(String o)&#123;</span><br><span class="line">		super(o);</span><br><span class="line">	&#125;</span><br><span class="line">	String getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		B ob = new B(&quot;子类使用具体类型初始化泛型类&quot;);</span><br><span class="line">		B ob1 = new B(&quot;只能创建String类对象&quot;);</span><br><span class="line">		System.out.println(ob.getob());</span><br><span class="line">		System.out.println(ob1.getob());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="泛型-操作参数化类型的类、接口或方法称为泛型"><a href="#泛型-操作参数化类型的类、接口或方法称为泛型" class="headerlink" title="泛型:操作参数化类型的类、接口或方法称为泛型"></a>泛型:操作参数化类型的类、接口或方法称为泛型</h2><h3 id="1-创建泛型类："><a href="#1-创建泛型类：" class="headerlink" title="1. 创建泛型类："></a>1. 创建泛型类：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Gen&lt;T&gt; &#123;   //T为类型参数的名称，当创建对象时，将实际类型传递给Gen</span><br><span class="line">	T ob;   //T声明对象ob</span><br><span class="line">	Gen(T o)&#123;		//如果T为Integer，则参数必须为Integer类型，必须是相同类型</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;   //返回实例化时传入的参数，T是返回值类型</span><br><span class="line">		return ob;   //ob与T为同一类型，所以可以兼容</span><br><span class="line">	&#125;</span><br><span class="line">	void showType() &#123;</span><br><span class="line">		System.out.println(&quot;Type of T is:&quot;+ob.getClass().getName());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>创建class Gen<t>:T是类型参数的名称，创建对象时将实际类型传递给Gen，只要声明类型参数，就需要在尖括号中指定。应用：Gen<integer> iob；该语句相当于：Integer iob。</integer></t></li>
+<li>声明T ob：如果将String类型传递给T，ob将是String类型，ob和T的类型一定一致</li>
+<li>构造函数Gen (T o){ob=o;}：参数o的类型为T,这意味着o的实际类型取决于创建Gen对象时传递给T的类型。因为ob的类型也是T，所以ob和o类型一致</li>
+<li>T指定方法的返回类型T getob(){return ob;}:因为ob也是T类型（前面声明了）,所以这样也是合法的。</li>
+<li>showType方法：ob对象调用getClass()方法获得Class对象(java.(…)，Class对象再调用getName()方法来显示T的类型</li>
+<li>泛型必须独立放在一个文件中</li>
+</ol>
+<hr>
+<h3 id="2-使用泛型类"><a href="#2-使用泛型类" class="headerlink" title="2. 使用泛型类"></a>2. 使用泛型类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Gen&lt;Integer&gt; iob;    //声明T为Integer，即Gen类型为Integer，声明iob为对象，相当于：Integer iob；</span><br><span class="line">		iob = new Gen&lt;Integer&gt;(88);    //将引用（传入参数88，调用了构造函数）赋值给iob对象</span><br><span class="line">		iob.showType();    //iob对象调用showType()方法</span><br><span class="line">		System.out.println(&quot;value:&quot;+iob.getob());  //直接iob.getob调用方法</span><br><span class="line">		System.out.println();</span><br><span class="line">		Gen&lt;String&gt; strob = new Gen&lt;String&gt;(&quot;Gen test&quot;);</span><br><span class="line">		strob.showType();</span><br><span class="line">		String str = strob.getob();   //创建一个String的对象str来接收返回值</span><br><span class="line">		System.out.println(&quot;value:&quot;+str);   </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Gen<integer> iob:创建了完整版的Gen类,将Integer类型传递给T。ob变成了Integer类型</integer></li>
+<li>iob = new<integer>(88):调用了构造函数，传入Integer参数88，ob = 88</integer></li>
+<li>iob.showType()、iob.getob():对象直接调用方法</li>
+</ol>
+<hr>
+<h3 id="3-带两个类型参数的泛型类"><a href="#3-带两个类型参数的泛型类" class="headerlink" title="3. 带两个类型参数的泛型类"></a>3. 带两个类型参数的泛型类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">泛型类：</span><br><span class="line">class Gen&lt;T,V&gt;&#123;	//使用逗号分隔类型参数</span><br><span class="line">	T ob1;  //创建T类型的实例变量ob1</span><br><span class="line">	V ob2;  //创建V类型的实例变量ob2</span><br><span class="line"></span><br><span class="line">	Gen(T ob1,V ob2)&#123;</span><br><span class="line">		this.ob1 = ob1; //初始化ob1</span><br><span class="line">		this.ob2 = ob2;</span><br><span class="line">	&#125;</span><br><span class="line">	void ShwoType() &#123;</span><br><span class="line">		System.out.println(&quot;T is &quot;+ob1.getClass().getName());</span><br><span class="line">		System.out.println(&quot;V is &quot;+ob2.getClass().getName());</span><br><span class="line">	&#125;</span><br><span class="line">	T getob1() &#123;</span><br><span class="line">		return ob1;</span><br><span class="line">	&#125;</span><br><span class="line">	V getob2() &#123;</span><br><span class="line">		return ob2;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">使用泛型类：</span><br><span class="line">public class Test &#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Gen&lt;Integer,String&gt;ob1 = new Gen&lt;Integer,String&gt;(88,&quot;两个参数类型的泛型类&quot;);   //创建对象时必须传递两个参数类型</span><br><span class="line">		ob1.ShwoType();</span><br><span class="line">		int t = ob1.getob1();</span><br><span class="line">		System.out.println(&quot;int t is &quot;+t);</span><br><span class="line">		String v = ob1.getob2();</span><br><span class="line">		System.out.println(&quot;String v is &quot;+v);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-创建泛型方法"><a href="#4-创建泛型方法" class="headerlink" title="4. 创建泛型方法"></a>4. 创建泛型方法</h3><ol>
+<li>可以声明本身使用一个或多个参数类型的泛型方法</li>
+<li>可以在非泛型类中创建泛型方法</li>
+<li>形式：(修饰符)+类型参数+返回值类型+方法名<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Test&#123;</span><br><span class="line">	static &lt;T extends Comparable&lt;T&gt;,V extends T&gt; boolean isTn(T x,V[] y) &#123;   //T为V设置了上界，V必须是T类或者是T的子类，强制限制只能使用相互兼容的参数来调用isTN方法</span><br><span class="line">									//T拓展了Comparable&lt;T&gt;,是java.lang的一个接口，是泛型接口</span><br><span class="line">		for(int i=0;i&lt;y.length;i++)</span><br><span class="line">			if(x.equals(y[i]))</span><br><span class="line">				return true;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Integer nums[] = &#123;1,2,3,4,5&#125;;</span><br><span class="line">		if(isTn(2,nums))    //静态方法isTN,不需要指定2为Integer,参数类型自动辨别，第一个参数2是Integer(装箱)，Integer替换T；第二个参数的基类型也是Integer，Integer替换V</span><br><span class="line">			System.out.println(&quot;2 is in nums&quot;);</span><br><span class="line">		if(isTn(7,nums))</span><br><span class="line">			System.out.println(&quot;7 is in nums&quot;);</span><br><span class="line">		System.out.println(&quot;7 is not in nums&quot;);</span><br><span class="line">		</span><br><span class="line">		String strs[] = &#123;&quot;one&quot;,&quot;two&quot;,&quot;three&quot;,&quot;four&quot;,&quot;five&quot;&#125;;</span><br><span class="line">		if(isTn(&quot;two&quot;,strs))</span><br><span class="line">			System.out.println(&quot;two is in strs&quot;);</span><br><span class="line">		if(isTn(&quot;seven&quot;,strs))</span><br><span class="line">			System.out.println(&quot;seven is in strs&quot;);</span><br><span class="line">		System.out.println(&quot;seven is not in strs&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="5-泛型构造函数"><a href="#5-泛型构造函数" class="headerlink" title="5. 泛型构造函数"></a>5. 泛型构造函数</h3><ol>
+<li>可以将构造函数泛型化，即使它们的类不是泛型类</li>
+<li>形式：类型参数+构造函数名+(参数类型)<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Test&#123;     //不是泛型类，但是可以泛型化构造函数</span><br><span class="line">	private double vala;  //val为私有成员</span><br><span class="line">	private double valb;</span><br><span class="line">	&lt;T extends Number&gt;Test(T arg)&#123;   //指定T继承子Number类，参数arg必须是Number的子类，可以使用任何类型的数值调用该构造函数</span><br><span class="line">		vala = arg.doubleValue();   //</span><br><span class="line">		valb = arg.doubleValue();</span><br><span class="line">	&#125;</span><br><span class="line">	public double getVala() &#123;</span><br><span class="line">		return vala;</span><br><span class="line">	&#125;</span><br><span class="line">	void getValb() &#123;</span><br><span class="line">		System.out.println(&quot;valb:&quot;+valb);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Test ob1 = new Test(10);</span><br><span class="line">		Test ob2 = new Test(10.2);</span><br><span class="line">		Test ob3 = new Test(1.3F);</span><br><span class="line">		System.out.println(ob1.getVala());</span><br><span class="line">		ob2.getValb();</span><br><span class="line">		ob3.getValb();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>指定了一个泛型类型的参数，并且这个参数必须是Number的子类，所以可以使用各种数值类型来调用构造函数。</p>
+<hr>
+<h3 id="6-泛型接口"><a href="#6-泛型接口" class="headerlink" title="6. 泛型接口"></a>6. 泛型接口</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface A&lt;T extends Comparable&lt;T&gt;&gt;&#123;</span><br><span class="line">	T min(); 		//返回类型为T的方法min()</span><br><span class="line">	T max();</span><br><span class="line">&#125;</span><br><span class="line">class B&lt;T extends Comparable&lt;T&gt;&gt; implements A&lt;T&gt;&#123;</span><br><span class="line">	T[] vals;   //声明一个T类型的数组vals</span><br><span class="line">	B(T[] o)&#123;    //定义形参为T类型的数组</span><br><span class="line">		vals = o;   //将传入的实参放入vals数组中</span><br><span class="line">	&#125;</span><br><span class="line">	public T min() &#123;   //实现接口方法min,返回值类型为T</span><br><span class="line">		T v = vals[0];   //创建T类型的v变量，值为vals[0]</span><br><span class="line">		for(int i=0;i&lt;vals.length;i++)   //遍历vals数组的元素</span><br><span class="line">			if(vals[i].compareTo(v)&lt;0)	//因为vals是B类的对象，可以调用Comparable接口的compareTo方法</span><br><span class="line">										//当前vals数组元素与第一个元素的差值</span><br><span class="line">				v = vals[i];   //如果vals[i]小于v,v等于vals[i]，注意：每次找到最小值v都会变成那个元素，直到遍历结束</span><br><span class="line">		return v;   //遍历结束，返回v</span><br><span class="line">	&#125;</span><br><span class="line">	public T max() &#123;    //实现接口方法max，返回值类型为T</span><br><span class="line">		T v = vals[0];   //创建T类型的v变量，值为vals[0]</span><br><span class="line">		for(int i=0;i&lt;vals.length;i++)    //遍历</span><br><span class="line">			if(vals[i].compareTo(v)&gt;0)   //如果vals[i]大于v，则v变成vals[i]，每次符合if条件，v都会变成那个vals[i]</span><br><span class="line">				v = vals[i];</span><br><span class="line">		return v;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Integer nums[] = &#123;1,2,3,4,5&#125;;</span><br><span class="line">		Character chars[] = &#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;,&apos;d&apos;,&apos;e&apos;&#125;;</span><br><span class="line">		B&lt;Integer&gt; ob1 = new B&lt;Integer&gt;(nums);</span><br><span class="line">		B&lt;Character&gt; ob2 = new B&lt;Character&gt;(chars);</span><br><span class="line">		System.out.println(&quot;max in nums is &quot;+ob1.max());</span><br><span class="line">		System.out.println(&quot;min in nums is &quot;+ob1.min());</span><br><span class="line">		System.out.println(&quot;max in chars is &quot;+ob2.max());</span><br><span class="line">		System.out.println(&quot;min in chars is &quot;+ob2.min());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分析：</p>
+<ol>
+<li>接口A的声明方式：interface A&lt;T extends Comparable<t>&gt;{}.<br>类型参数为T，上界是Comparable，指定了进行比较的对象类型：vals[i].compareTo(v),vals[i]的基类型为T，v的类型也为T</t></li>
+<li>实现接口类的声明：class B&lt;T extends Comparable<t>&gt; implements A<t>.类名+&lt;上界限制&gt;+implements+泛型接口名(A<t>).<br>因为接口A需要实现Comparable<t>泛型接口的方法，所以实现接口A的类必须指定相同的界限。</t></t></t></t></li>
+</ol>
+<hr>
+<h3 id="7-有界类型"><a href="#7-有界类型" class="headerlink" title="7. 有界类型"></a>7. 有界类型</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class stats&lt;T extends Number&gt; &#123;   //指定T的类型继承自Number类，可以调用doubleValue()方法获取每个数值的double类型(强制类型转换)</span><br><span class="line">	T[] nums;</span><br><span class="line">	stats(T[] o)&#123;       //参数为T类型的数组对象：T []o = new T[?]</span><br><span class="line">		nums = o;       //将传入的实参存入数组</span><br><span class="line">	&#125;</span><br><span class="line">	double average() &#123;</span><br><span class="line">		double sum = 0.0;</span><br><span class="line">		for(int i=0;i&lt;nums.length;i++) &#123;</span><br><span class="line">			sum += nums[i].doubleValue();   </span><br><span class="line">		&#125;</span><br><span class="line">		return sum/nums.length;</span><br><span class="line">	&#125;</span><br><span class="line">	int intaverage() &#123;</span><br><span class="line">		int sum = 0;</span><br><span class="line">		for(int i=0;i&lt;nums.length;i++) &#123;</span><br><span class="line">			sum += nums[i].intValue();</span><br><span class="line">		&#125;</span><br><span class="line">		return sum/nums.length;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">使用泛型类：</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Integer inums[] = &#123;1,2,3,4,5&#125;;</span><br><span class="line">		stats&lt;Integer&gt;ob1 = new stats&lt;Integer&gt;(inums);</span><br><span class="line">		double v = ob1.average();</span><br><span class="line">		System.out.println(&quot;ob average is &quot;+v);</span><br><span class="line">		</span><br><span class="line">		Double nums[] = &#123;1.1,2.1,3.1,4.1,5.1&#125;;</span><br><span class="line">		stats&lt;Double&gt;ob2 = new stats&lt;Double&gt;(nums);</span><br><span class="line">		double w = ob2.average();</span><br><span class="line">		System.out.println(&quot;ob2 average is &quot;+w);</span><br><span class="line">		</span><br><span class="line">		stats&lt;Integer&gt;ob3 = new stats&lt;Integer&gt;(inums);</span><br><span class="line">		int i = ob3.intaverage();</span><br><span class="line">		System.out.println(i);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="8-有界通配符-有界通配符为类型参数指定上界或下界，从而限制方法能够操作的对象类型，通过extends指定上界。建立上界：-lt-extends-superclass-gt-。建立下界：-lt-super-subclass-gt"><a href="#8-有界通配符-有界通配符为类型参数指定上界或下界，从而限制方法能够操作的对象类型，通过extends指定上界。建立上界：-lt-extends-superclass-gt-。建立下界：-lt-super-subclass-gt" class="headerlink" title="8. 有界通配符:有界通配符为类型参数指定上界或下界，从而限制方法能够操作的对象类型，通过extends指定上界。建立上界：&lt;? extends superclass&gt;。建立下界：&lt;? super subclass&gt;"></a>8. 有界通配符:有界通配符为类型参数指定上界或下界，从而限制方法能够操作的对象类型，通过extends指定上界。建立上界：&lt;? extends superclass&gt;。建立下界：&lt;? super subclass&gt;</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">	int x,y;</span><br><span class="line">	A(int a,int b)&#123;</span><br><span class="line">		x = a;</span><br><span class="line">		y = b;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B extends A&#123;</span><br><span class="line">	int z;</span><br><span class="line">	B(int a,int b,int c)&#123;</span><br><span class="line">		super(a,b);</span><br><span class="line">		z = c;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class C extends B&#123;</span><br><span class="line">	int t;</span><br><span class="line">	C(int a,int b,int c,int t)&#123;</span><br><span class="line">		super(a,b,c);</span><br><span class="line">		this.t = t; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Coords&lt;T extends A&gt;&#123;		//泛型的类型参数继承自超类A，</span><br><span class="line">	T[] coords;		//coords对象存储的所有数组都包含A类和其子类的对象</span><br><span class="line">	Coords(T[] o)&#123;</span><br><span class="line">		coords = o;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	static void showXY(Coords&lt;?&gt; c) &#123;	//创建Coords对象的所有对象都将是A类及其子类的数组</span><br><span class="line">			System.out.println(&quot;X and Y:&quot;);</span><br><span class="line">			for(int i=0;i&lt;c.coords.length;i++)</span><br><span class="line">				System.out.println(c.coords[i].x+&quot; &quot;+c.coords[i].y);  //默认上界为超类</span><br><span class="line">			System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line">	static void showXYZ(Coords&lt;? extends B&gt; c) &#123;</span><br><span class="line">		System.out.println(&quot;X、Y and Z：&quot;);</span><br><span class="line">		for(int i=0;i&lt;c.coords.length;i++)</span><br><span class="line">			System.out.println(c.coords[i].x+&quot; &quot;+c.coords[i].y+&quot; &quot;+c.coords[i].z);</span><br><span class="line">		System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line">	static void showXYZT(Coords&lt;? extends C&gt; c) &#123;</span><br><span class="line">		System.out.println(&quot;X、Y、Z and T：&quot;);</span><br><span class="line">		for(int i=0;i&lt;c.coords.length;i++)</span><br><span class="line">			System.out.println(c.coords[i].x+&quot; &quot;+c.coords[i].y+&quot; &quot;+c.coords[i].z+&quot; &quot;+c.coords[i].t);</span><br><span class="line">		System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		A a[] = &#123;new A(0,0),new A(7,9),new A(18,4),new A(-1,-23)&#125;;</span><br><span class="line">		Coords&lt;A&gt; ob1 = new Coords&lt;A&gt;(a);   //ob1为A的对象，只有XY</span><br><span class="line">		System.out.println(&quot;contens of tdlocs:&quot;);</span><br><span class="line">		showXY(ob1);</span><br><span class="line">		</span><br><span class="line">		C b[] = &#123;new C(1,2,3,4),new C(5,6,7,8),new C(9,10,11,12),new C(13,14,15,16)&#125;;</span><br><span class="line">		Coords&lt;C&gt; ob2 = new Coords&lt;C&gt;(b);   //ob2为C对象，有XYZT，实例化时调用super方法来初始化</span><br><span class="line">		showXY(ob2);</span><br><span class="line">		showXYZ(ob2);</span><br><span class="line">		showXYZT(ob2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="9-泛型类层次（继承泛型类时，必须对父类中的类型参数进行初始化。）"><a href="#9-泛型类层次（继承泛型类时，必须对父类中的类型参数进行初始化。）" class="headerlink" title="9. 泛型类层次（继承泛型类时，必须对父类中的类型参数进行初始化。）"></a>9. 泛型类层次（继承泛型类时，必须对父类中的类型参数进行初始化。）</h3><ol>
+<li>用子类中的泛型类型初始化父类：<br>public class Son<t> extends Parent<t>{}</t></t></li>
+<li>用具体类型初始化：<br>public class Son extends Parent<string>{}<br>在泛型层次中，类层次的所有子类都必须向上传递超类所需要的所有类型参数(与子类的构造函数通过super方法调用构造函数类似)</string></li>
+</ol>
+<hr>
+<h3 id="10-使用泛型超类"><a href="#10-使用泛型超类" class="headerlink" title="10. 使用泛型超类"></a>10. 使用泛型超类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Gen&lt;T&gt;&#123;</span><br><span class="line">	T ob;</span><br><span class="line">	Gen(T o)&#123;</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125; </span><br><span class="line">class Gen2&lt;T,V&gt; extends Gen&lt;T&gt;&#123;  //T是传递给Gen的类型，V是Gen2的类型</span><br><span class="line">	V ob2;			//声明ob2的类型为V</span><br><span class="line">	Gen2(T o,V o1)&#123;  </span><br><span class="line">		super(o);  		//调用Gen的构造函数，将T类型的参数传递。将value is传递给Gen的构造函数</span><br><span class="line">		ob2 = o1;</span><br><span class="line">	&#125;</span><br><span class="line">	V getob2() &#123;</span><br><span class="line">		return ob2;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Gen2&lt;String,Integer&gt; ob = new Gen2&lt;String,Integer&gt;(&quot;value is&quot;,99);//String是传递给T的类型，Integer是传递给V的类型</span><br><span class="line">		System.out.println(ob.getob());</span><br><span class="line">		System.out.println(ob.getob2());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="10-泛型子类：非泛型类可以作为泛型的超类"><a href="#10-泛型子类：非泛型类可以作为泛型的超类" class="headerlink" title="10. 泛型子类：非泛型类可以作为泛型的超类"></a>10. 泛型子类：非泛型类可以作为泛型的超类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">	int num;</span><br><span class="line">	A(int i)&#123;</span><br><span class="line">		num = i;</span><br><span class="line">	&#125;</span><br><span class="line">	int getnum() &#123;</span><br><span class="line">		return num;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Gen&lt;T&gt; extends A&#123;		//A并非是泛型，所以没有指定类型参数</span><br><span class="line">	T ob;</span><br><span class="line">	Gen(int i,T o)&#123;</span><br><span class="line">		super(i);</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		Gen&lt;String&gt; ob = new Gen&lt;String&gt;(30,&quot;非泛型类作为泛型超类&quot;);</span><br><span class="line">		System.out.println(ob.getnum());</span><br><span class="line">		System.out.println(ob.getob());</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="11-重写泛型类的方法"><a href="#11-重写泛型类的方法" class="headerlink" title="11. 重写泛型类的方法"></a>11. 重写泛型类的方法</h3><ol>
+<li><p>子类通过具体类型初始化泛型类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&lt;T&gt;&#123;</span><br><span class="line">	T ob;</span><br><span class="line">	A(T o)&#123;</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B extends A&lt;String&gt;&#123;   //子类用具体类型初始化泛型类</span><br><span class="line">	B(String o)&#123;</span><br><span class="line">		super(o);</span><br><span class="line">	&#125;</span><br><span class="line">	String getob() &#123;</span><br><span class="line">		System.out.println(&quot;you call string getob():&quot;);</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		B ob = new B(&quot;子类使用具体类型初始化泛型类&quot;);</span><br><span class="line">		System.out.println(ob.getob());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>子类的泛型类初始化父类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&lt;T&gt;&#123;</span><br><span class="line">	T ob;</span><br><span class="line">	A(T o)&#123;</span><br><span class="line">		ob = o;</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B&lt;T&gt; extends A&lt;T&gt;&#123;	//子类为一个泛型，父类也是泛型</span><br><span class="line">	B(T o)&#123;</span><br><span class="line">		super(o);</span><br><span class="line">	&#125;</span><br><span class="line">	T getob() &#123;</span><br><span class="line">		return ob;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		B&lt;String&gt; ob = new B&lt;String&gt;(&quot;子类的泛型类初始化父类&quot;);</span><br><span class="line">		System.out.println(ob.getob());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="12-泛型的一些限制："><a href="#12-泛型的一些限制：" class="headerlink" title="12. 泛型的一些限制："></a>12. 泛型的一些限制：</h3><ol>
+<li>不能实例化类型参数：ob = new T()   //T只是一个占位符，编译器不知道T具体为什么类型</li>
+<li>静态成员：静态成员不能在使用在类中声明的类型参数：static T ob;//非法； static T getob(){}   //非法</li>
+<li>泛型数组：不能实例化元素类型为类型参数的数组：T arry[] = new T [3];   //T的具体类型未知</li>
+<li>泛型类不能拓展Throwable</li>
+</ol>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/">http://yoursite.com/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/">九月 9日 2019, 9:06:38 上午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/">February 13th 2020, 9:29:57 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" title= "Java学习笔记(Day 11：lambda表达式)">
+                    <div class="nextTitle">Java学习笔记(Day 11：lambda表达式)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" title= "Java学习笔记(Day 10:注解）">
+                    <div class="prevTitle">Java学习笔记(Day 10:注解）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#今日总结："><span class="toc-number">1.</span> <span class="toc-text">今日总结：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型-操作参数化类型的类、接口或方法称为泛型"><span class="toc-number">2.</span> <span class="toc-text">泛型:操作参数化类型的类、接口或方法称为泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-创建泛型类："><span class="toc-number">2.1.</span> <span class="toc-text">1. 创建泛型类：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用泛型类"><span class="toc-number">2.2.</span> <span class="toc-text">2. 使用泛型类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-带两个类型参数的泛型类"><span class="toc-number">2.3.</span> <span class="toc-text">3. 带两个类型参数的泛型类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-创建泛型方法"><span class="toc-number">2.4.</span> <span class="toc-text">4. 创建泛型方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-泛型构造函数"><span class="toc-number">2.5.</span> <span class="toc-text">5. 泛型构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-泛型接口"><span class="toc-number">2.6.</span> <span class="toc-text">6. 泛型接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-有界类型"><span class="toc-number">2.7.</span> <span class="toc-text">7. 有界类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-有界通配符-有界通配符为类型参数指定上界或下界，从而限制方法能够操作的对象类型，通过extends指定上界。建立上界：-lt-extends-superclass-gt-。建立下界：-lt-super-subclass-gt"><span class="toc-number">2.8.</span> <span class="toc-text">8. 有界通配符:有界通配符为类型参数指定上界或下界，从而限制方法能够操作的对象类型，通过extends指定上界。建立上界：&lt;? extends superclass&gt;。建立下界：&lt;? super subclass&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-泛型类层次（继承泛型类时，必须对父类中的类型参数进行初始化。）"><span class="toc-number">2.9.</span> <span class="toc-text">9. 泛型类层次（继承泛型类时，必须对父类中的类型参数进行初始化。）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-使用泛型超类"><span class="toc-number">2.10.</span> <span class="toc-text">10. 使用泛型超类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-泛型子类：非泛型类可以作为泛型的超类"><span class="toc-number">2.11.</span> <span class="toc-text">10. 泛型子类：非泛型类可以作为泛型的超类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-重写泛型类的方法"><span class="toc-number">2.12.</span> <span class="toc-text">11. 重写泛型类的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-泛型的一些限制："><span class="toc-number">2.13.</span> <span class="toc-text">12. 泛型的一些限制：</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

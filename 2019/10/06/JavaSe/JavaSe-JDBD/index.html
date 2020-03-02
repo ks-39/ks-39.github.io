@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>JavaSe:JDBD · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">JavaSe:JDBD</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            JavaSe:JDBD
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JDBC">JDBC</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.8k</span>阅读时长: <span class="post-count reading-time">23 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/10/06</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><ol>
+<li>概念：Java Database Connectivity Java。Java语言操作数据库</li>
+<li>本质：一套操作所有关系型数据库的规则(接口)，驱动jar包的实现类来操作数据库。包括MySQL版本、Oracle版本和DB2版本</li>
+<li>基本步骤：<ol>
+<li>导入驱动jar包：mysql-connector-java</li>
+<li>注册驱动：Class.forName(“com.mysql.cj.jdbc.Driver”);</li>
+<li>定义sql语句：<ol>
+<li>Statement: String sql = “….”;</li>
+<li>PrepareStatement: String sql = “….. = ? …. = ? …”;     //使用?占位符替代参数</li>
+</ol>
+</li>
+<li>获取数据库连接对象Connection：Connection con = DriverManager.getConnection(“jdbc:mysql://localhost:3306/db1?serverTimezone=GMT”, “root”, “password”);</li>
+<li>获取执行sql语句的对象Statement:Statement sta = con.createStatement();/PrepareStatement psta = con.PrepareStatement();<ol>
+<li>使用PrepareStatement()：给?赋值<br> psta.set…();</li>
+</ol>
+</li>
+<li>执行sql语句,接收返回结果<br>int result = sta.executeUpdate(sql);<br>ResultSet rs = sta.executeQuery(sql);<br>int result = psta.executeUpdate();      //PrepareStatement()不需要传入sql<br>ResultSet rs = psta.executeQuery();</li>
+<li>处理结果：while(rs.next()){}</li>
+<li>释放资源：con.close();sta.close();rs.close();</li>
+</ol>
+</li>
+<li>使用JDBC工具类Utils:<ol>
+<li>新建配置文件(jdbc.properties),写入url、user、password和driver。（properties配置文件不能使用空格和””)</li>
+<li>创建Utils类声明url、user、password和driver为私有静态变量</li>
+<li>创建静态代码块<ol>
+<li>创建Properties类,使用load方法获取src下的配置文件：Properties pro = new Properties();</li>
+<li>声明ClassLoader类对象:ClassLoader load = JDBCUtils.class.getClassLoader();</li>
+<li>使用InputStream流接收getResourceAsStream(“jdbc.properties”)返回的路径</li>
+<li>pro.load(inputstream);读取properties配置文件</li>
+<li>给私有变量赋值:url = pro.getProperty(“url”);</li>
+<li>注册驱动：Class.forName(driver);     //在静态代码块中注册驱动</li>
+</ol>
+</li>
+<li>创建获取连接对象方法:public static Connection getConnection(){<br> return DriverManager.getConnection(url,user,password);  //返回类型为Connection类对象<br>}</li>
+<li>创建释放资源方法:public static void close(Connection con,Statement sta,….){}</li>
+<li>具体实现类：<ol>
+<li>获取链接和注册驱动：<br>con.JDBCUtils.getConnection();</li>
+<li>开启事务</li>
+<li>定义sql语句</li>
+<li>获取执行sql的对象PrepareStatement psta;</li>
+<li>设置?参数</li>
+<li>执行sql</li>
+<li>提交事务</li>
+<li>回滚事务</li>
+<li>释放资源：JDBCUtils.close(con,psta…);</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>C3P0数据库连接池<ol>
+<li>导入jar包add as library:c3p0-0.9.5.2.jar/mchange-commons-java-0.2.12.jar</li>
+<li>定义配置文件：<ol>
+<li>名称：c3p0.properties 或者 c3p0-config.xml       //properties格式:不能使用双引号和空格;</li>
+<li>路径：配置文件放在src目录下</li>
+</ol>
+</li>
+<li>创建核心对象ComboPooledDateSource:DataSource ds = new ComboPooledDataSource();</li>
+<li>获取连接getConnection():Connection con = ds.getConnection();</li>
+</ol>
+</li>
+<li>Druid数据库连接池（使用DruidUtils工具类）<ol>
+<li>导入jar包add as library:druid-1.1.16.jar</li>
+<li>定义配置文件:<ol>
+<li>名称：druid.properties       //不能使用空格和双引号,可以为任意名称</li>
+<li>路径：可以在任意路径</li>
+</ol>
+</li>
+<li>静态代码块加载配置文件：<ol>
+<li>创建Properties类：Properties pro = new Properties();</li>
+<li>使用InputStream对象接收DruidTest.class.getClassLoader().getResourceAsStream()返回的路径;</li>
+<li>pro.load(input);读取配置文件参数</li>
+<li>获取数据库连接池对象：通过工厂类(DruidDataSourceFactory)获取<br> DataSource ds = DruidDataSourceFactory.createDataSource(pro);       //DataSource读取xing</li>
+</ol>
+</li>
+<li>获取连接对象方法：<br>public static Connection getConnection(){<br> return ds.getConnection();<br>}</li>
+<li>释放资源方法</li>
+<li>获取连接池方法：<br>public static DataSource getDataSource(){<br> return ds;<br>}</li>
+<li>main方法：<ol>
+<li>获取链接和注册驱动：<br>con.DruidUtils.getConnection();</li>
+<li>开启事务</li>
+<li>定义sql语句</li>
+<li>获取执行sql的对象PrepareStatement psta;</li>
+<li>设置?参数</li>
+<li>执行sql</li>
+<li>提交事务</li>
+<li>回滚事务</li>
+<li>释放资源：DruidUtils.close(con,psta…);</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="JDBC类"><a href="#JDBC类" class="headerlink" title="JDBC类"></a>JDBC类</h2><h2 id="入门操作案例："><a href="#入门操作案例：" class="headerlink" title="入门操作案例："></a>入门操作案例：</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.DriverManager;</span><br><span class="line">import java.sql.Statement;</span><br><span class="line"></span><br><span class="line">public class JDBCTest1 &#123;</span><br><span class="line">    public static void main(String args[]) &#123;</span><br><span class="line">        Statement sta = null;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            //注册驱动</span><br><span class="line">            Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span><br><span class="line">            //定义sql语句</span><br><span class="line">            String sql = &quot;insert into account values(null,&apos;王五&apos;,3000)&quot;;</span><br><span class="line">            //获取Connection对象</span><br><span class="line">            con = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/db1?serverTimezone=GMT&quot;, &quot;root&quot;, &quot;password&quot;);</span><br><span class="line">            //获取执行sql语句的对象</span><br><span class="line">            sta = con.createStatement();</span><br><span class="line">            //执行sql语句</span><br><span class="line">            int result = sta.executeUpdate(sql);</span><br><span class="line">            //处理结果</span><br><span class="line">            System.out.println(result);</span><br><span class="line">            if (result &gt; 0)</span><br><span class="line">                System.out.println(&quot;添加修改:&quot; + result);</span><br><span class="line">            else</span><br><span class="line">                System.out.println(&quot;添加失败&quot;);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            if(sta!=null)</span><br><span class="line">            try &#123;</span><br><span class="line">                sta.close();</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if(con!=null)</span><br><span class="line">            try&#123;</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="拆解"><a href="#拆解" class="headerlink" title="拆解"></a>拆解</h2><h3 id="1-DriverManager类：（驱动管理对象）"><a href="#1-DriverManager类：（驱动管理对象）" class="headerlink" title="1. DriverManager类：（驱动管理对象）"></a>1. DriverManager类：（驱动管理对象）</h3><ol>
+<li>功能：<ol>
+<li>注册驱动:（static void registerDriver(Driver driver)静态方法）（可有可无）<ol>
+<li>代码实现：<br>Class.forNaem(“com.mysql.cj.jdbc.Driver”);      //在com.mysql.cj.jdbc.Driver类中存在静态代码块</li>
+</ol>
+</li>
+<li>获取数据库连接：（static Connection getConnection(String url,String user,String password);<ol>
+<li>代码实现：（mysql)<br>DriverManager.getConnection(“jdbc:mysql://localhost:3306/db1?serverTimezone=GMT”,”root”,”password”);       //serverTimezone=GMT设置时区，mysql默认端口3306,可以省略</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="2-Connection类：（数据库连接对象）"><a href="#2-Connection类：（数据库连接对象）" class="headerlink" title="2. Connection类：（数据库连接对象）"></a>2. Connection类：（数据库连接对象）</h3><ol>
+<li>功能：<ol>
+<li>获取执行sql的对象<ol>
+<li>Statement createStatement();     //不推荐</li>
+<li>PrepareStatement prepareStatement(String sql);       //需要给?占位符赋值</li>
+</ol>
+</li>
+<li>管理事务<ol>
+<li>开启事务:con.setAutoCommit(boolean autoCommit);  //false 开启,</li>
+<li>提交事务:con.commit();       </li>
+<li>回滚事务:con.rollback();</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="3-Statement类：（执行sql语句对象）"><a href="#3-Statement类：（执行sql语句对象）" class="headerlink" title="3. Statement类：（执行sql语句对象）"></a>3. Statement类：（执行sql语句对象）</h3><ol>
+<li>执行sql语句<ol>
+<li>int executeUpdate(String sql);       //执行DML(增删改)，返回值为影响的行数。</li>
+<li>ResultSet executeQuery(String sql);      //执行DQL(select)语句</li>
+</ol>
+</li>
+<li>DML语句（增删改）：<ol>
+<li>account表添加一条记录<br> String sql = “insert into account values(null,’王五’,3000”;</li>
+<li>account表修改记录<br> String sql = “update account set balance = 1000 where id = 3”;</li>
+<li>account表删除一条记录<br> String sql = “delete from account where id = 3”;</li>
+</ol>
+</li>
+<li>DDL语句（create表）<ol>
+<li>创建表<br> String sql = “create table info (id int, name varchar(20))”;</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="4-ResultSet类：（结果集对象-封装查询结果）"><a href="#4-ResultSet类：（结果集对象-封装查询结果）" class="headerlink" title="4. ResultSet类：（结果集对象,封装查询结果）"></a>4. ResultSet类：（结果集对象,封装查询结果）</h3><ol>
+<li><p>执行select语句：</p>
+<ol>
+<li>String sql = “select * from account”;</li>
+</ol>
+</li>
+<li><p>使用executeQuery()执行select语句</p>
+</li>
+<li><p>普通查询方式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class JDBCTest1 &#123;</span><br><span class="line">    public static void main(String args[]) &#123;</span><br><span class="line">        Statement sta = null;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        ResultSet rs = null;    //结果集</span><br><span class="line">        try &#123;</span><br><span class="line">            //注册驱动</span><br><span class="line">            Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span><br><span class="line">            //定义sql语句</span><br><span class="line">            String sql = &quot;select * from account&quot;;       //查询表格account</span><br><span class="line">            //获取Connection对象</span><br><span class="line">            con = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/db1?serverTimezone=GMT&quot;, &quot;root&quot;, &quot;password&quot;);</span><br><span class="line">            //获取执行sql语句的对象</span><br><span class="line">            sta = con.createStatement();</span><br><span class="line">            //执行sql语句</span><br><span class="line">           rs = sta.executeQuery(sql);      //使用executeQuery()执行select语句</span><br><span class="line">            //处理结果</span><br><span class="line">            System.out.println(&quot;id&quot; + &quot;\t&quot; + &quot;name&quot; + &quot;\t&quot; + &quot;balance&quot; + &quot;\t&quot;);</span><br><span class="line">            while(rs.next()) &#123;</span><br><span class="line">                int id = rs.getInt(1);       //从1开始</span><br><span class="line">                String name = rs.getNString(&quot;name&quot;);    //设置字符串为name</span><br><span class="line">                double balance = rs.getDouble(3);</span><br><span class="line">                System.out.println(id + &quot;\t&quot; + name + &quot;\t&quot; + balance);//打印表格</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            if(rs!=null)</span><br><span class="line">                try&#123;</span><br><span class="line">                    rs.close();     //释放资源ResultSet资源</span><br><span class="line">                &#125;catch (Exception e)&#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            if(sta!=null)</span><br><span class="line">                try &#123;</span><br><span class="line">                    sta.close();    //释放Statement资源</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            if(con!=null)</span><br><span class="line">                try&#123;</span><br><span class="line">                    con.close();        //释放Connection资源</span><br><span class="line">                &#125;catch (Exception e)&#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将结果集封装</p>
+<ol>
+<li><p>account数据收集类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line">封装account表的数据JavaBean</span><br><span class="line">*/</span><br><span class="line">public class account &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private String name;</span><br><span class="line">    private double balance;</span><br><span class="line">    //getter和setter</span><br><span class="line">    public int getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(int id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getBalance() &#123;</span><br><span class="line">        return balance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setBalance(double balance) &#123;</span><br><span class="line">        this.balance = balance;</span><br><span class="line">    &#125;</span><br><span class="line">    //toString()方法</span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;account&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, balance=&quot; + balance +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>具体实现方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line">查询所有account对象</span><br><span class="line">*/</span><br><span class="line">public List&lt;account&gt; findAll()&#123;</span><br><span class="line">    Connection con = null;</span><br><span class="line">    Statement sta = null;</span><br><span class="line">    ResultSet rs = null;</span><br><span class="line">    List&lt;account&gt; list = null;      //创建一个account类的集合</span><br><span class="line">    try &#123;</span><br><span class="line">        //1.注册驱动</span><br><span class="line">        Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span><br><span class="line">        //2.获取连接(Connection con)</span><br><span class="line">        con = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/db1?serverTimezone=GMT&quot;,&quot;root&quot;,&quot;wangjiahui,.&quot;);</span><br><span class="line">        //3.定义sql语句</span><br><span class="line">        String sql = &quot;select * from account&quot;;</span><br><span class="line">        //4.获取执行sql对象(Statement sta)</span><br><span class="line">        sta = con.createStatement();</span><br><span class="line">        //5.执行sql(sta.executeQuery(sql)</span><br><span class="line">        rs = sta.executeQuery(sql);</span><br><span class="line">        //6.遍历结果集，封装对象，装载集合</span><br><span class="line">        //6.1实例化account对象,创建集合</span><br><span class="line">        account ac = null;</span><br><span class="line">        list = new ArrayList&lt;account&gt;();        //集合类型为ArrayList,类型参数为account类</span><br><span class="line">        //6.1遍历</span><br><span class="line">        while(rs.next())&#123;</span><br><span class="line">            //获取数据</span><br><span class="line">            int id = rs.getInt(&quot;id&quot;);</span><br><span class="line">            String name = rs.getString(&quot;name&quot;);</span><br><span class="line">            double balance = rs.getDouble(&quot;balance&quot;);</span><br><span class="line"></span><br><span class="line">            //6.2创建account对象</span><br><span class="line">            ac = new account();</span><br><span class="line">            ac.setId(id);</span><br><span class="line">            ac.setName(name);</span><br><span class="line">            ac.setBalance(balance);</span><br><span class="line"></span><br><span class="line">            //6.3装载集合</span><br><span class="line">            list.add(ac);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;finally &#123;</span><br><span class="line">        if(rs!=null)</span><br><span class="line">            try&#123;</span><br><span class="line">                rs.close();     //释放资源ResultSet资源</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        if(sta!=null)</span><br><span class="line">            try &#123;</span><br><span class="line">                sta.close();    //释放Statement资源</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        if(con!=null)</span><br><span class="line">            try&#123;</span><br><span class="line">                con.close();        //释放Connection资源</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public static void main(String args[])&#123;</span><br><span class="line">    List&lt;account&gt; list = new JDBCTest2().findAll();     //调用findAll()方法</span><br><span class="line">    System.out.println(list);</span><br><span class="line">    System.out.println(list.size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="5-PreparedStatement类："><a href="#5-PreparedStatement类：" class="headerlink" title="5. PreparedStatement类："></a>5. PreparedStatement类：</h3><ol>
+<li>sql注入问题:在sql语句拼接时，有sql关键字参与，</li>
+<li>解决sql注入步骤：<ol>
+<li>导入驱动jar包：mysql-connector-java</li>
+<li>注册驱动：Class.forName(“com.mysql.cj.jdbc.Driver”);</li>
+<li>定义sql语句：String sql = “…”;  参数使用?作为占位符.如：”select * from user where username = ? and password = ?”;</li>
+<li>获取数据库连接对象Connection：Connection con = DriverManager.getConnection(“jdbc:mysql://localhost:3306/db1?serverTimezone=GMT”, “root”, “password”);</li>
+<li>获取执行sql语句的对象PrepareStatement:PreparedStatement psta = Connection.prepareStatement(String sql);</li>
+<li>给?赋值:setusername(参数1,参数2);    //参数1为?位置编号(从1开始),参数2为?的值</li>
+<li>执行sql语句,接收返回结果,不需要传递sql<br>int result = psta.executeUpdate();<br>ResultSet rs = psta.executeQuery();</li>
+<li>处理结果：while(rs.next()){}</li>
+<li>释放资源：con.close();sta.close();rs.close();</li>
+</ol>
+</li>
+<li>登陆实例：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import 工具类JDBCUtils.Utils;</span><br><span class="line">import java.sql.*;</span><br><span class="line">import java.util.Scanner;</span><br><span class="line">/*</span><br><span class="line">1.登入用户名和密码</span><br><span class="line">2. 判断用户是否登陆成功</span><br><span class="line"> */</span><br><span class="line">public class JDBCTest &#123;</span><br><span class="line">    public static void main(String args[])&#123;</span><br><span class="line">        //1. 读取录入</span><br><span class="line">        Scanner sc = new Scanner(System.in);    //Scanner读取键盘录入</span><br><span class="line">        System.out.println(&quot;请输入用户名&quot;);</span><br><span class="line">        String username = sc.nextLine();        //读取下一行</span><br><span class="line">        System.out.println(&quot;请输入密码&quot;);</span><br><span class="line">        String password = sc.nextLine();</span><br><span class="line">        //2. 调用login()方法，传入实参</span><br><span class="line">        boolean flag = new JDBCTest().login(username,password);</span><br><span class="line">        //3. 判断结果</span><br><span class="line">        if(flag)&#123;</span><br><span class="line">            System.out.println(&quot;登陆成功&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            System.out.println(&quot;用户名或密码错误&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //1. 判断用户名和密码是否为空</span><br><span class="line">    public boolean login(String username,String password)&#123;</span><br><span class="line">        if(username == null &amp;&amp; password == null)&#123;   //如果用户名和密码都为空则输入失败</span><br><span class="line">            return  false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //2. 声明资源类</span><br><span class="line">        PreparedStatement psta = null;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        ResultSet rs = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            //1.获取连接对象:Connection con</span><br><span class="line">            con = Utils.getConnection();</span><br><span class="line">            //2. 定义sql语句</span><br><span class="line">            String sql = &quot;select * from user where username = ? and password = ?&quot;;</span><br><span class="line">            //3. 获取执行sql对象:PrepareStatement psta</span><br><span class="line">            psta = con.prepareStatement(sql);</span><br><span class="line">            //4. 给?赋值:psta.setString(?num,var)</span><br><span class="line">            psta.setString(1,username);</span><br><span class="line">            psta.setString(2,pas sword);</span><br><span class="line">            //5. 执行sql语句,接收返回结果,不需要传递sql</span><br><span class="line">            rs = psta.executeQuery();</span><br><span class="line">            //6. 判断结果集是否有数据</span><br><span class="line">            return rs.next();       //直接返回结果，有数据则成功</span><br><span class="line">        &#125; catch (SQLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            //释放资源</span><br><span class="line">            Utils.close(rs,psta,con);</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h2 id="JDBC工具类：JDBCUtils"><a href="#JDBC工具类：JDBCUtils" class="headerlink" title="JDBC工具类：JDBCUtils"></a>JDBC工具类：JDBCUtils</h2><ol>
+<li><p>JDBCUtils类中实现以下方法:</p>
+<ol>
+<li>静态代码块读取配置文件：<ol>
+<li>读取配置文件参数赋值给私有变量参数(url、user…)</li>
+<li>注册驱动</li>
+</ol>
+</li>
+<li>获取连接对象：public static Connection getConnection(){}</li>
+<li>释放资源:public static void close(..,…,..){}</li>
+</ol>
+</li>
+<li><p>Utils工具类具体实现步骤</p>
+<ol>
+<li>新建配置文件(jdbc.properties),写入url、user、password和driver。（properties配置文件不能使用空格和””)</li>
+<li>创建Utils类声明url、user、password和driver为私有静态变量</li>
+<li>创建静态代码块<ol>
+<li>创建Properties类,使用load方法获取src下的配置文件：Properties pro = new Properties();</li>
+<li>声明ClassLoader类对象:ClassLoader load = JDBCUtils.class.getClassLoader();</li>
+<li>使用InputStream流接收getResourceAsStream(“jdbc.properties”)返回的路径</li>
+<li>pro.load(inputstream);读取properties配置文件</li>
+<li>给私有变量赋值:url = pro.getProperty(“url”);</li>
+<li>注册驱动：Class.forName(driver);     //在静态代码块中注册驱动</li>
+</ol>
+</li>
+<li>创建获取连接对象方法:public static Connection getConnection(){<br> return DriverManager.getConnection(url,user,password);  //返回类型为Connection类对象<br>}</li>
+<li>创建释放资源方法:public static void close(Connection con,Statement sta,….){}</li>
+<li>具体实现类：main()<ol>
+<li>获取链接和注册驱动：<br>con.JDBCUtils.getConnection();</li>
+<li>开启事务</li>
+<li>定义sql语句</li>
+<li>获取执行sql的对象PrepareStatement psta;</li>
+<li>设置?参数</li>
+<li>执行sql</li>
+<li>提交事务</li>
+<li>回滚事务</li>
+<li>释放资源：JDBCUtils.close(con,psta…);</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>实例代码</p>
+<ol>
+<li><p>Utils工具类:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Utils &#123;</span><br><span class="line">    //创建私有静态变量</span><br><span class="line">    private static String url;</span><br><span class="line">    private static String user;</span><br><span class="line">    private static String password;</span><br><span class="line">    private static String driver;</span><br><span class="line">    //1. 读取配置文件</span><br><span class="line">    static&#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            //1.创建Properties集合类</span><br><span class="line">            Properties pro = new Properties();</span><br><span class="line">            //2.获取src下的文件：ClassLoader()</span><br><span class="line">            ClassLoader load = Utils.class.getClassLoader();        //Utils类获取load读取的数据</span><br><span class="line">            URL file_url = load.getResource(&quot;jdbc.properties&quot;); //返回URL路径</span><br><span class="line">            String str_url = file_url.getPath();     //获取字符串路径</span><br><span class="line"></span><br><span class="line">            //3.load(new FileReader())加载文件</span><br><span class="line">            pro.load(new FileReader(str_url));</span><br><span class="line">            //4.getProperty()获取数据,赋值给private变量</span><br><span class="line">            url = pro.getProperty(&quot;url&quot;);</span><br><span class="line">            user = pro.getProperty(&quot;user&quot;);</span><br><span class="line">            password = pro.getProperty(&quot;password&quot;);</span><br><span class="line">            driver = pro.getProperty(&quot;driver&quot;);</span><br><span class="line">            //5.注册驱动</span><br><span class="line">            Class.forName(driver);</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //2. 获取连接对象方法</span><br><span class="line">    public static Connection getConnection() throws SQLException  &#123;   //静态方法,方便调用</span><br><span class="line">        return DriverManager.getConnection(url,user,password);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //3.释放资源方法(Statement和Connection)</span><br><span class="line">    public static void close(Statement sta,Connection con)&#123;</span><br><span class="line">        //释放Statement</span><br><span class="line">        if(sta != null)&#123;</span><br><span class="line">            try&#123;</span><br><span class="line">                sta.close();</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //释放Connection</span><br><span class="line">        if(con != null)&#123;</span><br><span class="line">            try&#123;</span><br><span class="line">                con.close();</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //3.释放资源方法（ResultSet、Statement和Connection）</span><br><span class="line">    public static void close(ResultSet rs,Statement sta, Connection con)&#123;</span><br><span class="line">        //释放Statement</span><br><span class="line">        if(sta != null)&#123;</span><br><span class="line">            try&#123;</span><br><span class="line">                sta.close();</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //释放Connection</span><br><span class="line">        if(con != null)&#123;</span><br><span class="line">            try&#123;</span><br><span class="line">                con.close();</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //释放ResultSet资源</span><br><span class="line">        if(rs != null)&#123;</span><br><span class="line">            try&#123;</span><br><span class="line">                rs.close();</span><br><span class="line">            &#125;catch(Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>具体实现类：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class JDBCTest2 &#123;</span><br><span class="line">    public static void main(String[] args)&#123;</span><br><span class="line">        List&lt;account&gt; list = new JDBCTest2().findAll();     //调用findAll()方法</span><br><span class="line">        System.out.println(list);</span><br><span class="line">        System.out.println(list.size());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    查询所有account对象</span><br><span class="line">    */</span><br><span class="line">    public List&lt;account&gt; findAll()&#123;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        Statement sta = null;</span><br><span class="line">        ResultSet rs = null;</span><br><span class="line">        List&lt;account&gt; list = null;      //创建一个account类的集合</span><br><span class="line">        try &#123;</span><br><span class="line">            //1.注册驱动并获取连接对象</span><br><span class="line">            con = Utils.getConnection();</span><br><span class="line">            //2.定义sql语句</span><br><span class="line">            String sql = &quot;select * from account&quot;;</span><br><span class="line">            //3.获取执行sql对象(Statement sta)</span><br><span class="line">            sta = con.createStatement();</span><br><span class="line">            //4.执行sql(sta.executeQuery(sql)</span><br><span class="line">            rs = sta.executeQuery(sql);</span><br><span class="line">            //5.遍历结果集，封装对象，装载集合</span><br><span class="line">                //5.1实例化account对象,创建集合</span><br><span class="line">            account ac = null;</span><br><span class="line">            list = new ArrayList&lt;account&gt;();        //集合类型为ArrayList,类型参数为account类</span><br><span class="line">                //5.2遍历</span><br><span class="line">            while(rs.next())&#123;</span><br><span class="line">                //5.2.1获取数据</span><br><span class="line">                int id = rs.getInt(&quot;id&quot;);</span><br><span class="line">                String name = rs.getString(&quot;name&quot;);</span><br><span class="line">                double balance = rs.getDouble(&quot;balance&quot;);</span><br><span class="line"></span><br><span class="line">                //5.2.2创建account对象</span><br><span class="line">                ac = new account();</span><br><span class="line">                ac.setId(id);</span><br><span class="line">                ac.setName(name);</span><br><span class="line">                ac.setBalance(balance);</span><br><span class="line"></span><br><span class="line">                //5.2.3装载集合</span><br><span class="line">                list.add(ac);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            //6.释放资源</span><br><span class="line">            Utils.close(rs,sta,con);    //调用close()方法</span><br><span class="line">        &#125;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="JDBC事务"><a href="#JDBC事务" class="headerlink" title="JDBC事务"></a>JDBC事务</h2><ol>
+<li>使用Connection对象来管理事务<ol>
+<li>开启事务：con.setAutoCommit(boolean autoCommit)      //设置参数为false即开启事务</li>
+<li>提交事务：con.commit()</li>
+<li>回滚事务：con.rollback() </li>
+</ol>
+</li>
+<li>具体实例：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import 工具类JDBCUtils.Utils;</span><br><span class="line"></span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.PreparedStatement;</span><br><span class="line">import java.sql.ResultSet;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line"></span><br><span class="line">public class JDBCTest3 &#123;</span><br><span class="line">    public static void main(String args[])&#123;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        PreparedStatement psta1 = null;</span><br><span class="line">        PreparedStatement psta2 = null;</span><br><span class="line">        try&#123;</span><br><span class="line">            //1. 获取连接</span><br><span class="line">            con = Utils.getConnection();</span><br><span class="line">            //2. 开启事务</span><br><span class="line">            con.setAutoCommit(false);</span><br><span class="line">            //3. 定义sql语句</span><br><span class="line">            //3.1 张三balance - 500</span><br><span class="line">            //3.2 李四balance + 500</span><br><span class="line">            String sql1 = &quot;update account set balance = balance - ? where id = ?&quot;;</span><br><span class="line">            String sql2 = &quot;update account set balance = balance + ? where id = ?&quot;;</span><br><span class="line">            //4. 获取执行sql对象</span><br><span class="line">            psta1 = con.prepareStatement(sql1);      //张三的sql1</span><br><span class="line">            psta2 = con.prepareStatement(sql2);     //李四的sql2</span><br><span class="line">            //5. 设置?参数</span><br><span class="line">            //5.1 设置张三sql1语句的两个?的值</span><br><span class="line">            psta1.setInt(1,500);</span><br><span class="line">            psta1.setInt(2,1);</span><br><span class="line">            //5.2 设置李四sql2语句的两个?的值</span><br><span class="line">            psta2.setInt(1,500);</span><br><span class="line">            psta2.setInt(2,2);</span><br><span class="line">            //6. 执行sql语句</span><br><span class="line">            psta1.executeUpdate();</span><br><span class="line">            psta2.executeUpdate();</span><br><span class="line">            //7. 提交事务</span><br><span class="line">            con.commit();</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            //8. 事务回滚</span><br><span class="line">            try &#123;</span><br><span class="line">                con.rollback();</span><br><span class="line">            &#125;catch (SQLException ex) &#123;</span><br><span class="line">                ex.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            Utils.close(null,psta1,psta2,con);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h2 id="数据库连接池-简化获取获取连接步骤-（datasource接口-（原理：创建一个容器来存放数据库连接对象）"><a href="#数据库连接池-简化获取获取连接步骤-（datasource接口-（原理：创建一个容器来存放数据库连接对象）" class="headerlink" title="数据库连接池:(简化获取获取连接步骤)（datasource接口)（原理：创建一个容器来存放数据库连接对象）"></a>数据库连接池:(简化获取获取连接步骤)（datasource接口)（原理：创建一个容器来存放数据库连接对象）</h2><h3 id="基本实现-（生成标准的Connection对象）（标准接口：DataSource-javax-sql）"><a href="#基本实现-（生成标准的Connection对象）（标准接口：DataSource-javax-sql）" class="headerlink" title="基本实现:（生成标准的Connection对象）（标准接口：DataSource  //javax.sql）"></a>基本实现:（生成标准的Connection对象）（标准接口：DataSource  //javax.sql）</h3><h3 id="1-Druid数据库连接池技术："><a href="#1-Druid数据库连接池技术：" class="headerlink" title="1. Druid数据库连接池技术："></a>1. Druid数据库连接池技术：</h3><ol>
+<li>实现步骤：（使用DruidUtlis工具类）<ol>
+<li>导入jar包add as library:druid-1.1.16.jar</li>
+<li>定义配置文件:<ol>
+<li>名称：druid.properties       //不能使用空格和双引号,可以为任意名称</li>
+<li>路径：可以在任意路径</li>
+</ol>
+</li>
+<li>静态代码块加载配置文件：<ol>
+<li>创建Properties类：Properties pro = new Properties();</li>
+<li>使用InputStream对象接收DruidTest.class.getClassLoader().getResourceAsStream()返回的路径;</li>
+<li>pro.load(input);读取配置文件参数</li>
+<li>获取数据库连接池对象：通过工厂类(DruidDataSourceFactory)获取<pre><code>DataSource ds = DruidDataSourceFactory.createDataSource(pro);       //DataSource读取xing</code></pre></li>
+</ol>
+</li>
+<li>获取连接对象方法：<br>public static Connection getConnection(){<br> return ds.getConnection();<br>}</li>
+<li>释放资源方法</li>
+<li>获取连接池方法：<br>public static DataSource getDataSource(){<br> return ds;<br>}</li>
+<li>main方法：<ol>
+<li>获取链接和注册驱动：<br>con.DruidUtils.getConnection();</li>
+<li>开启事务</li>
+<li>定义sql语句</li>
+<li>获取执行sql的对象PrepareStatement psta;</li>
+<li>设置?参数</li>
+<li>执行sql</li>
+<li>提交事务</li>
+<li>回滚事务</li>
+<li>释放资源：DruidUtils.close(con,psta…);</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Druid实例： <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//连接池连接数据库</span><br><span class="line">import com.alibaba.druid.pool.DruidDataSourceFactory;</span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.util.Properties;</span><br><span class="line"></span><br><span class="line">public class DruidTest &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        //1. 加载配置文件</span><br><span class="line">        Properties pro = new Properties();</span><br><span class="line">        InputStream input = DruidTest.class.getClassLoader().getResourceAsStream(&quot;druid.properties&quot;);</span><br><span class="line">        pro.load(input);</span><br><span class="line">        //2. 获取连接池对象</span><br><span class="line">        DataSource ds = DruidDataSourceFactory.createDataSource(pro);</span><br><span class="line">        //3. 获取连接</span><br><span class="line">        Connection con = ds.getConnection();</span><br><span class="line">        System.out.println(con);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>// 使用工具类执行sql语句</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. 工具类</span><br><span class="line">import JDBC_Druid.DruidTest;</span><br><span class="line">import com.alibaba.druid.pool.DruidDataSourceFactory;</span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.sql.*;</span><br><span class="line">import java.util.Properties;</span><br><span class="line"></span><br><span class="line">public class Druid_Utils &#123;</span><br><span class="line">    //1. 定义成员变量：dataSource</span><br><span class="line">    private static DataSource ds;</span><br><span class="line">    //2. 静态代码块</span><br><span class="line">    static&#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            //1. 加载配置文件</span><br><span class="line">            Properties pro = new Properties();</span><br><span class="line">            pro.load(DruidTest.class.getClassLoader().getResourceAsStream(&quot;druid.properties&quot;));</span><br><span class="line">            try &#123;</span><br><span class="line">                //2. 获取DataSource对象</span><br><span class="line">                ds = DruidDataSourceFactory.createDataSource(pro);</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //3. 获取连接</span><br><span class="line">    public static Connection getConnection() throws SQLException &#123;</span><br><span class="line">            return ds.getConnection();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //4. 释放资源</span><br><span class="line">    public static void close(Statement sta,Connection con) throws SQLException &#123;</span><br><span class="line">        if(sta != null)&#123;</span><br><span class="line">            sta.close();</span><br><span class="line">        &#125;</span><br><span class="line">        if(con != null)&#123;</span><br><span class="line">            con.close();    //归还到连接池</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void close(ResultSet rs,Statement sta, Connection con) throws SQLException &#123;</span><br><span class="line">        if (rs != null) &#123;</span><br><span class="line">            rs.close();</span><br><span class="line">        &#125;</span><br><span class="line">        if (sta != null &amp;&amp; con != null) &#123;</span><br><span class="line">            close(sta, con);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //5. 获取连接池方法</span><br><span class="line">    public static DataSource getDataSource()&#123;</span><br><span class="line">        return ds;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">2. 实现类</span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.PreparedStatement;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line"></span><br><span class="line">public class DruidTest1 &#123;       //使用Druid_Utils</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Connection con  = null;</span><br><span class="line">        PreparedStatement psta = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            //1. 获取连接</span><br><span class="line">            con = Druid_Utils.getConnection();</span><br><span class="line">            //2. 定义sql语句</span><br><span class="line">            String sql = &quot;insert into account values(null,?,?)&quot;;    //添加操作</span><br><span class="line">            //3. 获取PrepareStatement对象</span><br><span class="line">            psta = con.prepareStatement(sql);</span><br><span class="line">            //4. 给?赋值，必须先获取了PrepareStatement对象才能给?赋值</span><br><span class="line">            psta.setString(1,&quot;王五&quot;);</span><br><span class="line">            psta.setDouble(2,1500);</span><br><span class="line">            //5. 执行sql</span><br><span class="line">            int count  = psta.executeUpdate();</span><br><span class="line">            //6. 查看处理结果</span><br><span class="line">            System.out.println(count);</span><br><span class="line">        &#125; catch (SQLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                //7. 释放资源</span><br><span class="line">                Druid_Utils.close(psta,con);</span><br><span class="line">            &#125; catch (SQLException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-C3P0数据库连接池技术："><a href="#2-C3P0数据库连接池技术：" class="headerlink" title="2. C3P0数据库连接池技术："></a>2. C3P0数据库连接池技术：</h3><ol>
+<li>步骤：<ol>
+<li>导入jar包add as library:c3p0-0.9.5.2.jar/mchange-commons-java-0.2.12.jar</li>
+<li>定义配置文件：<ol>
+<li>名称：c3p0.properties 或者 c3p0-config.xml       //properties格式:不能使用双引号和空格;xml格式:</li>
+<li>路径：配置文件放在src目录下</li>
+</ol>
+</li>
+<li>创建核心对象:ComboPooledDateSource</li>
+<li>获取连接:getConnection();</li>
+</ol>
+</li>
+<li>实现代码：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import com.mchange.v2.c3p0.ComboPooledDataSource;</span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line"></span><br><span class="line">public class C3P0Test &#123;</span><br><span class="line">    public static void main(String[] args) throws SQLException &#123;</span><br><span class="line">        //1. 获取datasource(使用default-config)</span><br><span class="line">        DataSource ds = ew ComboPooledDataSource();        //使用default—config的参数</span><br><span class="line">        //2. 获取连接（验证default-config的 maxPoolsize参数,此时maxPoolSize=10)</span><br><span class="line">        System.out.println(&quot;使用default—config&quot;);</span><br><span class="line">        for(int i = 1;i&lt;=11;i++)&#123;</span><br><span class="line">            Connection con = ds.getConnection();</span><br><span class="line">            System.out.println(i+&quot;:&quot;+con);</span><br><span class="line"></span><br><span class="line">            if(i == 5)&#123;</span><br><span class="line">                con.close();        //归还连接对象</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        testotherc3p0();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void testotherc3p0() throws SQLException &#123;</span><br><span class="line">        //1. 获取datasource(使用otherc3p0)</span><br><span class="line">        DataSource ds1 = new ComboPooledDataSource(&quot;otherc3p0&quot;);</span><br><span class="line">        //2. 获取连接（验证otherc3p0的maxPoolSize参数）</span><br><span class="line">        System.out.println(&quot;使用otherc3p0&quot;);</span><br><span class="line">        for(int i = 1;i&lt;=15;i++)&#123;</span><br><span class="line">            Connection con = ds1.getConnection();</span><br><span class="line">            System.out.println(i+&quot;:&quot;+con);</span><br><span class="line"></span><br><span class="line">            if(i == 5)&#123;</span><br><span class="line">                con.close();        //归还连接对象</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/10/06/JavaSe/JavaSe-JDBD/">http://yoursite.com/2019/10/06/JavaSe/JavaSe-JDBD/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/10/06/JavaSe/JavaSe-JDBD/">十月 6日 2019, 9:42:28 晚上</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/10/06/JavaSe/JavaSe-JDBD/">February 17th 2020, 4:33:59 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" title= "JavaWeb(Junit白盒测试、反射和注解)">
+                    <div class="nextTitle">JavaWeb(Junit白盒测试、反射和注解)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/10/05/MySql/MySQL基础/" title= "MySQL基础">
+                    <div class="prevTitle">MySQL基础</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结："><span class="toc-number">1.</span> <span class="toc-text">总结：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC类"><span class="toc-number">2.</span> <span class="toc-text">JDBC类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#入门操作案例："><span class="toc-number">3.</span> <span class="toc-text">入门操作案例：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拆解"><span class="toc-number">4.</span> <span class="toc-text">拆解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-DriverManager类：（驱动管理对象）"><span class="toc-number">4.1.</span> <span class="toc-text">1. DriverManager类：（驱动管理对象）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Connection类：（数据库连接对象）"><span class="toc-number">4.2.</span> <span class="toc-text">2. Connection类：（数据库连接对象）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Statement类：（执行sql语句对象）"><span class="toc-number">4.3.</span> <span class="toc-text">3. Statement类：（执行sql语句对象）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-ResultSet类：（结果集对象-封装查询结果）"><span class="toc-number">4.4.</span> <span class="toc-text">4. ResultSet类：（结果集对象,封装查询结果）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-PreparedStatement类："><span class="toc-number">4.5.</span> <span class="toc-text">5. PreparedStatement类：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC工具类：JDBCUtils"><span class="toc-number">5.</span> <span class="toc-text">JDBC工具类：JDBCUtils</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC事务"><span class="toc-number">6.</span> <span class="toc-text">JDBC事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库连接池-简化获取获取连接步骤-（datasource接口-（原理：创建一个容器来存放数据库连接对象）"><span class="toc-number">7.</span> <span class="toc-text">数据库连接池:(简化获取获取连接步骤)（datasource接口)（原理：创建一个容器来存放数据库连接对象）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本实现-（生成标准的Connection对象）（标准接口：DataSource-javax-sql）"><span class="toc-number">7.1.</span> <span class="toc-text">基本实现:（生成标准的Connection对象）（标准接口：DataSource  //javax.sql）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Druid数据库连接池技术："><span class="toc-number">7.2.</span> <span class="toc-text">1. Druid数据库连接池技术：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-C3P0数据库连接池技术："><span class="toc-number">7.3.</span> <span class="toc-text">2. C3P0数据库连接池技术：</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

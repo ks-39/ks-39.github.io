@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Java学习笔记(Day 6:接口+异常) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Java学习笔记(Day 6:接口+异常)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Java学习笔记(Day 6:接口+异常)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaSe">JavaSe</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.4k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/09/04</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="P200-P237"><a href="#P200-P237" class="headerlink" title="P200-P237"></a>P200-P237</h1><hr>
+<h2 id="今日内容："><a href="#今日内容：" class="headerlink" title="今日内容："></a>今日内容：</h2><ol>
+<li>接口：<ol>
+<li>定义接口：interface interface-name{}</li>
+<li>实现接口：class class-name implements interface-name{}</li>
+<li>调用接口(接口引用指向实现接口的类的对象)：interface-name interfaceobj = class-name classobj</li>
+<li>接口多态: 一个接口可以被多个类实现或被多个接口继承</li>
+<li>嵌套接口(class-name.interface-name): 可以在类中声明接口(可以声明为public、private和protected)</li>
+<li>默认接口方法：default void meth1(){},默认接口需要写方法体，默认方法可以被重写</li>
+<li>接口多级继承：<ol>
+<li>接口可以通过关键字extends继承另一个接口，语法和继承类相同。如果类实现的接口继承自另一个接口，那么类必须实现继承链中定义的所有方法.</li>
+<li>在所有情况下，类实现（类定义的接口方法）的优先级高于接口默认实现。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>异常：<ol>
+<li>try/catch</li>
+<li>try/catch/finally</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="接口（难点）-接口没有实例变量，也没有实现的方法体。一旦定义接口，任何数量的类都可以实现接口，同样，一个类可以实现多个接口。不相关的类可以实现同一个接口。"><a href="#接口（难点）-接口没有实例变量，也没有实现的方法体。一旦定义接口，任何数量的类都可以实现接口，同样，一个类可以实现多个接口。不相关的类可以实现同一个接口。" class="headerlink" title="接口（难点）:接口没有实例变量，也没有实现的方法体。一旦定义接口，任何数量的类都可以实现接口，同样，一个类可以实现多个接口。不相关的类可以实现同一个接口。"></a>接口（难点）:接口没有实例变量，也没有实现的方法体。一旦定义接口，任何数量的类都可以实现接口，同样，一个类可以实现多个接口。不相关的类可以实现同一个接口。</h2><hr>
+<h3 id="1-定义接口："><a href="#1-定义接口：" class="headerlink" title="1. 定义接口："></a>1. 定义接口：</h3><ol>
+<li>（使用关键字interface）<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface interface-name&#123;&#125;</span><br><span class="line">interface callme&#123;  //定义callme接口</span><br><span class="line">void callback(int param);  //声明callback方法，有一个整型参数</span><br><span class="line">void callback1(int i,int j);  //有两个整型参数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="2-实现接口"><a href="#2-实现接口" class="headerlink" title="2. 实现接口:"></a>2. 实现接口:</h3><ol>
+<li>(使用关键字implements) <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class class-name implements implements-name&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="3-调用实现接口方法："><a href="#3-调用实现接口方法：" class="headerlink" title="3. 调用实现接口方法："></a>3. 调用实现接口方法：</h3><ol>
+<li>(通过接口引用指向实现类对象，再通过接口引用调用方法）</li>
+<li>（传入对应的参数匹配到相对应的方法）</li>
+<li>（接口引用只能调用实现的接口方法）<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface B&#123;</span><br><span class="line">	void meth1(int i);</span><br><span class="line">	void meth2(double j);</span><br><span class="line">&#125;</span><br><span class="line">class A implements B&#123;</span><br><span class="line">	public void meth1(int i) &#123;</span><br><span class="line">		System.out.println(&quot;参数为int。实现接口方法必须声明为public,方便接口引用调用该方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth2(double j) &#123;</span><br><span class="line">		System.out.println(&quot;参数为double。实现接口类可以定义自己的成员方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth3(String s) &#123;</span><br><span class="line">		System.out.print(&quot;参数为String。A定义自己的成员方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		B b = new A();	//接口引用指向实现类的某个对象,</span><br><span class="line">		b.meth1(10);</span><br><span class="line">		b.meth2(10.3);</span><br><span class="line">//		b.meth3()		//接口引用只能调用接口方法，就算实现类自己定义的成员方法声明为public，也无法调用</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">参数为int。实现接口方法必须声明为public,方便接口引用调用该方法</span><br><span class="line">参数为double。实现接口类可以定义自己的成员方法</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="4-接口的多态功能："><a href="#4-接口的多态功能：" class="headerlink" title="4. 接口的多态功能："></a>4. 接口的多态功能：</h3><ol>
+<li>（一个接口可以被多个类实现）</li>
+<li>（通过接口引用指向来调用指向类实现的接口方法）<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface B&#123;</span><br><span class="line">	void meth1(int i);</span><br><span class="line">	void meth2(double j);</span><br><span class="line">&#125;</span><br><span class="line">class A implements B&#123;</span><br><span class="line">	public void meth1(int i) &#123;</span><br><span class="line">		System.out.println(&quot;这是class A实现的meth1&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth2(double j) &#123;</span><br><span class="line">		System.out.println(&quot;这是class A实现的meth2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth3(String s) &#123;</span><br><span class="line">		System.out.print(&quot;参数为String。A定义自己的成员方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class C implements B&#123;</span><br><span class="line">	public void meth1(int i) &#123;</span><br><span class="line">		System.out.println(&quot;这是class C实现的meth1&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth2(double j) &#123;</span><br><span class="line">		System.out.println(&quot;这是class C实现的meth2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		B b = new A();</span><br><span class="line">		b.meth1(10);</span><br><span class="line">		b.meth2(10.3);</span><br><span class="line">		</span><br><span class="line">		C c = new C();		//创建C的实例对象</span><br><span class="line">		b = c;		//将接口引用指向C的实例对象</span><br><span class="line">		</span><br><span class="line">		b.meth1(10);		//接口引用可以用C实现的接口方法</span><br><span class="line">		b.meth2(10.3);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">这是class A实现的meth1</span><br><span class="line">这是class A实现的meth2</span><br><span class="line">这是class C实现的meth1</span><br><span class="line">这是class C实现的meth2</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="5-嵌套接口："><a href="#5-嵌套接口：" class="headerlink" title="5. 嵌套接口："></a>5. 嵌套接口：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class class-name&#123;</span><br><span class="line">	public interface interface-name&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><font color="red">可以将接口声明为某一类或另一个接口的成员，这种接口被成为成员接口或嵌套接口。嵌套接口可以被声明为public、private和protected（顶级接口只有public和默认）。</font></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">	public interface NestedIF&#123;  //在A类中定义接口，声明为public访问</span><br><span class="line">		boolean isNotNegative(int x);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B implements A.NestedIF&#123;  //实现A类中的NestedIF接口（A.NestedIF)</span><br><span class="line">	public boolean isNotNegative(int x) &#123;   //重写</span><br><span class="line">		return x &lt; 0? false:true;  </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">public class Test &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		A.NestedIF a = new B();  //声明接口引用a，被赋值给B类的一个实例，</span><br><span class="line">		if(a.isNotNegative(10))  //通过接口引用变量a来调用B类中的isNotNegative方法</span><br><span class="line">			System.out.println(&quot;10 is not negative&quot;);</span><br><span class="line">		if(a.isNotNegative(-12))</span><br><span class="line">			System.out.println(&quot;this won&apos;t be execute&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">10 is not negative</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="6-默认接口方法定义：（使用default关键字）：default-return-type-meth-name-parameter-list"><a href="#6-默认接口方法定义：（使用default关键字）：default-return-type-meth-name-parameter-list" class="headerlink" title="6. 默认接口方法定义：（使用default关键字）：default return-type meth-name(parameter-list){}"></a>6. 默认接口方法定义：（使用default关键字）：default return-type meth-name(parameter-list){}</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface A&#123;</span><br><span class="line">	int getNumber();</span><br><span class="line">	default String getString() &#123;</span><br><span class="line">		return &quot;定义默认方法&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B implements A&#123;</span><br><span class="line">	public int getNumber() &#123;		//default接口方法可以不重写，也可以重新在实现类中重写</span><br><span class="line">		return 100;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		B ob = new B();  //ob是B的对象，B是实现A</span><br><span class="line">		System.out.println(ob.getNumber());</span><br><span class="line">		System.out.println(ob.getString());  //默认方法default可以直接被调用,不需要在B类中定义</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="7-实现类可以重写default方法："><a href="#7-实现类可以重写default方法：" class="headerlink" title="7. 实现类可以重写default方法："></a>7. 实现类可以重写default方法：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface A&#123;</span><br><span class="line">	int getNumber();</span><br><span class="line">	default String getString(String s) &#123;		//定义default接口方法，参数为一个String类型</span><br><span class="line">		return &quot;定义默认方法&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B implements A&#123;</span><br><span class="line">	public int getNumber() &#123;</span><br><span class="line">		return 100;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getString(String s1,String s2) &#123;		//重写default方法,参数为两个String类型</span><br><span class="line">		return &quot;这是在B类中重写的getString方法&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		B ob = new B();  //ob是B的对象，B是实现A</span><br><span class="line">		System.out.println(ob.getNumber());</span><br><span class="line">		System.out.println(ob.getString(&quot;将会调用接口A的default方法&quot;));</span><br><span class="line">		System.out.println(ob.getString(&quot;将会调用B类重写的default方法&quot;,&quot;234&quot;));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">100</span><br><span class="line">定义默认方法</span><br><span class="line">这是在B类中重写的getString方法</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="接口继承：（interface-B-implements-A-）"><a href="#接口继承：（interface-B-implements-A-）" class="headerlink" title="接口继承：（interface B implements A{}）"></a>接口继承：（interface B implements A{}）</h2><ol>
+<li><font color="red">接口可以通过关键字extends继承另一个接口，语法和继承类相同。如果类实现的接口继承自另一个接口，那么类必须实现继承链中定义的所有方法</font></li>
+<li>在所有情况下，类实现（类定义的接口方法）的优先级高于接口默认实现。<h3 id="1-接口1-gt-接口2-继承接口1，不重写接口1方法-gt-实现类：（类实现的优先级高于接口实现，通过接口引用调用方法，传入参数和接口方法一致，也只会调用类实现的方法）"><a href="#1-接口1-gt-接口2-继承接口1，不重写接口1方法-gt-实现类：（类实现的优先级高于接口实现，通过接口引用调用方法，传入参数和接口方法一致，也只会调用类实现的方法）" class="headerlink" title="1. 接口1-&gt;接口2(继承接口1，不重写接口1方法)-&gt;实现类：（类实现的优先级高于接口实现，通过接口引用调用方法，传入参数和接口方法一致，也只会调用类实现的方法）"></a>1. 接口1-&gt;接口2(继承接口1，不重写接口1方法)-&gt;实现类：（类实现的优先级高于接口实现，通过接口引用调用方法，传入参数和接口方法一致，也只会调用类实现的方法）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface A&#123;</span><br><span class="line">	default void meth1(int i) &#123;</span><br><span class="line">		System.out.println(&quot;接口A的meth1&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	default void meth2(double j) &#123;</span><br><span class="line">		System.out.println(&quot;接口A的meth2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface B extends A&#123;</span><br><span class="line">	default void meth3(String s) &#123;</span><br><span class="line">		System.out.println(&quot;接口B的meth3&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class C implements B&#123;</span><br><span class="line">	public void meth1(int i) &#123;</span><br><span class="line">		System.out.println(&quot;C类重写的meth1&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth2(double j) &#123;</span><br><span class="line">		System.out.println(&quot;C类重写A的meth2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth3(String s) &#123;</span><br><span class="line">		System.out.println(&quot;C类重写的meth3&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		A a;	</span><br><span class="line">		B b;</span><br><span class="line">		C c = new C();</span><br><span class="line">		a = c;	//将接口A的接口引用a指向C类对象c	</span><br><span class="line">		a.meth1(10);	//类实现高于接口实现，会调用C类的方法</span><br><span class="line">		a.meth2(10.3);</span><br><span class="line">		</span><br><span class="line">		b = c;		//同理</span><br><span class="line">		b.meth1(10);		//会调用C类的方法</span><br><span class="line">		b.meth2(10.3);</span><br><span class="line">		b.meth3(&quot;调用meth3&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">C类重写的meth1</span><br><span class="line">C类重写A的meth2</span><br><span class="line">C类重写的meth1</span><br><span class="line">C类重写A的meth2</span><br><span class="line">C类重写的meth3</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h3 id="2-接口1-gt-实现类-lt-接口2：-同样说明类实现高于接口实现"><a href="#2-接口1-gt-实现类-lt-接口2：-同样说明类实现高于接口实现" class="headerlink" title="2. 接口1-&gt;实现类&lt;-接口2：(同样说明类实现高于接口实现)"></a>2. 接口1-&gt;实现类&lt;-接口2：(同样说明类实现高于接口实现)</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface A&#123;</span><br><span class="line">	default void meth1(int i) &#123;</span><br><span class="line">		System.out.println(&quot;接口A的meth1&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface B&#123;</span><br><span class="line">	default void meth2(double d) &#123;</span><br><span class="line">		System.out.println(&quot;接口B的meth2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class C implements A,B&#123;</span><br><span class="line">	public void meth1(int i) &#123;		//public实现接口方法</span><br><span class="line">		System.out.println(&quot;类实现高于接口实现&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth2(double s2) &#123;</span><br><span class="line">		System.out.println(&quot;类实现default方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void meth3(String s3) &#123;</span><br><span class="line">		System.out.println(&quot;C定义自己的成员方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		A a;</span><br><span class="line">		B b;</span><br><span class="line">		C c = new C();</span><br><span class="line">		a = c;</span><br><span class="line">		a.meth1(10); 	//调用类实现的方法</span><br><span class="line">		b = c;</span><br><span class="line">		b.meth2(10.3); 		//调用类实现的方法</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">类实现高于接口实现</span><br><span class="line">类实现default方法</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-接口1—-gt-接口2-重写接口1方法-gt-类-不重写接口方法-：（说明当类无实现时，子类实现优先级高于父类实现）（方法调用逐级向上查找）"><a href="#3-接口1—-gt-接口2-重写接口1方法-gt-类-不重写接口方法-：（说明当类无实现时，子类实现优先级高于父类实现）（方法调用逐级向上查找）" class="headerlink" title="3. 接口1—&gt;接口2(重写接口1方法)-&gt;类(不重写接口方法)：（说明当类无实现时，子类实现优先级高于父类实现）（方法调用逐级向上查找）"></a>3. 接口1—&gt;接口2(重写接口1方法)-&gt;类(不重写接口方法)：（说明当类无实现时，子类实现优先级高于父类实现）（方法调用逐级向上查找）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">interface A&#123;</span><br><span class="line">	default void meth1(int i) &#123;   //必须声明default，不然视作abstract方法</span><br><span class="line">		System.out.println(&quot;接口A的meth1&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">interface B extends A&#123;		//接口B继承接口A</span><br><span class="line">	default void meth1(int j) &#123;</span><br><span class="line">		System.out.println(&quot;接口B重写接口A的默认方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class C implements A,B&#123;</span><br><span class="line">	//类中不实现接口方法</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		C c = new C();		</span><br><span class="line">		c.meth1(10);	//因为类C没有重写任何接口方法，而C又实现了接口A，B,可以调用A,B的方法，</span><br><span class="line">						//传入参数，匹配调用接口B的方法(因为方法调用是从子类到父类，向上搜索匹配的方法</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">接口B重写接口A的默认方法</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><ol>
+<li>异常处理通过5个关键字进行管理：try、catch、throw、throws、finally。手动抛出异常：throw，从方法抛出任何异常：throws。一般形式：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">	//需要被检验的代码</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">catch(已经发生的错误类型1)&#123;</span><br><span class="line">	// 捕捉错误</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">catch(已经发生的错误类型2)&#123;</span><br><span class="line">	// 捕捉错误</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">finally&#123;</span><br><span class="line">	//最后被执行的代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="1-异常类型"><a href="#1-异常类型" class="headerlink" title="1. 异常类型"></a>1. 异常类型</h3><p>所有异常类型都是内置类Throwable的子类。Throwable下有两个子类，1、Exception类。既可以用于程序应当捕获的异常，有可以用于创建自定义异常类型的子类。Exception有一个重要子类——RuntimeException。这种类型的异常是自动定义的。包括处理除零和无效数组索引这类情况。<br>2、Error类。不希望被程序捕获的异常，堆栈溢出就是Error类错误的一个例子。</p>
+<h3 id="2-使用try和catch"><a href="#2-使用try和catch" class="headerlink" title="2. 使用try和catch"></a>2. 使用try和catch</h3><ul>
+<li>在try代码块中封装希望监视的代码，随后使用catch指定希望捕获的异常类型</li>
+<li>使用多条catch子句时，必须把异常子类写在异常超类之前。<h3 id="3-嵌套的try语句"><a href="#3-嵌套的try语句" class="headerlink" title="3. 嵌套的try语句"></a>3. 嵌套的try语句</h3></li>
+<li>如果内层try中没有catch能够捕获错误，传递到外层查询try语句的catch能否捕获<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		try&#123;</span><br><span class="line">//			int a = args.length;    //初始化参数为0</span><br><span class="line">//			int a = 1;</span><br><span class="line">			int a = 2;</span><br><span class="line">			int b = 42/a;   //发生错误，捕捉，跳转到catch(ArithmeticException)</span><br><span class="line">			System.out.println(&quot;a = &quot;+a);</span><br><span class="line">			try &#123;</span><br><span class="line">				if(a == 1)   ////当初始化a=1时，发生错误，捕获，如果嵌套try中没有catch语句能捕获错误，传递到外层</span><br><span class="line">							//try</span><br><span class="line">					a = a/(a-a);  </span><br><span class="line">				if(a ==2) &#123;  //当初始化a=2时，发生错误，在嵌套try中有catch可以捕获</span><br><span class="line">					int c[] = &#123;1&#125;; </span><br><span class="line">					c[42] = 99;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;catch(ArrayIndexOutOfBoundsException e) &#123;</span><br><span class="line">				System.out.println(&quot;array index of out-of bounds&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;catch(ArithmeticException e) &#123; //使用e来接收错误类型</span><br><span class="line">		</span><br><span class="line">			System.out.println(&quot;division by 0 &quot;+e);  </span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="4-throw"><a href="#4-throw" class="headerlink" title="4. throw"></a>4. throw</h3><ul>
+<li>throw一般形式如下：throw ThrowableInsatance；<br>其中ThrowableInsatance必须是Throwable或其子类类型的对象。基本类型（int、char、String、Object）都不能用作异常。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Throw&#123;</span><br><span class="line">	static void ThrowError()&#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			throw new NullPointerException(&quot;创建异常对象&quot;);</span><br><span class="line">		&#125;catch(NullPointerException e) &#123;</span><br><span class="line">			System.out.println(&quot;ThrowError的try语句捕获异常&quot;);</span><br><span class="line">			throw e;  //返回异常类型</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			ThrowError();  //方法返回了异常类型</span><br><span class="line">		&#125;catch(NullPointerException e) &#123;</span><br><span class="line">			System.out.println(&quot;main的try语句捕获异常 &quot;+e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">ThrowError的try语句捕获异常</span><br><span class="line">main的try语句捕获异常 java.lang.NullPointerException: 创建异常对象</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>ThrowError方法new构造了一个NullPointerException的异常实例，并将其返回给调用例程。main函数调用该方法，再次捕获</p>
+<h3 id="5-thrwos"><a href="#5-thrwos" class="headerlink" title="5. thrwos"></a>5. thrwos</h3><ul>
+<li>通过在方法声明中提供throws子句来列出方法可能抛出的异常类型（除了Error（不希望被捕获）和RuntimeException及其子类型异常）。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class ThrowsError&#123;</span><br><span class="line">	static void throwsone()  throws IllegalAccessException&#123;  //在声明方法时通过thrwos语句列出方法可能抛出的异常类型</span><br><span class="line">		System.out.println(&quot;使用方法抛出异常&quot;);</span><br><span class="line">		throw new IllegalAccessException(&quot;创建一个异常实例&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			throwsone();</span><br><span class="line">		&#125;catch(IllegalAccessException e) &#123;</span><br><span class="line">			System.out.println(&quot;捕获到：&quot;+e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">使用方法抛出异常</span><br><span class="line">捕获到：java.lang.IllegalAccessException: 创建一个异常实例</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>声明形式：meth-name() throws Error-name{ }</p>
+<h3 id="6-finally"><a href="#6-finally" class="headerlink" title="6. finally"></a>6. finally</h3><ul>
+<li>使用finally创建一个代码块，改代码块在执行完try/catch语句后执行，不管有无异常抛出，都会执行finally<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class FinallyTest&#123;</span><br><span class="line">	static void Throw1() throws RuntimeException&#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			System.out.println(&quot;throw1创建RuntimeException异常&quot;);</span><br><span class="line">		&#125;finally &#123;</span><br><span class="line">			System.out.println(&quot;throw1抛出完毕&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	static void Throw2() &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			System.out.println(&quot;throw2没有抛出异常&quot;);</span><br><span class="line">			return;</span><br><span class="line">		&#125;finally &#123;</span><br><span class="line">			System.out.println(&quot;throw2抛出完毕&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	static void Throw3() &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			System.out.println(&quot;throw3没有抛出异常&quot;);</span><br><span class="line">		&#125;finally &#123;</span><br><span class="line">			System.out.println(&quot;throw3完成&quot;);  //使用finally</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			FinallyTest.Throw1();</span><br><span class="line">		&#125;catch(Exception e) &#123;</span><br><span class="line">			System.out.println(&quot;捕获到异常： &quot;+e);</span><br><span class="line">		&#125;</span><br><span class="line">		FinallyTest.Throw2();</span><br><span class="line">		FinallyTest.Throw3();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">throw1创建RuntimeException异常</span><br><span class="line">throw1抛出完毕</span><br><span class="line">throw2没有抛出异常</span><br><span class="line">throw2抛出完毕</span><br><span class="line">throw3没有抛出异常</span><br><span class="line">throw3完成</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>在方法throw2中通过finally退出try代码块，在返回前执行finally子句。（换言之，finally代码块会在与之相关联的try代码块结束后执行。</p>
+<hr>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/">http://yoursite.com/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/">九月 4日 2019, 1:06:59 下午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/">February 13th 2020, 6:22:10 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" title= "Java学习笔记(Day 7:多线程)">
+                    <div class="nextTitle">Java学习笔记(Day 7:多线程)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" title= "Java学习笔记(Day 5：重写+重载+抽象类+访问权限）">
+                    <div class="prevTitle">Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#P200-P237"><span class="toc-number">1.</span> <span class="toc-text">P200-P237</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#今日内容："><span class="toc-number">1.1.</span> <span class="toc-text">今日内容：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口（难点）-接口没有实例变量，也没有实现的方法体。一旦定义接口，任何数量的类都可以实现接口，同样，一个类可以实现多个接口。不相关的类可以实现同一个接口。"><span class="toc-number">1.2.</span> <span class="toc-text">接口（难点）:接口没有实例变量，也没有实现的方法体。一旦定义接口，任何数量的类都可以实现接口，同样，一个类可以实现多个接口。不相关的类可以实现同一个接口。</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义接口："><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 定义接口：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-实现接口"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 实现接口:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-调用实现接口方法："><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 调用实现接口方法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-接口的多态功能："><span class="toc-number">1.2.4.</span> <span class="toc-text">4. 接口的多态功能：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-嵌套接口："><span class="toc-number">1.2.5.</span> <span class="toc-text">5. 嵌套接口：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-默认接口方法定义：（使用default关键字）：default-return-type-meth-name-parameter-list"><span class="toc-number">1.2.6.</span> <span class="toc-text">6. 默认接口方法定义：（使用default关键字）：default return-type meth-name(parameter-list){}</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-实现类可以重写default方法："><span class="toc-number">1.2.7.</span> <span class="toc-text">7. 实现类可以重写default方法：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口继承：（interface-B-implements-A-）"><span class="toc-number">1.3.</span> <span class="toc-text">接口继承：（interface B implements A{}）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-接口1-gt-接口2-继承接口1，不重写接口1方法-gt-实现类：（类实现的优先级高于接口实现，通过接口引用调用方法，传入参数和接口方法一致，也只会调用类实现的方法）"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 接口1-&gt;接口2(继承接口1，不重写接口1方法)-&gt;实现类：（类实现的优先级高于接口实现，通过接口引用调用方法，传入参数和接口方法一致，也只会调用类实现的方法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-接口1-gt-实现类-lt-接口2：-同样说明类实现高于接口实现"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 接口1-&gt;实现类&lt;-接口2：(同样说明类实现高于接口实现)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-接口1—-gt-接口2-重写接口1方法-gt-类-不重写接口方法-：（说明当类无实现时，子类实现优先级高于父类实现）（方法调用逐级向上查找）"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 接口1—&gt;接口2(重写接口1方法)-&gt;类(不重写接口方法)：（说明当类无实现时，子类实现优先级高于父类实现）（方法调用逐级向上查找）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常处理"><span class="toc-number">1.4.</span> <span class="toc-text">异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-异常类型"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 异常类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用try和catch"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 使用try和catch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-嵌套的try语句"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 嵌套的try语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-throw"><span class="toc-number">1.4.4.</span> <span class="toc-text">4. throw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-thrwos"><span class="toc-number">1.4.5.</span> <span class="toc-text">5. thrwos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-finally"><span class="toc-number">1.4.6.</span> <span class="toc-text">6. finally</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

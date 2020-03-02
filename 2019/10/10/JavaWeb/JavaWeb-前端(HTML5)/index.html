@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>JavaWeb(前端三板斧之HTML5) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">JavaWeb(前端三板斧之HTML5)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            JavaWeb(前端三板斧之HTML5)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaWeb">JavaWeb</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.5k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/10/10</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ol>
+<li>C/S(客户端服务端)和B/S(浏览求服务端)架构</li>
+<li>HTML5主要标签:<ol>
+<li>文件标签:html\head\title\body!DOCTYPE html</li>
+<li>文本标签:<ol>
+<li>h1-h6\p\br\hr\b\i&amp;nbsp&amp;copy</li>
+<li>属性:color\width</li>
+</ol>
+</li>
+<li>图像标签:<ol>
+<li>img</li>
+<li>属性:src/alt</li>
+</ol>
+</li>
+<li>列表标签:<ol>
+<li>ol/ul/li</li>
+<li>属性:type/start</li>
+</ol>
+</li>
+<li>超链接标签:<ol>
+<li>a</li>
+<li>属性:href/targe</li>
+</ol>
+</li>
+<li>块标签:div</li>
+<li>表格标签:<ol>
+<li>table/tr/td/</li>
+<li>属性:border</li>
+</ol>
+</li>
+<li>表单标签:<ol>
+<li>form/input/select/textarea/button</li>
+<li>form属性:<ol>
+<li>Method:<ol>
+<li>GET:地址栏可见</li>
+<li>POST:地址栏不可见</li>
+</ol>
+</li>
+<li>action:提交表单到指定页面</li>
+</ol>
+</li>
+<li>input类型:<ol>
+<li>按钮: <ol>
+<li>submit:提交</li>
+<li>button:按钮</li>
+<li>image:(src=””)使用图片样式的按钮</li>
+</ol>
+</li>
+<li>text:文本输入框(placeholder提示信息)(label for=”在input中设置id属性”)</li>
+<li>password:密码输入框,输入的数据被隐藏</li>
+<li>radio:单选框,一组选项的name值必须一致(check指定默认值)</li>
+<li>checkbox:复选框(check指定默认值)</li>
+<li>file:文件选择框</li>
+<li>hidden:隐藏域,其value会被提交</li>
+<li>color:取色器</li>
+<li>date:日历<ol>
+<li>date：年月日</li>
+<li>datetime-local：年月日时分秒</li>
+</ol>
+</li>
+<li>email:邮箱(校验)</li>
+<li>number:数字</li>
+</ol>
+</li>
+<li>input属性:<ol>
+<li>values:初始值</li>
+</ol>
+</li>
+<li>select属性:<ol>
+<li>option:选项</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>通用属性:class/id/title/style(不推荐使用)</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h2><ol>
+<li>C/S:Client/Server：客户端和服务端<ol>
+<li>优点<ol>
+<li>用户体验好</li>
+</ol>
+</li>
+<li>缺点<ol>
+<li>开发两端(C/S)，安装，部署，维护</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>(重点)B/S:Browser/Server：浏览器和服务端。通过URL访问不同的服务器<ol>
+<li>优点<ol>
+<li>只需要开发服务端（即网站）</li>
+<li>客户不需要安装(使用浏览器即可访问服务端)</li>
+<li>部署</li>
+<li>维护</li>
+</ol>
+</li>
+<li>缺点<ol>
+<li>如果应用过大，用户体验差</li>
+</ol>
+</li>
+<li>B/S资源分类<ol>
+<li>静态网站：（使用HTML,CSS,JavaScript）（服务器直接将静态资源部署到网页，通过解析引擎解析静态资源）</li>
+<li>(重点)动态网站：（使用jsp/servlet）（客户端请求动态资源，服务器将动态资源转换为静态资源部署到网页）</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="HTML5：（用于展示页面内容）"><a href="#HTML5：（用于展示页面内容）" class="headerlink" title="HTML5：（用于展示页面内容）"></a>HTML5：（用于展示页面内容）</h2><ol>
+<li><p>文件标签：</p>
+<ol>
+<li>html：标识html文档的根标签：最顶层</li>
+<li>head：用于指定html文档的属性(比如meta charset=”utf-8”指定编码为utf-8)和引入外部资源</li>
+<li>title：定义网页标题</li>
+<li>body：页面显示的内容</li>
+<li>!DOCTYPE html：定义文档为html文档<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">文件标签主要用于定义头文件：</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">        &lt;title&gt;text(网页标题)&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        text(网页主体)</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;html&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>文本标签</p>
+<ol>
+<li><h1> to <h6>:文本标题</h6></h1></li>
+<li><p>:文本段落</p></li>
+<li><br>:换行</li>
+<li><hr>:水平线</li>
+<li><b>:字体加粗</b></li>
+<li><i>:字体斜体</i></li>
+<li><font>:不推荐使用<ol>
+<li>color</li>
+<li>size</li>
+<li>face</li>
+</ol>
+</font></li>
+<li>属性定义：<ol>
+<li>color:<ol>
+<li>英文：red，green</li>
+<li>RGB(值1,值2,值3):值范围：0-255,表示三原色的占比</li>
+<li>/#值1值2值3：值的范围：00-FF</li>
+</ol>
+</li>
+<li>width:<ol>
+<li>width=”20”,单位px,</li>
+<li>width=”50%”,相对于屏幕宽度的占比</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>特殊符号：<ol>
+<li>空格：&amp;nbsp</li>
+<li>版权号：&amp;copy<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;ch&quot;&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">        &lt;title&gt;HTML文本标签&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line"></span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;!-- 文本标签 --&gt;</span><br><span class="line">        &lt;h1&gt;文本标签Test&lt;/h1&gt;</span><br><span class="line">            &lt;font color=pink&gt;</span><br><span class="line">                &lt;p&gt;普通文本&lt;/p&gt;&lt;br&gt;</span><br><span class="line">                &lt;b&gt;字体加粗&lt;/b&gt;&lt;br&gt;</span><br><span class="line">                &lt;i&gt;字体斜体&lt;/i&gt;&lt;br&gt;</span><br><span class="line">            &lt;/font&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- &lt;hr&gt;显示水平线 --&gt;</span><br><span class="line">            &lt;hr color=&quot;blue&quot; size=&quot;3&quot; align=&quot;left&quot;&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- font标签 --&gt;</span><br><span class="line">            &lt;font color=&quot;purple&quot; size=&quot;12&quot; face=&quot;楷体&quot;&gt;Font属性测试:&lt;br&gt;颜色紫色.&lt;br&gt;字体大小12号.&lt;br&gt;字体宋体&lt;/font&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- &lt;hr&gt;显示水平线 --&gt;</span><br><span class="line">            &lt;hr color=&quot;blue&quot; size=&quot;3&quot; align=&quot;left&quot;&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- color属性测试 --&gt;</span><br><span class="line">            &lt;font color=&quot;pink&quot; size=&quot;8&quot;&gt;Font颜色color属性测试:&lt;br&gt;color=&quot;pink&quot;&lt;/font&gt;</span><br><span class="line">            &lt;hr&gt;</span><br><span class="line">            &lt;font color=rgb(55,155,255) size=&quot;8&quot;&gt;Font颜色color属性测试:&lt;br&gt;rgb(55,155,255)&lt;/font&gt;</span><br><span class="line">            &lt;hr&gt;</span><br><span class="line">            &lt;font color=#01FF12 size=&quot;8&quot;&gt;Font颜色color属性测试:&lt;br&gt;#01FF12&lt;/font&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- &lt;hr&gt;显示水平线 --&gt;    </span><br><span class="line">            &lt;hr color=&quot;blue&quot; size=&quot;3&quot; align=&quot;left&quot;&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- width属性测试 --&gt;</span><br><span class="line">            &lt;font width=&quot;50&quot; size=&quot;8&quot; face=&quot;宋体&quot;&gt;Font宽度width属性测试:&lt;br&gt;width=&quot;50&quot;&lt;/font&gt;</span><br><span class="line">            &lt;hr&gt;</span><br><span class="line">            &lt;font width=&quot;%50&quot; size=&quot;8&quot; face=&quot;微软雅黑&quot;&gt;Font宽度width属性测试:&lt;br&gt;width=&quot;%50&quot;&lt;/font&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- &lt;hr&gt;显示水平线 --&gt;    </span><br><span class="line">            &lt;hr color=&quot;blue&quot; size=&quot;3&quot; align=&quot;left&quot;&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- 文本标签案例 --&gt;</span><br><span class="line">            &lt;h1&gt;</span><br><span class="line">                Java集合接口</span><br><span class="line">            &lt;/h1&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- 打印一条水平线 --&gt;</span><br><span class="line">            &lt;hr color=&quot;pink&quot; size=&quot;3&quot;&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;!-- 文本 --&gt;</span><br><span class="line">            &lt;p&gt;</span><br><span class="line">                &lt;font color=&quot;blue&quot; size=&quot;8&quot; face=&quot;楷体&quot;&gt;集合接口:&lt;br&gt;&lt;/font&gt;</span><br><span class="line">            &lt;/p&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;p&gt;</span><br><span class="line">                &lt;font color=#23FE85 size=&quot;5&quot; face=&quot;宋体&quot;&gt;&lt;i&gt;1、Collection:&lt;/i&gt;&lt;/font&gt;</span><br><span class="line">            &lt;/p&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;p&gt;</span><br><span class="line">                &lt;font color=#56BF43 size=&quot;5&quot; face=&quot;宋体&quot;&gt;&lt;b&gt;2、Deque&lt;/b&gt;:&lt;/font&gt;</span><br><span class="line">            &lt;/p&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;p&gt;</span><br><span class="line">                &lt;font color=#77AD31 size=&quot;5&quot; face=&quot;宋体&quot;&gt;&lt;b&gt;3、List&lt;/b&gt;:&lt;/font&gt;</span><br><span class="line">            &lt;/p&gt;     </span><br><span class="line">            </span><br><span class="line">            &lt;!-- 打印一条水平线 --&gt;</span><br><span class="line">            &lt;hr color=&quot;pink&quot; size=&quot;3&quot;&gt;</span><br><span class="line"></span><br><span class="line">            &lt;p&gt;</span><br><span class="line">                &lt;font color=&quot;grey&quot; size=&quot;3&quot; face=&quot;微软雅黑&quot;&gt;&lt;center&gt;&lt;b&gt;Powered&amp;nbsp;&amp;nbsp;&amp;nbsp;by&amp;nbsp;&amp;nbsp;&amp;copy;Hexo&lt;br&gt;Theme&amp;nbsp;&amp;nbsp;&amp;nbsp;Archer&lt;br&gt;Author&amp;nbsp;&amp;nbsp;&amp;nbsp;ks-39&lt;/b&gt;&lt;/center&gt;&lt;/font&gt;</span><br><span class="line">            &lt;/p&gt;</span><br><span class="line">                    </span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>图片标签</p>
+<ol>
+<li>img:<ol>
+<li>属性:<ol>
+<li>src:路径</li>
+<li>width:</li>
+<li>height:</li>
+<li>align</li>
+</ol>
+</li>
+<li>路径：<ol>
+<li>相对路径:<ol>
+<li>./代表当前目录</li>
+<li>../代表上一级目录<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 图片标签 --&gt;</span><br><span class="line">&lt;img src=&quot;‪8YOu6LF8ig.jpg&quot; align=&quot;center&quot; alt=&quot;图片&quot; widht=&quot;720&quot; height=&quot;300&quot;/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>列表标签</p>
+<ol>
+<li>有序列表<ol>
+<li>ol&amp;li</li>
+<li>属性:<ol>
+<li>type=”a/A”,”i/I”,”1”</li>
+<li>start=”number”;指定从第几个数开始</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>无序列表<ol>
+<li>ul&amp;li:<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 列表标签 --&gt;</span><br><span class="line">&lt;h2&gt;有序列表ol，type=&quot;a&quot; start=&quot;5&quot;,从e开始&lt;/h2&gt;</span><br><span class="line">    &lt;ol type=&quot;a&quot; start=&quot;5&quot;&gt;</span><br><span class="line">        &lt;li&gt;有序列表1&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;有序列表2&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;有序列表3&lt;/li&gt;</span><br><span class="line">    &lt;/ol&gt;</span><br><span class="line">&lt;hr&gt;</span><br><span class="line"></span><br><span class="line">&lt;h2&gt;无序列表ul,type=&quot;A&quot;,start=&quot;3&quot;,从C开始&lt;/h2&gt;</span><br><span class="line">    &lt;ul type=&quot;A&quot; start=&quot;3&quot;&gt;</span><br><span class="line">        &lt;li&gt;无序列表1&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;无序列表2&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;无序列表3&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line"></span><br><span class="line">&lt;h2&gt;无序列表ul,type=&quot;disc&quot;,start=&quot;3&quot;,从C开始&lt;/h2&gt;</span><br><span class="line">    &lt;ul type=&quot;disc&quot; start=&quot;3&quot;&gt;</span><br><span class="line">        &lt;li&gt;无序列表1&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;无序列表2&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;无序列表3&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line"></span><br><span class="line">&lt;h2&gt;无序列表ul,type=&quot;square&quot;,start=&quot;3&quot;,从C开始&lt;/h2&gt;</span><br><span class="line">    &lt;ul type=&quot;square&quot; start=&quot;3&quot;&gt;</span><br><span class="line">        &lt;li&gt;无序列表1&lt;/li&gt;</span><br><span class="line">            &lt;li&gt;无序列表2&lt;/li&gt;</span><br><span class="line">            &lt;li&gt;无序列表3&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line"></span><br><span class="line">&lt;h2&gt;无序列表ul,type=&quot;circle&quot;,start=&quot;3&quot;,从C开始&lt;/h2&gt;</span><br><span class="line">    &lt;ul type=&quot;circle&quot; start=&quot;3&quot;&gt;</span><br><span class="line">        &lt;li&gt;无序列表1&lt;/li&gt;</span><br><span class="line">            &lt;li&gt;无序列表2&lt;/li&gt;</span><br><span class="line">            &lt;li&gt;无序列表3&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>超链接标签</p>
+<ol>
+<li>&lt; a href=”<a href="http://www.baidu.com&quot;&gt;click" target="_blank" rel="noopener">www.baidu.com&quot;&gt;click</a> here     //在当前页面打开链接</li>
+<li>&lt; a href=”<a href="http://www.baidu.com&quot;" target="_blank" rel="noopener">www.baidu.com&quot;</a> target=”_self”&gt;click here      //在当前页面打开链接</li>
+<li>&lt; a href=”<a href="http://www.baidu.com&quot;" target="_blank" rel="noopener">www.baidu.com&quot;</a> targer=”blank”&gt;click here       //在新页面打开链接</li>
+<li>&lt; a href=”xxx.html” target=”blank”&gt;访问html文件     //跳转到一个html文件</li>
+<li>&lt; a href=”mailto:<a href="mailto:xxx.xxxxx@xxx.com" target="_blank" rel="noopener">xxx.xxxxx@xxx.com</a>“&gt;访问邮箱<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 超链接标签 --&gt;</span><br><span class="line">&lt;a href=&quot;http://www.baidu.com&quot; color=&quot;purple&quot;&gt;click here&lt;/a&gt;</span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;a href=&quot;http://www.baidu.com&quot; color=&quot;purple&quot; target=&quot;_self&quot;&gt;click here&lt;/a&gt;</span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;a href=&quot;http://www.baidu.com&quot; color=&quot;purple&quot; target=&quot;blank&quot;&gt;click here&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>块标签</p>
+<ol>
+<li><p>div：一个div的文本信息占一行</p>
+</li>
+<li><p>语义化标签：<header><footer></footer></header></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;header&gt;&lt;div id=&quot;header&quot;&gt;头部&lt;/div&gt;&lt;/header&gt;</span><br><span class="line">&lt;footer&gt;&lt;div id=&quot;footer&quot;&gt;脚部&lt;/div&gt;&lt;/footer&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>span：多个span的文本信息在一行内显示</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 块标签 --&gt;</span><br><span class="line">    &lt;span&gt;</span><br><span class="line">        文本信息在一行内展示。行内标签</span><br><span class="line">    &lt;/span&gt;</span><br><span class="line">    &lt;span&gt;</span><br><span class="line">        文本信息在一行内展示。行内标签</span><br><span class="line">    &lt;/span&gt;</span><br><span class="line"></span><br><span class="line">    &lt;hr&gt;</span><br><span class="line"></span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        一个div占一行</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        一个div占一行</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 语义化标签 --&gt;</span><br><span class="line">    &lt;header&gt;</span><br><span class="line">        &lt;div id=&quot;header&quot;&gt;</span><br><span class="line">            头部</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/header&gt;</span><br><span class="line">            </span><br><span class="line">    &lt;footer&gt;</span><br><span class="line">        &lt;div id=&quot;footer&quot;&gt;</span><br><span class="line">            尾部</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/footer&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>表格标签</p>
+<ol>
+<li>table:定义表格<ol>
+<li>border:边框</li>
+<li>width:宽度</li>
+<li>cellpadding/cellspacing:定义单元格间隔,一般为0</li>
+<li>bgcolor:背景色</li>
+<li>align:对齐方式</li>
+</ol>
+</li>
+<li>tr:定义行<ol>
+<li>bgcolor:背景色</li>
+<li>align:对齐方式</li>
+</ol>
+</li>
+<li>td:定义单元格<ol>
+<li>colspan:合并列</li>
+<li>rowspan:合并行</li>
+</ol>
+</li>
+<li>th:定义表头单元格<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 表格标签 --&gt;</span><br><span class="line">    &lt;table border=&quot;1&quot; width=&quot;50%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;thead&gt;             </span><br><span class="line">            &lt;caption&gt;学生成绩表&lt;/caption&gt;</span><br><span class="line">                &lt;!-- 第一行表头 --&gt;</span><br><span class="line">                &lt;th&gt;编号&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;姓名&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;成绩&lt;/th&gt;</span><br><span class="line">        &lt;/thead&gt;</span><br><span class="line"></span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;!-- 第二行 --&gt;</span><br><span class="line">            &lt;tr bgcolor=&quot;blue&quot; align=&quot;center&quot;&gt;</span><br><span class="line">                &lt;td&gt;1&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;大王&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;85&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">            &lt;!-- 第三行 --&gt;</span><br><span class="line">            &lt;tr bgcolor=&quot;pink&quot; align=&quot;center&quot;&gt;</span><br><span class="line">                &lt;td&gt;2&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;小王&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;80&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">        &lt;/tbody&gt;</span><br><span class="line"></span><br><span class="line">        &lt;tfoot&gt;</span><br><span class="line">            &lt;!-- 最后一行 --&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;4&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;张三&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;60&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">        &lt;/tfoot&gt;</span><br><span class="line"></span><br><span class="line">        &lt;tbody&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td colspan=&quot;2&quot;&gt;3&lt;/td&gt;</span><br><span class="line">                &lt;td rowspan=&quot;2&quot;&gt;李四&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;75&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">        &lt;/tbody&gt;</span><br><span class="line">    &lt;/table&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>(重要)表单标签：（用于采集用户输入的数据，用于和服务器进行数据交互）</p>
+<ol>
+<li>form:（定义一个表单块）<ol>
+<li>action:提交方式的URL</li>
+<li>method:制定提交方式<ol>
+<li>get:<ol>
+<li>请求参数会在地址栏中显示</li>
+<li>请求参数长度有限制</li>
+<li>不安全</li>
+</ol>
+</li>
+<li>post:<ol>
+<li>请求参数不在地址栏中显示</li>
+<li>请求参数无长度限制</li>
+<li>安全</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>input:<ol>
+<li>类型type=””:改变元素展示的样式，默认为text<ol>
+<li>按钮：   <ol>
+<li>submit:提交</li>
+<li>button:按钮</li>
+<li>image:(src=””)使用图片样式的按钮</li>
+</ol>
+</li>
+<li>text:文本输入框(placeholder提示信息)(label for=”在input中设置id属性”)</li>
+<li>password:密码输入框,输入的数据被隐藏</li>
+<li>radio:单选框,一组选项的name值必须一致(check指定默认值)</li>
+<li>checkbox:复选框(check指定默认值)</li>
+<li>file:文件选择框</li>
+<li>hidden:隐藏域,其value会被提交</li>
+<li>color:取色器</li>
+<li>date:日历<ol>
+<li>date：年月日</li>
+<li>datetime-local：年月日时分秒</li>
+</ol>
+</li>
+<li>email:邮箱(校验)</li>
+<li>number:数字</li>
+</ol>
+</li>
+<li>属性:<ol>
+<li>values:初始值</li>
+<li>readonly:只读</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>select:下拉列表<ol>
+<li>option:限定列表项(设置选项)</li>
+</ol>
+</li>
+<li>textarea:文本域<ol>
+<li>cols：列数(100)</li>
+<li>rows：行数(15)</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="实例-注册页面-HTML"><a href="#实例-注册页面-HTML" class="headerlink" title="实例:注册页面(HTML)"></a>实例:注册页面(HTML)</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">        &lt;title&gt;注册页面&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body background=&quot;BqAJYvdnK0N.jpg&quot; width=&quot;100%&quot;&gt;</span><br><span class="line">            &lt;form action=&quot;#&quot; method=&quot;POST&quot;&gt;</span><br><span class="line">                &lt;table border=&quot;1&quot; align=&quot;center&quot; width=&quot;500&quot;&gt;</span><br><span class="line">                    &lt;!-- 用户名 --&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label for=&quot;username&quot;&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;用户名:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;请输入用户名&quot; id=&quot;username&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- 密码 type=password--&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label for=&quot;password&quot;&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;密码:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;&lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;请输入密码&quot; id=&quot;password&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- 再次输入密码 type=password--&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label for=&quot;re_password&quot;&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;请再次输入密码:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;&lt;input type=&quot;password&quot; name=&quot;re_password&quot; placeholder=&quot;请再次输入密码&quot; id=&quot;re_password&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- Email type=email--&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label for=&quot;email&quot;&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;请输入邮箱地址:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;&lt;input type=&quot;email&quot; name=&quot;email&quot; placeholder=&quot;请输入邮箱地址&quot; id=&quot;email&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- 手机号 type=tel --&gt; </span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label for=&quot;phone&quot;&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;请输入手机号码:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;&lt;input type=&quot;tel&quot; name=&quot;phone&quot; placeholder=&quot;请输入手机号码&quot; id=&quot;phone&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- 性别 type=radio--&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;性别:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;</span><br><span class="line">                            &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;male&quot;&gt;男</span><br><span class="line">                            &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;female&quot;&gt;女</span><br><span class="line">                        &lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- 出生日期 type=date --&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td&gt;&lt;label for=&quot;birthday&quot;&gt;&lt;font color=&quot;blue&quot; size=&quot;5&quot; face=&quot;楷体&quot;&gt;出生日期:&lt;/font&gt;&lt;/label&gt;&lt;/td&gt;</span><br><span class="line">                        &lt;td&gt;&lt;input type=&quot;date&quot; name=&quot;birthday&quot; id=&quot;birthday&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                    &lt;!-- 注册按钮 --&gt;</span><br><span class="line">                    &lt;tr&gt;</span><br><span class="line">                        &lt;td align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;input type=&quot;submit&quot; value=&quot;注册&quot;&gt;&lt;/td&gt;</span><br><span class="line">                    &lt;/tr&gt;</span><br><span class="line">                &lt;/table&gt;</span><br><span class="line">            &lt;/form&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/">http://yoursite.com/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/">十月 10日 2019, 9:10:31 晚上</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/">February 17th 2020, 7:52:24 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" title= "JavaWeb(前端三板斧之CSS)">
+                    <div class="nextTitle">JavaWeb(前端三板斧之CSS)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" title= "JavaWeb(Junit白盒测试、反射和注解)">
+                    <div class="prevTitle">JavaWeb(Junit白盒测试、反射和注解)</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-number">1.</span> <span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#软件架构"><span class="toc-number">2.</span> <span class="toc-text">软件架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTML5：（用于展示页面内容）"><span class="toc-number">3.</span> <span class="toc-text">HTML5：（用于展示页面内容）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#null"><span class="toc-number"></span> <span class="toc-text"> to :文本标题</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#null"><span class="toc-number">0.0.0.0.1.</span> <span class="toc-text">:文本标题</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例-注册页面-HTML"><span class="toc-number">1.</span> <span class="toc-text">实例:注册页面(HTML)</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

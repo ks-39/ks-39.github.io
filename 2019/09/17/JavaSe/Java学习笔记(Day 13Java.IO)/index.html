@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Java学习笔记(Day 13:Java.IO) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Java学习笔记(Day 13:Java.IO)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Java学习笔记(Day 13:Java.IO)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaSe">JavaSe</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.5k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/09/17</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="P644-P691"><a href="#P644-P691" class="headerlink" title="P644-P691"></a>P644-P691</h1><hr>
+<h2 id="回顾I-O"><a href="#回顾I-O" class="headerlink" title="回顾I/O"></a>回顾I/O</h2><ol>
+<li>File类:<ol>
+<li>目录操作：<ol>
+<li>读取目录：listFiles()</li>
+<li>筛选文件：创建实现FilenameFilter接口的类，重写boolean accept()方法，返回endWith()</li>
+<li>创建目录：mkdir();</li>
+<li>删除目录：delete();</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>流：<ol>
+<li>字节流(重点)</li>
+<li>字符流(重点)</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><h3 id="1-输入流：Input-Reader"><a href="#1-输入流：Input-Reader" class="headerlink" title="1. 输入流：Input/Reader"></a>1. 输入流：Input/Reader</h3><ol>
+<li>InputStream(字节)和Reader(字符)：（从文件读取数据输入到流中为input和Reader）<h4 id="1-InputStream字节：byte"><a href="#1-InputStream字节：byte" class="headerlink" title="1. InputStream字节：byte"></a>1. InputStream字节：byte</h4><ol>
+<li>FileInputStream：（可以使用try-with-resource）<ol>
+<li>针对文件操作，参数必须为文件路径</li>
+<li>先使用File类声明一个文件对象，再使用file.createNewFile()方法创建文件(createNewFile()必须使用try/catch语句)</li>
+<li>声明一个int类型变量，使用while((c=input.read())!=-1)读取文件内容：<font color="red"><strong>=-1 意思就是字符串已到达流末尾而没有可用的字节，JAVA这时候会返回-1值， ！=-1 就是有字节，就读取它</strong></font><blockquote>
+<p>byte[] b1 = new byte[(int)file.length()];<br>int len;<br>while((len=fis.read(b1))!=-1)</p>
+<pre><code>System.out.print(new String(b1,0,len));</code></pre></blockquote>
+</li>
+</ol>
+</li>
+<li>ByteArrayInputStream:（可以使用try-with-resource）<ol>
+<li>针对字符操作，参数必须为字符数组byte[]</li>
+</ol>
+</li>
+<li>BufferedInputStream:(可以使用try-with-resource)<ol>
+<li>针对InputStream对象操作，参数必须为InputStream对象(FileInputStream和ByteArrayInputStream)</li>
+<li>缓冲流可以优化I/O<h4 id="2-Reader字符：char"><a href="#2-Reader字符：char" class="headerlink" title="2. Reader字符：char"></a>2. Reader字符：char</h4></li>
+</ol>
+</li>
+<li>FileReader:（可以使用try-with-resource）<ol>
+<li>针对文件操作，参数必须为文件路径FilePath</li>
+<li>先声明一个File对象，并使用file.createNewFile()方法创建文件(createNewFile()必须使用try/catch语句)</li>
+<li>读取文件内容：<blockquote>
+<p>int len1;<br>while((len1=fr.read())!=-1)<br>   System.out.print((char) len1);</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>CharArrayReader：（可以使用try-with-resource）<ol>
+<li>具体操作参考ByteArrayInputReader</li>
+</ol>
+</li>
+<li>BufferedReader：（可以使用try-with-resource）<ol>
+<li>具体操作参考BufferedInputStream</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="2-输出流：Output-Writer"><a href="#2-输出流：Output-Writer" class="headerlink" title="2. 输出流：Output/Writer"></a>2. 输出流：Output/Writer</h3><ol>
+<li>OutputStream(字节)和Writer(字符)：（将流的数据输出到文件为output和Writer)<h4 id="1-OutputStream字节：byte"><a href="#1-OutputStream字节：byte" class="headerlink" title="1. OutputStream字节：byte"></a>1. OutputStream字节：byte</h4><ol>
+<li>FileOutputStream:（可以使用try-with-resource）<ol>
+<li>针对文件操作，参数为filePath</li>
+<li>必须先使用File类声明一个文件对象，并使用file.createNewFile()方法创建文件(createNewFile()必须使用try/catch语句)</li>
+<li>调用output.write(byte byte[]),将字节数组传入</li>
+<li>如果需要读取写入内容，需要再另行实例化FileInputStream，具体操作参考FileInputStream读取内容方法</li>
+</ol>
+</li>
+<li>ByteArrayOutputStrram：（可以使用try-with-resource）（可以通过writeTo写入到FileOutputStream)<ol>
+<li>专门针对字节数组</li>
+<li>调用write(byte [])方法写入数据</li>
+<li>若调用了writeTo(fileouputstream)方法，想要读取文件内容：<blockquote>
+<p>fos.close();    //fos先关闭保存，再读取<br>byte[] b1 = new byte[(int)file.length()];<br>int len;<br>while((len=fis.read(b1))!=-1)</p>
+<pre><code>System.out.print(new String(b1,0,len));</code></pre></blockquote>
+</li>
+</ol>
+</li>
+<li>BufferedOutputStream:（可以使用try-with-resource）<ol>
+<li>专门针对OutputStream对象(FileOutputStream和ByteArrayOutputStrean)</li>
+<li>缓冲流可以优化I/O</li>
+<li>使用try-with-resource实例化OutputStream对象和BufferedOuputStream，传入outputstream对象</li>
+<li>读取内容方法参考FileOutputStreamt<h4 id="2-Writer字符：char"><a href="#2-Writer字符：char" class="headerlink" title="2. Writer字符：char"></a>2. Writer字符：char</h4></li>
+</ol>
+</li>
+<li>FileWriter:（可以使用try-with-resource）<ol>
+<li>针对文件操作，参数必须为文件路径FilePath</li>
+<li>先声明一个File对象，并使用file.createNewFile()方法创建文件(createNewFile()必须使用try/catch语句)</li>
+<li>读取文件内容：需要先调用close()关闭保存<blockquote>
+<p>int len1;<br>while((len1=fr.read())!=-1)<br>   System.out.print((char) len1);</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>CharArrayWriter：（可以使用try-with-resource）<ol>
+<li>具体操作参考ByteArrayOutputReader</li>
+</ol>
+</li>
+<li>BufferedWriter：（可以使用try-with-resource）<ol>
+<li>具体操作参考BufferedOutputStream</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="总结字节流和字符流注意事项"><a href="#总结字节流和字符流注意事项" class="headerlink" title="总结字节流和字符流注意事项:"></a>总结字节流和字符流注意事项:</h2><ol>
+<li>涉及File类时，字节流读取需要先创建一个byte[]数组来接收文件的内容，再通过new String(byte,0,length)来强制将字节内容转换为字符串</li>
+<li>而字符流可以直接通过((char) c)来输出文件字符内容</li>
+<li>当涉及FileOutputStream/FileWriter写入操作时，如果想读取写入的文件内容，需要先调用close()方法关闭保存</li>
+</ol>
+<hr>
+<h2 id="File类：（直接处理文件和文件系统）（获取和操作磁盘文件的信息）（浏览子目录层次）"><a href="#File类：（直接处理文件和文件系统）（获取和操作磁盘文件的信息）（浏览子目录层次）" class="headerlink" title="File类：（直接处理文件和文件系统）（获取和操作磁盘文件的信息）（浏览子目录层次）"></a>File类：（直接处理文件和文件系统）（获取和操作磁盘文件的信息）（浏览子目录层次）</h2><ol>
+<li>构造函数：<ol>
+<li>File(String directoryPath);directoryPath为路径名</li>
+<li>File(String directoryPath,String filename);filename为文件或子目录名</li>
+<li>File(File dirObj,String filename);dirObj为指定目录的File对象</li>
+<li>File(URI uriobj);uriobj为描述文件的URI对象</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>getName()：返回文件名</li>
+<li>getParent()：返回父目录名</li>
+<li>exists():判断文件是否存在</li>
+<li>isFile()：判断调用对象是否为文件类型</li>
+<li>isAbsolute():判断调用路径是否为绝对路径</li>
+<li>boolean renameTo(File rename):重命名调用对象名称，成功修改返回true，反之false</li>
+<li>boolean delete():删除目录，成功返回true</li>
+<li>getPath();获取路径</li>
+<li>renameTo(File fileobj);<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		File file = new File(&quot;E:\\Test.txt&quot;);</span><br><span class="line">		</span><br><span class="line">		System.out.println(file.exists());</span><br><span class="line">		System.out.println(file.getAbsolutePath());</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();		//正式创建</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		System.out.println(file.exists());</span><br><span class="line">		File file1 = new File(&quot;E:\\Test1.txt&quot;);		//新建一个File对象</span><br><span class="line">		file.renameTo(file1);		//复制文件，file1不需要调用createNewFile方法</span><br><span class="line">		</span><br><span class="line">		System.out.println(file.exists());		//file存在</span><br><span class="line">		System.out.println(file1.exists());		//file1存在</span><br><span class="line">		System.out.println(file1.getAbsolutePath());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="1-目录操作"><a href="#1-目录操作" class="headerlink" title="1. 目录操作"></a>1. 目录操作</h3><ol>
+<li><p>通过listFiles()方法获取该目录下所有的文件名：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		File f1 = new File(&quot;E:\\Python&quot;);</span><br><span class="line">		if(f1.isDirectory()) &#123;		//isDirectory()方法</span><br><span class="line">			File[] dir = f1.listFiles();		//创建一个File类数组来接收listFiles()方法返回的数据</span><br><span class="line">			for(File filelist:dir) &#123;		//声明一个File对象遍历文件名</span><br><span class="line">				if(filelist.isDirectory())		//判断遍历的文件名是否为目录</span><br><span class="line">					System.out.println(&quot;Dircetory:&quot;+filelist);</span><br><span class="line">				else</span><br><span class="line">					System.out.println(&quot;Not Directory:&quot;+filelist);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用FilenameFilter接口过滤得到需要的文件<br>使用方式：</p>
+<ol>
+<li>创建一个实现了FilenameFilter接口的类</li>
+<li>定义构造函数参数为(String 需要的文件后缀名)；</li>
+<li>实现boolean accept(File directory,String filename)方法。return name.endswith(后缀名)</li>
+<li>主函数中实例化接口引用，以及实例化实现类的对象，传入后缀名为参数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Fileter implements FilenameFilter&#123;		//创建实现了FilenameFilter接口的类</span><br><span class="line">	String endwith;</span><br><span class="line">	Fileter(String end)&#123;		</span><br><span class="line">		endwith = end;</span><br><span class="line">	&#125;</span><br><span class="line">	public boolean accept(File dir,String endname) &#123;		//重写boolean accept(File directory,String endname)方法</span><br><span class="line">		return endname.endsWith(endwith);		//返回调用endWith()方法筛选</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		File file = new File(&quot;E:\\Python&quot;);</span><br><span class="line">		Fileter filter = new Fileter(&quot;py&quot;);		//实例化实现类</span><br><span class="line">		if(file.isDirectory()) &#123;		</span><br><span class="line">			File[] dir = file.listFiles(filter);		//dir接收存储file调用listFiles方法的文件名,</span><br><span class="line">												//此处的listFiles方法参数为实现了FilenameFilter接口的filter类对象</span><br><span class="line">			for(File list:dir)											</span><br><span class="line">				System.out.println(list);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>创建目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Test&#123;</span><br><span class="line">	static void print(String str) &#123;</span><br><span class="line">		System.out.println(str);</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		File dir = new File(&quot;E:\\1&quot;);</span><br><span class="line">		dir.mkdir();		//创建目录</span><br><span class="line">		print(dir.getName());</span><br><span class="line">		dir.delete();	//删除目录</span><br><span class="line">		File dir1 = new File(&quot;E:\\123&quot;);</span><br><span class="line">		dir1.mkdir();</span><br><span class="line">		print(dir1.getAbsolutePath());</span><br><span class="line">		dir1.delete();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<hr>
+<h2 id="流类：四个抽象类（InputStream和OutputStream：针对字节流（字节或二进制对象）；Reader和Writer：针对字符流（字符或字符串））"><a href="#流类：四个抽象类（InputStream和OutputStream：针对字节流（字节或二进制对象）；Reader和Writer：针对字符流（字符或字符串））" class="headerlink" title="流类：四个抽象类（InputStream和OutputStream：针对字节流（字节或二进制对象）；Reader和Writer：针对字符流（字符或字符串））"></a>流类：四个抽象类（InputStream和OutputStream：针对字节流（字节或二进制对象）；Reader和Writer：针对字符流（字符或字符串））</h2><h3 id="1-字节流：（顶层：InputStream和OutputStream"><a href="#1-字节流：（顶层：InputStream和OutputStream" class="headerlink" title="1. 字节流：（顶层：InputStream和OutputStream)"></a>1. 字节流：（顶层：InputStream和OutputStream)</h3><h4 id="1-FileInputStream类：（针对文件操作）（输入数据到文件）"><a href="#1-FileInputStream类：（针对文件操作）（输入数据到文件）" class="headerlink" title="1. FileInputStream类：（针对文件操作）（输入数据到文件）"></a>1. FileInputStream类：（针对文件操作）（输入数据到文件）</h4><ol>
+<li>构造函数：<ol>
+<li>FileInputStream(String filePath);</li>
+<li>FileInputStream(File fileobj);</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>int available():返回当前可读取的输入字节数</li>
+<li>void close();</li>
+<li>int read();返回代表下一个可以字节的整数</li>
+<li>int read(byte buffer[]);读取文件内容到buffer字符数组</li>
+<li>void reset();重置文件内容</li>
+</ol>
+</li>
+<li>实例化：<ol>
+<li>FileInputStream file = new FileInputStream(File filePath);  </li>
+<li>FileInputStream file = new FileInputStream(new File(File FilePath));   </li>
+<li>try-with-resource：try(FileInputStream input = new FileInputStream(File filepath)){}</li>
+</ol>
+</li>
+</ol>
+<h4 id="2-FileOutputStream类：（针对文件操作）（从文件读取数据）"><a href="#2-FileOutputStream类：（针对文件操作）（从文件读取数据）" class="headerlink" title="2. FileOutputStream类：（针对文件操作）（从文件读取数据）"></a>2. FileOutputStream类：（针对文件操作）（从文件读取数据）</h4><ol>
+<li>构造函数：<ol>
+<li>FileOutputStream(String filePath);</li>
+<li>FileOutputStream(File fileobj);</li>
+<li>FileOutputStream(String filePath,boolean append);</li>
+<li>FileOutputStream(File fileobj,boolean append);</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>void write(int b);写入单个int字节</li>
+<li>void write(byte buffer[]);写入一个字节数组</li>
+</ol>
+</li>
+<li>实例化：<ol>
+<li>FileOutputStream file = new FileOutputStream(File filePath);  //</li>
+<li>FileOutputStream file = new FileOutputStream(new File(File filePath));    //</li>
+<li>try-with-resource：try(FileOutputStream input = new FileOutputStream(File filePath)){}</li>
+</ol>
+</li>
+</ol>
+<h4 id="3-FileInputStream和FileOutputStream综合运用："><a href="#3-FileInputStream和FileOutputStream综合运用：" class="headerlink" title="3. FileInputStream和FileOutputStream综合运用："></a>3. FileInputStream和FileOutputStream综合运用：</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		String filename = &quot;E:\\File.txt&quot;;</span><br><span class="line">		File file = new File(&quot;E:\\File.txt&quot;);</span><br><span class="line">		String str = &quot;FileInput/OutputStream运用&quot;;</span><br><span class="line">		byte[] b = str.getBytes();</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(file.exists()) &#123;</span><br><span class="line">			try(FileInputStream input = new FileInputStream(filename);FileOutputStream output = new FileOutputStream(filename))&#123;</span><br><span class="line">				output.write(b);		//写入</span><br><span class="line">				</span><br><span class="line">				byte[] b1 = new byte[(int)file.length()];	//创建字符串读取文件内容</span><br><span class="line">				int len;	</span><br><span class="line">				while((len=input.read(b1))!=-1)</span><br><span class="line">					System.out.print(new String(b1,0,len));</span><br><span class="line">	</span><br><span class="line">			&#125;catch(IOException e) &#123;</span><br><span class="line">				System.out.println(e);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-ByteArrayInputStream类：（输入字节数据到流）"><a href="#4-ByteArrayInputStream类：（输入字节数据到流）" class="headerlink" title="4. ByteArrayInputStream类：（输入字节数据到流）"></a>4. ByteArrayInputStream类：（输入字节数据到流）</h4><ol>
+<li>构造函数：<ol>
+<li>ByteArrayInputStream(byte array[]);</li>
+<li>ByteArrayInputStream(byte array[],int start,int number);从start索引值开始，存入number个字符</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>void mark();设置标记</li>
+<li>void reset();重置文件内容</li>
+</ol>
+</li>
+</ol>
+<h4 id="5-ByteArrayOutputStream类：（从流输出字节数据）"><a href="#5-ByteArrayOutputStream类：（从流输出字节数据）" class="headerlink" title="5. ByteArrayOutputStream类：（从流输出字节数据）"></a>5. ByteArrayOutputStream类：（从流输出字节数据）</h4><ol>
+<li>构造函数：<ol>
+<li>ByteArrayOutputStream();32字节缓冲区</li>
+<li>ByteArrayOutputStream(int numBytes); 指定numBytes大小的缓冲区</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>void write(byte buffer[]);写入一个字符数组到流</li>
+<li>void flush();刷新缓冲区</li>
+<li>void write(int num);写入单个int类型</li>
+<li>void writeTo(FileOutputStream obj);将调用方法的内容写入到obj</li>
+</ol>
+</li>
+</ol>
+<h4 id="6-ByteArrayInputStream和ByteArrayOutputStream综合运用："><a href="#6-ByteArrayInputStream和ByteArrayOutputStream综合运用：" class="headerlink" title="6. ByteArrayInputStream和ByteArrayOutputStream综合运用："></a>6. ByteArrayInputStream和ByteArrayOutputStream综合运用：</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		String str1 = &quot;ByteArrayInput/OutputStream运用\n&quot;;</span><br><span class="line">		byte[] b1 = str1.getBytes();</span><br><span class="line">		String filename = &quot;E:\\ByteArray.txt&quot;;</span><br><span class="line">		File file = new File(filename);</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		try(ByteArrayInputStream bis = new ByteArrayInputStream(b1);</span><br><span class="line">			ByteArrayOutputStream bos = new ByteArrayOutputStream();</span><br><span class="line">			FileOutputStream fos = new FileOutputStream(filename);</span><br><span class="line">			FileInputStream fis = new FileInputStream(filename))&#123;</span><br><span class="line">			</span><br><span class="line">			//ByteArrayInputStream已经将b1内容读取到流中</span><br><span class="line">			byte[] b2 = new byte[(int)b1.length];</span><br><span class="line">			int len1;</span><br><span class="line">			while((len1=bis.read(b2))!=-1)		//读取流中内容</span><br><span class="line">				System.out.print(new String(b2,0,len1));</span><br><span class="line">			</span><br><span class="line">			bos.write(&quot;ByteArrayOutputStream读取这个字节到流,再通过writeTo方法写入到文件&quot;.getBytes());	//ByteArrayOutputStream将b1内容读取到流</span><br><span class="line">			</span><br><span class="line">			bos.writeTo(fos);	//再将bos流中的内容写入到fos文件流</span><br><span class="line">			</span><br><span class="line">			byte[] b3 = new byte[(int)file.length()];		//创建一个file文件长度大小的字节数组</span><br><span class="line">			int len2;</span><br><span class="line">			while((len2=fis.read(b3))!=-1)		//读取文件内容</span><br><span class="line">				System.out.print(new String(b3,0,len2));</span><br><span class="line">			</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-BufferedInputStream类-缓冲输入字节流-（输入到流）"><a href="#7-BufferedInputStream类-缓冲输入字节流-（输入到流）" class="headerlink" title="7.  BufferedInputStream类(缓冲输入字节流)（输入到流）"></a>7.  BufferedInputStream类(缓冲输入字节流)（输入到流）</h4><ol>
+<li>构造函数：<ol>
+<li>BufferedInputStream(InputStream inputstream);参数为InputStream输入字节流的对象</li>
+<li>BufferedInputStream(InputStream inputstream,int bufsize);设置缓冲区大小为bufsize</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>int available():返回当前可读取的输入字节数</li>
+<li>void close();</li>
+<li>int read();返回代表下一个可以字节的整数</li>
+<li>int read(byte buffer[]);读取文件内容到buffer字符数组</li>
+<li>void reset();重置文件内容</li>
+<li>void mark(int num);标志num位置</li>
+<li>void reset();重置流，回到mark的位置。如果没有mark，返回到开头</li>
+</ol>
+</li>
+</ol>
+<h4 id="8-BufferedOutputStream类：（缓冲输出字节流）（从流输出）"><a href="#8-BufferedOutputStream类：（缓冲输出字节流）（从流输出）" class="headerlink" title="8. BufferedOutputStream类：（缓冲输出字节流）（从流输出）"></a>8. BufferedOutputStream类：（缓冲输出字节流）（从流输出）</h4><ol>
+<li>构造函数：<ol>
+<li>BufferedOutputStream(OutputStream outputstream);</li>
+<li>BufferedOutputStream(OutputStream outputstream,int bufsize)</li>
+</ol>
+</li>
+<li>常用方法：<ol>
+<li>void write(int b);写入单个int字节</li>
+<li>void write(byte buffer[]);写入一个字节数组</li>
+<li>void flush();刷新缓冲区</li>
+</ol>
+</li>
+</ol>
+<h4 id="9-BufferedInput-OutputStream综合运用："><a href="#9-BufferedInput-OutputStream综合运用：" class="headerlink" title="9. BufferedInput/OutputStream综合运用："></a>9. BufferedInput/OutputStream综合运用：</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		String str1 = &quot;BufferedInput/OutputStream运用\n&quot;;</span><br><span class="line">		byte[] b1 = str1.getBytes();</span><br><span class="line">		</span><br><span class="line">		String filename = &quot;E:\\BufferedStream.txt&quot;;</span><br><span class="line">		File file = new File(filename);</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(file.exists()) &#123;</span><br><span class="line">			try(FileInputStream fis = new FileInputStream(filename);</span><br><span class="line">				FileOutputStream fos = new FileOutputStream(filename);	</span><br><span class="line">				BufferedInputStream bis = new BufferedInputStream(fis);</span><br><span class="line">				BufferedOutputStream bos = new BufferedOutputStream(fos);)&#123;</span><br><span class="line">				</span><br><span class="line">				bos.write(b1);</span><br><span class="line">				bos.flush();		//写入之后刷新一下缓冲区</span><br><span class="line">				</span><br><span class="line">				byte[] b2 = new byte[(int)file.length()];</span><br><span class="line">				int len1;</span><br><span class="line">				while((len1 = bis.read(b2))!=-1) &#123;</span><br><span class="line">					System.out.print(new String(b2,0,len1));</span><br><span class="line">				&#125;</span><br><span class="line">							</span><br><span class="line">			&#125;catch(IOException e) &#123;</span><br><span class="line">				System.out.println(e);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-字符流（针对char类型）"><a href="#2-字符流（针对char类型）" class="headerlink" title="2. 字符流（针对char类型）"></a>2. 字符流（针对char类型）</h3><h4 id="1-Reader类：（抽象类）（输入到流）（读取）"><a href="#1-Reader类：（抽象类）（输入到流）（读取）" class="headerlink" title="1.Reader类：（抽象类）（输入到流）（读取）"></a>1.Reader类：（抽象类）（输入到流）（读取）</h4><p>方法：</p>
+<ol>
+<li>void mark(int num);</li>
+<li>int read();读取</li>
+<li>int read(char buffer[]);    //读取到buffer数组</li>
+<li>void reset();</li>
+</ol>
+<h4 id="2-Writer类：（从流输出）（写入）"><a href="#2-Writer类：（从流输出）（写入）" class="headerlink" title="2. Writer类：（从流输出）（写入）"></a>2. Writer类：（从流输出）（写入）</h4><p>方法：</p>
+<ol>
+<li>Writer append(char ch);将字符添加到输出流的末尾</li>
+<li>void writer(int ch)；写入单个int字符</li>
+<li>void writer(String str);写入字符串</li>
+</ol>
+<h4 id="3-FileReader类：（从文件读取数据）（针对char类型）"><a href="#3-FileReader类：（从文件读取数据）（针对char类型）" class="headerlink" title="3. FileReader类：（从文件读取数据）（针对char类型）"></a>3. FileReader类：（从文件读取数据）（针对char类型）</h4><ol>
+<li>构造函数：<ol>
+<li>FileReader(String filePath);</li>
+<li>FileReader(File fileobj);</li>
+</ol>
+</li>
+<li>方法：同Reader类</li>
+</ol>
+<h4 id="4-FileWriter类：（写入数据到文件）（针对char类型）"><a href="#4-FileWriter类：（写入数据到文件）（针对char类型）" class="headerlink" title="4. FileWriter类：（写入数据到文件）（针对char类型）"></a>4. FileWriter类：（写入数据到文件）（针对char类型）</h4><ol>
+<li>构造函数：<ol>
+<li>FileWriter(String filePath)</li>
+<li>FileWriter(String filePath,boolean append)</li>
+<li>FileWriter(File fileobj)</li>
+<li>FileWriter(File fileobj,boolean append);boolean append为true，加载文件</li>
+</ol>
+</li>
+<li>FileWriter类对象实例时会自动创建目标文件</li>
+<li>方法：同Writer类</li>
+</ol>
+<h4 id="5-FileReader和FileWriter综合运用："><a href="#5-FileReader和FileWriter综合运用：" class="headerlink" title="5. FileReader和FileWriter综合运用："></a>5. FileReader和FileWriter综合运用：</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		String filename = &quot;E:\\FileChar.txt&quot;;</span><br><span class="line">		String str1 = &quot;FileReader/FileWriter综合运用&quot;;</span><br><span class="line">		char[] c1 = str1.toCharArray();</span><br><span class="line">		File file = new File(filename);</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(file.exists()) &#123;</span><br><span class="line">			try(FileReader fr = new FileReader(filename);FileWriter fw = new FileWriter(filename))&#123;</span><br><span class="line">				fw.write(c1);</span><br><span class="line">				fw.close();  	//需要先关闭文件，保存后再读取</span><br><span class="line">				</span><br><span class="line">				int c;</span><br><span class="line">				while((c=fr.read())!=-1)</span><br><span class="line">					System.out.print((char)c);</span><br><span class="line">	</span><br><span class="line">			&#125;catch(IOException e) &#123;</span><br><span class="line">				System.out.println(e);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-CharArrayReader类：（输出流-（读取数据到流）"><a href="#6-CharArrayReader类：（输出流-（读取数据到流）" class="headerlink" title="6. CharArrayReader类：（输出流)（读取数据到流）"></a>6. CharArrayReader类：（输出流)（读取数据到流）</h4><ol>
+<li>构造函数：<ol>
+<li>CharArrayReader(char array[]);</li>
+<li>CharArrayReader(char array[],int start，int numchars);根据字符数组的子集创建Reader对象，从start索引开始读取，一共读取numchars个字符</li>
+</ol>
+</li>
+</ol>
+<h4 id="7-CharArrayWriter类：（输入流）（将流中的数据写入）"><a href="#7-CharArrayWriter类：（输入流）（将流中的数据写入）" class="headerlink" title="7. CharArrayWriter类：（输入流）（将流中的数据写入）"></a>7. CharArrayWriter类：（输入流）（将流中的数据写入）</h4><ol>
+<li>构造函数：<ol>
+<li>CharArrayWriter();</li>
+<li>CharArrayWriter(int numchars);指定缓冲区大小</li>
+</ol>
+</li>
+</ol>
+<h4 id="8-CharArrayReader和CharArrayWriter综合运用："><a href="#8-CharArrayReader和CharArrayWriter综合运用：" class="headerlink" title="8. CharArrayReader和CharArrayWriter综合运用："></a>8. CharArrayReader和CharArrayWriter综合运用：</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		String str1 = &quot;CharArrayReader/CharArrayWriter综合运用&quot;;</span><br><span class="line">		char[] c1 = str1.toCharArray();</span><br><span class="line">		String filename = &quot;E:\\CharArray.txt&quot;;</span><br><span class="line">		File file = new File(filename);</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		try(CharArrayReader car = new CharArrayReader(c1);	//car将c1数组内容读取到流</span><br><span class="line">			CharArrayWriter caw = new CharArrayWriter();</span><br><span class="line">			FileWriter fw = new FileWriter(filename);</span><br><span class="line">			FileReader fr = new FileReader(filename))&#123;</span><br><span class="line">			int len1;</span><br><span class="line">			while((len1=car.read())!=-1)	//读取流中的数据</span><br><span class="line">				System.out.print((char)len1);		//</span><br><span class="line">			System.out.println();</span><br><span class="line">			</span><br><span class="line">			caw.write(c1);  		//caw读取c1数组内容到流</span><br><span class="line">			caw.writeTo(fw);		//caw将流的内容写入到fw</span><br><span class="line">			caw.close();</span><br><span class="line">			</span><br><span class="line">			fw.close();		//fw执行关闭保存</span><br><span class="line">			int len2;</span><br><span class="line">			while((len2=fr.read()) != -1)</span><br><span class="line">				System.out.print((char)len2);</span><br><span class="line">			</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-BufferedReader类：（缓冲区输入流）（读取数据到流）"><a href="#9-BufferedReader类：（缓冲区输入流）（读取数据到流）" class="headerlink" title="9. BufferedReader类：（缓冲区输入流）（读取数据到流）"></a>9. BufferedReader类：（缓冲区输入流）（读取数据到流）</h4><ol>
+<li>构造函数：<ol>
+<li>BufferedReader(Reader inputstream);    //Reader inputstream可以是FileReader、CharArrayReader</li>
+<li>BufferedReader(Reader inputstream,int bufsize);</li>
+</ol>
+</li>
+</ol>
+<h4 id="10-BufferedWriter类：（缓冲区输出流）（从流读取数据）"><a href="#10-BufferedWriter类：（缓冲区输出流）（从流读取数据）" class="headerlink" title="10. BufferedWriter类：（缓冲区输出流）（从流读取数据）"></a>10. BufferedWriter类：（缓冲区输出流）（从流读取数据）</h4><ol>
+<li>构造函数：<ol>
+<li>BufferedWriter(Writer outputstream);</li>
+<li>BufferedWriter(Writer outputstream,int bufsiez);</li>
+</ol>
+</li>
+</ol>
+<h4 id="11-BufferedReader-Writer综合运用："><a href="#11-BufferedReader-Writer综合运用：" class="headerlink" title="11. BufferedReader/Writer综合运用："></a>11. BufferedReader/Writer综合运用：</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.io.*;</span><br><span class="line">class Test&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">		String filename = &quot;E:\\BufferChar.txt&quot;;</span><br><span class="line">		String str1 = &quot;BufferedReder/Writer综合运用&quot;;</span><br><span class="line">		char[] c1 = str1.toCharArray();</span><br><span class="line">		File file = new File(filename);</span><br><span class="line">		</span><br><span class="line">		try &#123;</span><br><span class="line">			file.createNewFile();</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		try(FileReader fr = new FileReader(filename);</span><br><span class="line">			FileWriter fw = new FileWriter(filename);</span><br><span class="line">			CharArrayReader car = new CharArrayReader(c1);</span><br><span class="line">			CharArrayWriter caw = new CharArrayWriter();</span><br><span class="line">			BufferedReader bfr = new BufferedReader(car);</span><br><span class="line">			BufferedWriter bfw = new BufferedWriter(caw);)&#123;</span><br><span class="line">			</span><br><span class="line">			int len1;</span><br><span class="line">			while((len1=bfr.read())!=-1)		//因为BufferedReader的参数为car，</span><br><span class="line">												//而car读取了c1数组的数据到流，所以bfr可以读取到</span><br><span class="line">												//流中的数据</span><br><span class="line">				System.out.print((char) len1);</span><br><span class="line">			</span><br><span class="line">			caw.write(c1);</span><br><span class="line">			caw.writeTo(fw);</span><br><span class="line">			caw.close();</span><br><span class="line">			</span><br><span class="line">			fw.close();		//需先关闭保存</span><br><span class="line">			int len2;</span><br><span class="line">			while((len2=fr.read())!=-1)</span><br><span class="line">				System.out.print((char) len2);</span><br><span class="line">			</span><br><span class="line">		&#125;catch(IOException e) &#123;</span><br><span class="line">			System.out.println(e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/">http://yoursite.com/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/">九月 17日 2019, 2:12:19 下午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/">February 13th 2020, 11:42:12 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" title= "Java学习笔记(Day 14:NIO)">
+                    <div class="nextTitle">Java学习笔记(Day 14:NIO)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" title= "Java学习笔记(Day 12：Java.util:集合框架)">
+                    <div class="prevTitle">Java学习笔记(Day 12：Java.util:集合框架)</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#P644-P691"><span class="toc-number">1.</span> <span class="toc-text">P644-P691</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#回顾I-O"><span class="toc-number">1.1.</span> <span class="toc-text">回顾I/O</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结："><span class="toc-number">1.2.</span> <span class="toc-text">总结：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-输入流：Input-Reader"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 输入流：Input/Reader</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-InputStream字节：byte"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">1. InputStream字节：byte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Reader字符：char"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">2. Reader字符：char</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-输出流：Output-Writer"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 输出流：Output/Writer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-OutputStream字节：byte"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">1. OutputStream字节：byte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Writer字符：char"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2. Writer字符：char</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结字节流和字符流注意事项"><span class="toc-number">1.3.</span> <span class="toc-text">总结字节流和字符流注意事项:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File类：（直接处理文件和文件系统）（获取和操作磁盘文件的信息）（浏览子目录层次）"><span class="toc-number">1.4.</span> <span class="toc-text">File类：（直接处理文件和文件系统）（获取和操作磁盘文件的信息）（浏览子目录层次）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-目录操作"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 目录操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流类：四个抽象类（InputStream和OutputStream：针对字节流（字节或二进制对象）；Reader和Writer：针对字符流（字符或字符串））"><span class="toc-number">1.5.</span> <span class="toc-text">流类：四个抽象类（InputStream和OutputStream：针对字节流（字节或二进制对象）；Reader和Writer：针对字符流（字符或字符串））</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-字节流：（顶层：InputStream和OutputStream"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. 字节流：（顶层：InputStream和OutputStream)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-FileInputStream类：（针对文件操作）（输入数据到文件）"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">1. FileInputStream类：（针对文件操作）（输入数据到文件）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-FileOutputStream类：（针对文件操作）（从文件读取数据）"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">2. FileOutputStream类：（针对文件操作）（从文件读取数据）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-FileInputStream和FileOutputStream综合运用："><span class="toc-number">1.5.1.3.</span> <span class="toc-text">3. FileInputStream和FileOutputStream综合运用：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-ByteArrayInputStream类：（输入字节数据到流）"><span class="toc-number">1.5.1.4.</span> <span class="toc-text">4. ByteArrayInputStream类：（输入字节数据到流）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-ByteArrayOutputStream类：（从流输出字节数据）"><span class="toc-number">1.5.1.5.</span> <span class="toc-text">5. ByteArrayOutputStream类：（从流输出字节数据）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-ByteArrayInputStream和ByteArrayOutputStream综合运用："><span class="toc-number">1.5.1.6.</span> <span class="toc-text">6. ByteArrayInputStream和ByteArrayOutputStream综合运用：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-BufferedInputStream类-缓冲输入字节流-（输入到流）"><span class="toc-number">1.5.1.7.</span> <span class="toc-text">7.  BufferedInputStream类(缓冲输入字节流)（输入到流）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-BufferedOutputStream类：（缓冲输出字节流）（从流输出）"><span class="toc-number">1.5.1.8.</span> <span class="toc-text">8. BufferedOutputStream类：（缓冲输出字节流）（从流输出）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-BufferedInput-OutputStream综合运用："><span class="toc-number">1.5.1.9.</span> <span class="toc-text">9. BufferedInput/OutputStream综合运用：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-字符流（针对char类型）"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. 字符流（针对char类型）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Reader类：（抽象类）（输入到流）（读取）"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">1.Reader类：（抽象类）（输入到流）（读取）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Writer类：（从流输出）（写入）"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">2. Writer类：（从流输出）（写入）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-FileReader类：（从文件读取数据）（针对char类型）"><span class="toc-number">1.5.2.3.</span> <span class="toc-text">3. FileReader类：（从文件读取数据）（针对char类型）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-FileWriter类：（写入数据到文件）（针对char类型）"><span class="toc-number">1.5.2.4.</span> <span class="toc-text">4. FileWriter类：（写入数据到文件）（针对char类型）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-FileReader和FileWriter综合运用："><span class="toc-number">1.5.2.5.</span> <span class="toc-text">5. FileReader和FileWriter综合运用：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-CharArrayReader类：（输出流-（读取数据到流）"><span class="toc-number">1.5.2.6.</span> <span class="toc-text">6. CharArrayReader类：（输出流)（读取数据到流）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-CharArrayWriter类：（输入流）（将流中的数据写入）"><span class="toc-number">1.5.2.7.</span> <span class="toc-text">7. CharArrayWriter类：（输入流）（将流中的数据写入）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-CharArrayReader和CharArrayWriter综合运用："><span class="toc-number">1.5.2.8.</span> <span class="toc-text">8. CharArrayReader和CharArrayWriter综合运用：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-BufferedReader类：（缓冲区输入流）（读取数据到流）"><span class="toc-number">1.5.2.9.</span> <span class="toc-text">9. BufferedReader类：（缓冲区输入流）（读取数据到流）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-BufferedWriter类：（缓冲区输出流）（从流读取数据）"><span class="toc-number">1.5.2.10.</span> <span class="toc-text">10. BufferedWriter类：（缓冲区输出流）（从流读取数据）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-BufferedReader-Writer综合运用："><span class="toc-number">1.5.2.11.</span> <span class="toc-text">11. BufferedReader/Writer综合运用：</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

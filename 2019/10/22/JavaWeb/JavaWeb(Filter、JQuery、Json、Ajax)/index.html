@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>JavaWeb(Filter、JQuery、Json、Ajax) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">JavaWeb(Filter、JQuery、Json、Ajax)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            JavaWeb(Filter、JQuery、Json、Ajax)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaWeb">JavaWeb</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.5k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/10/22</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="Filter"><a href="#Filter" class="headerlink" title="Filter:()"></a>Filter:()</h3><ol>
+<li><p>Filter过滤器简单案例</p>
+</li>
+<li><p>Filter执行流程</p>
+</li>
+<li><p>Filter生命周期方法</p>
+<ol>
+<li>inti:一次执行,服务器启动执行</li>
+<li>destroy:一次执行,服务器正常关闭执行</li>
+<li>doFilter:每次请求都会拦截<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@WebFilter(&quot;/*&quot;)</span><br><span class="line">public class FilterTest2 implements Filter &#123;</span><br><span class="line">    //正常关闭执行destroy()</span><br><span class="line">    public void destroy() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //执行多次,每次请求都会被拦截</span><br><span class="line">    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;Filter执行&quot;);</span><br><span class="line">        chain.doFilter(req, resp);</span><br><span class="line">        System.out.println(&quot;Filter放行&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //服务器启动后创建,调用init方法</span><br><span class="line">    public void init(FilterConfig config) throws ServletException &#123;</span><br><span class="line">        System.out.println(&quot;Filter&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>Filter配置路径</p>
+<ol>
+<li><p>拦截路径:</p>
+<ol>
+<li>具体资源路径拦截:/index.jsp </li>
+<li>拦截目录:/user/*</li>
+<li>后缀名拦截:*.jsp</li>
+<li>拦截所有资源：/*</li>
+</ol>
+</li>
+<li><p>拦截方式:</p>
+<ol>
+<li><p>注解:设置dispatcherTypes属性</p>
+<ol>
+<li>REQUEST:默认值,浏览器直接请求资源</li>
+<li>FORWARD:转发访问<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@WebFilter(value = &quot;/*&quot;,dispatcherTypes=&#123;DispatcherType.FORWARD,DispatcherType.REQUEST&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>web.xml</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Filter链(配置多个过滤器)</p>
+<ol>
+<li>执行顺序:<ol>
+<li>F1 start</li>
+<li>F2 start</li>
+<li>资源执行</li>
+<li>F2 end</li>
+<li>F1 end</li>
+</ol>
+</li>
+<li>先后顺序:<ol>
+<li>注解配置:字符串小的先执行</li>
+<li>xml配置:先配置先执行</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>案例1:登陆验证：</p>
+<ol>
+<li>需求:<ol>
+<li>当用户访问服务器其他资源时,进行拦截,验证用户是否已经登录</li>
+<li>如果登录了,直接放行</li>
+<li>如果没有登录,跳转至登录页面</li>
+</ol>
+</li>
+<li>思路:<ol>
+<li>获取资源请求路径:request.getRequestURI()</li>
+<li>判断是否包含登录相关资源(也就是用户是否是在访问login.jsp页面):uri.contains(“/login.jsp”)….</li>
+<li>包含则放行继续操作,不包含则判断用户是否已经登录(获取session的user属性):requestgetSession.getAttribute(“user”);读取session中的user信息.如果user不为空则代表已经登录,如果为空则重定向到login.jsp页面</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>案例2:过滤敏感词</p>
+<ol>
+<li>思路:<ol>
+<li>对request对象的getParameter()方法进行增强,生成一个新的request</li>
+<li>放行,将新request对象传入</li>
+</ol>
+</li>
+<li>增强对象的功能:通过代理模式的动态代理实现<ol>
+<li>代理模式增强方法:(与真实对象实现相同的接口)<ol>
+<li>Proxy.newProxyInstance(obj.getClass().getClassLoader(),obj.getClass().getInterfaces(),new InvocationHandler())</li>
+</ol>
+</li>
+<li>实现步骤:<ol>
+<li>代理对象和真实对象实现相同的接口</li>
+<li>代理对象 = Proxy.new ProxyInstance()</li>
+<li>使用代理对象调用方法</li>
+<li>增强方法</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="JQuery-JavaScript框架-优化Dom操作"><a href="#JQuery-JavaScript框架-优化Dom操作" class="headerlink" title="JQuery:JavaScript框架,优化Dom操作"></a>JQuery:JavaScript框架,优化Dom操作</h3><ol>
+<li><p>JQuery对象与js对象:本质上都是数组</p>
+<ol>
+<li>JQuery对象和js对象的方法不通用</li>
+<li>互相转换:<ol>
+<li>jq –&gt; js:jq[索引]或jq.get(索引)</li>
+<li>js –&gt; jq:$(js对象)<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    //1. js获取tag</span><br><span class="line">    var div1 = document.getElementsByName(&quot;div&quot;);</span><br><span class="line">    alert(div1);</span><br><span class="line">    for (var i = 0; i &lt;div1.length ; i++) &#123;</span><br><span class="line">        div1[i].innerHTML(&quot;aabb&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    //2. jq获取tag</span><br><span class="line">    var $divs = $(&quot;div&quot;);</span><br><span class="line">    alert($divs);</span><br><span class="line">    $divs.html(&quot;bbaa&quot;);     //仅支持jq对象</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>JQuery基本语法:</p>
+<ol>
+<li><p>绑定事件:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//1. 绑定事件(click)</span><br><span class="line">var $b1 = $(&quot;#b1&quot;).click(function () &#123;</span><br><span class="line">    alert(&quot;error&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>入口函数:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//2. 入口函数:$(function)&#123;&#125;</span><br><span class="line">$(function () &#123;</span><br><span class="line">    alert(&quot;hhhh&quot;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>样式控制:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//3. 样式控制</span><br><span class="line">$(function()&#123;</span><br><span class="line">    $(&quot;#b1&quot;).css(&quot;background-color&quot;,&quot;red&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>JQuery选择器:</p>
+<ol>
+<li>基本选择器:<ol>
+<li>标签(元素):$(“标签名”)</li>
+<li>id:$(“#id值”)</li>
+<li>类:$(“.class值”)</li>
+</ol>
+</li>
+<li>层级选择器(元素标签):<ol>
+<li>后代:$(“A B”):A标签的所有B元素:(所有后代元素)(多层)</li>
+<li>子选择:$(“A &gt; B”):A标签的所有B标签的子元素：(一层)</li>
+</ol>
+</li>
+<li>属性选择器(属性值):<ol>
+<li>属性名:$(“A[属性]”)</li>
+<li>属性:$(“A[属性=值]”)</li>
+<li>符合属性:$(“A[属性=值][]..)</li>
+</ol>
+</li>
+<li>表单过滤选择器:<ol>
+<li>可用元素过滤:$(“A[属性=值]:enable”)</li>
+<li>不可用元素过滤:$(“A[属性=值]:disable”)</li>
+<li>单/复选框选中选择器:$(“A[属性=值]:checked”)</li>
+<li>下拉列表选中:$(“A[属性=值]:selected”)</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>DOM操作:</p>
+<ol>
+<li><p>内容操作:</p>
+<ol>
+<li>html():获取/设置元素标签体内容</li>
+<li>text():获取/设置元素标签体纯文本内容</li>
+<li>val():获取/设置元素的value属性值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$(function () &#123;</span><br><span class="line">    //1. 获取div的标签体内容</span><br><span class="line">    var html = $(&quot;#div&quot;).html();</span><br><span class="line">    alert(html);</span><br><span class="line">    //2. 获取div的文本内容</span><br><span class="line">    var text = $(&quot;#div&quot;).text();</span><br><span class="line">    alert(text);</span><br><span class="line">    //3. 获取input标签的value值</span><br><span class="line">    var value = $(&quot;#inputText&quot;).val();</span><br><span class="line">    alert(value);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>属性操作:</p>
+<ol>
+<li>通用属性<ol>
+<li>attr():获取/设置元素的属性</li>
+<li>removeAttr():删除属性</li>
+<li>prop():获取/设置元素的固有属性</li>
+<li>removeProp():删除固有属性</li>
+</ol>
+</li>
+<li>class属性<ol>
+<li>addClass():添加class属性</li>
+<li>removeClass():删除class属性</li>
+<li>toggleClass():切换class属性<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$(function () &#123;</span><br><span class="line">    // 通用属性操作</span><br><span class="line">    //1. 获取id为text的name属性</span><br><span class="line">    var name = $(&quot;#text&quot;).attr(&quot;name&quot;);</span><br><span class="line">    alert(name)</span><br><span class="line">    //2. 设置id为text的name属性为didu</span><br><span class="line">    $(&quot;#text&quot;).attr(&quot;name&quot;,&quot;didu&quot;);</span><br><span class="line">    //3. 新增id为text的area属性为9000;</span><br><span class="line">    $(&quot;#text&quot;).attr(&quot;area&quot;,9000);</span><br><span class="line">    //4. 删除id为text的name属性</span><br><span class="line">    $(&quot;#text&quot;).removeAttr(&quot;name&quot;);</span><br><span class="line">    //5. 获取hobby属性的状态(固有属性)</span><br><span class="line">    var checked = $(&quot;#tex&quot;).prop(&quot;checked&quot;);</span><br><span class="line">    alert(checked);</span><br><span class="line"></span><br><span class="line">    //class属性操作</span><br><span class="line">    //1. 添加class属性</span><br><span class="line">    $(&quot;#text&quot;).addClass(&quot;capital&quot;);</span><br><span class="line">    //2. 删除class属性</span><br><span class="line">    $(&quot;#text&quot;).removeClass(&quot;capital&quot;);</span><br><span class="line">    //3. 切换class属性</span><br><span class="line">    $(&quot;#text&quot;).toggleClass(&quot;capital&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>CRUD:</p>
+<ol>
+<li>对象1.append(对象2):将对象2追加到对象1末尾</li>
+<li>对象1.prepend(对象2):将对象2追加到对象1开头</li>
+<li>对象1.appendTo(对象2):将对象1追加到对象2末尾</li>
+<li>对象1.prepend(对象2):将对象1追加到对象2开头</li>
+<li>对象1.after(对象2):将1添加到2后</li>
+<li>对象1.before(对象2):将1添加到2前</li>
+<li>对象1.insertAfter(对象2):将2添加到1后</li>
+<li>对象1.insertBefore(对象2):将2添加到1前</li>
+<li>对象.remove():删除对象</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>案例1:隔行换色:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//1. 案例1:隔行换色</span><br><span class="line">    $(function () &#123;</span><br><span class="line">        //1. 获取奇数行(表单行数从0开始)的tr:gt</span><br><span class="line">        $(&quot;tr:gt(1):odd&quot;).css(&quot;backgroundColor&quot;,&quot;pink&quot;);</span><br><span class="line">        //2. 获取偶数行tr:gt(1):even</span><br><span class="line">        $(&quot;tr:gt(1):even&quot;).css(&quot;backgroundColor&quot;,&quot;green&quot;);</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>案例2:全选全不选</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//2. 全选全不选</span><br><span class="line">function selectAll(param) &#123;</span><br><span class="line">    $(&quot;.itemSelect&quot;).prop(&quot;checked&quot;,param.checked);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>案例3:将qq表情追加到文本框</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$(function () &#123;</span><br><span class="line">    //1. 给gif绑定click事件</span><br><span class="line">    $(&quot;ul img&quot;).click(function () &#123;</span><br><span class="line">    //2. 追加到p标签$(this).clone())</span><br><span class="line">    $(&quot;.word&quot;).append($(this).clone());</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>动画:</p>
+<ol>
+<li>speed:slow、normal、fast或时间</li>
+<li>easing:swing、liner</li>
+<li>显示效果:<ol>
+<li>show([speed],[easing],[fn])</li>
+<li>slideDown([speed],[easing],[fn])</li>
+<li>fadeIn([speed],[easing],[fn])</li>
+</ol>
+</li>
+<li>隐藏效果:<ol>
+<li>hide([speed],[easing],[fn])</li>
+<li>slideUp([speed],[easing],[fn])</li>
+<li>fadeOut([speed],[easing],[fn])</li>
+</ol>
+</li>
+<li>切换效果:<ol>
+<li>toggle([speed],[easing],[fn])</li>
+<li>slideToggle([speed],[easing],[fn])</li>
+<li>fadeToggle([speed],[easing],[fn])<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//1. 显示</span><br><span class="line">function showFn() &#123;</span><br><span class="line">    // $(&quot;#showDiv&quot;).show(&quot;slow&quot;);</span><br><span class="line">    // $(&quot;#showDiv&quot;).slideDown(&quot;slow&quot;);</span><br><span class="line">    $(&quot;#showDiv&quot;).fadeIn(5000);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//2. 隐藏</span><br><span class="line">function hiddenFn() &#123;</span><br><span class="line">    // $(&quot;#showDiv&quot;).hide(&quot;slow&quot;);</span><br><span class="line">    // $(&quot;#showDiv&quot;).slideUp(&quot;slow&quot;);</span><br><span class="line">    $(&quot;#showDiv&quot;).fadeOut(5000);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//3. 切换</span><br><span class="line">function toggleFn() &#123;</span><br><span class="line">    // $(&quot;#showDiv&quot;).toggle(3000);</span><br><span class="line">    // $(&quot;#showDiv&quot;).slideToggle(&quot;slow&quot;);</span><br><span class="line">    $(&quot;#showDiv&quot;).fadeToggle(5000);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>遍历:</p>
+<ol>
+<li>for循环</li>
+<li>jq.each()</li>
+<li>$.each()<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$(function () &#123;</span><br><span class="line">    var cities = $(&quot;#city li&quot;);</span><br><span class="line">    // 1. for</span><br><span class="line">    for (var i = 0; i &lt; cities.length; i++) &#123;</span><br><span class="line">        if(cities[i].innerHTML==&quot;上海&quot;)&#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        alert(i+&quot;:&quot;+cities[i].innerHTML);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //2. jq.each()</span><br><span class="line">    cities.each(function (index,element) &#123;</span><br><span class="line">        if($(element).html()==&quot;上海&quot;)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        alert(index+&quot;:&quot;+$(element).html());</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    //3. $.each()</span><br><span class="line">    $.each(cities,function (index,element) &#123;</span><br><span class="line">        alert(index+&quot;:&quot;+$(element).html());</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    //4. for(of)</span><br><span class="line">    for(li of cities)&#123;</span><br><span class="line">        alert($(li).html());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>JQuery事件绑定</p>
+<ol>
+<li>jq.事件(回调函数);</li>
+<li>jq对象.on(“事件”,回调函数)</li>
+<li>jq对象.off(“事件”)</li>
+<li>jq对象.toggle(fn1,fn2)<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//1. 标准绑定</span><br><span class="line">$(&quot;#b1&quot;).click(function () &#123;</span><br><span class="line">    alert(&quot;标准绑定&quot;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">//2. on绑定</span><br><span class="line">$(function () &#123;</span><br><span class="line">    $(&quot;#b1&quot;).on(&quot;click&quot;,function () &#123;</span><br><span class="line">        alert(&quot;on绑定click事件&quot;);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">//3. off解绑,点击b2解绑b1的click事件</span><br><span class="line">$(&quot;#b2&quot;).click(function () &#123;</span><br><span class="line">    $(&quot;#b1&quot;).off(&quot;click&quot;);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">//4. 事件切换(导入&quot;jquery-migrate&quot;)</span><br><span class="line">$(function () &#123;</span><br><span class="line">    $(&quot;#tog&quot;).toggle(function () &#123;</span><br><span class="line">        //1. 改变背景色为blue</span><br><span class="line">        $(&quot;#showDiv&quot;).css(&quot;backgroundColor&quot;,&quot;blue&quot;);</span><br><span class="line">    &#125;,function () &#123;</span><br><span class="line">        //2. 改变背景色为pink</span><br><span class="line">        $(&quot;#showDiv&quot;).css(&quot;backgroundColor&quot;,&quot;pink&quot;);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>案例:img滚动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//数组存放img路径</span><br><span class="line">var imgs = [&quot;img/1.jpg&quot;,&quot;img/2.jpg&quot;,</span><br><span class="line">            &quot;img/3.jpg&quot;,&quot;img/4.jpg&quot;,</span><br><span class="line">            &quot;img/5.jpg&quot;,&quot;img/6.jpg&quot;,</span><br><span class="line">            &quot;img/7.jpg&quot;,&quot;img/8.jpg&quot;,</span><br><span class="line">            &quot;img/9.jpg&quot;,&quot;img/10.jpg&quot;,</span><br><span class="line">            ];</span><br><span class="line"></span><br><span class="line">var startTime;        //定义定时器变量</span><br><span class="line">var Imgindex;         //定义imgs索引</span><br><span class="line"></span><br><span class="line">//小相框滚动()</span><br><span class="line">//1. 定义循环计时器</span><br><span class="line">$(function () &#123;</span><br><span class="line">    //设置开始按钮可用,停止按钮不可用</span><br><span class="line">    $(&quot;#start&quot;).prop(&quot;disabled&quot;,false);</span><br><span class="line">    $(&quot;#end&quot;).prop(&quot;disabled&quot;,true);</span><br><span class="line"></span><br><span class="line">    //1. start单击事件</span><br><span class="line">    $(&quot;#start&quot;).click(function () &#123;</span><br><span class="line">        startTime = setInterval(function () &#123;</span><br><span class="line">            //1. 点击开始按钮后,开始按钮不可用,停止按钮可用</span><br><span class="line">            $(&quot;#start&quot;).prop(&quot;disabled&quot;,true);</span><br><span class="line">            $(&quot;#end&quot;).prop(&quot;disabled&quot;,false);</span><br><span class="line">            //2.2 生成随机数获取数组元素</span><br><span class="line">             Imgindex = Math.floor(Math.random()*10);</span><br><span class="line">            //2. 切换src属性</span><br><span class="line">            $(&quot;#imgId1&quot;).prop(&quot;src&quot;,imgs[Imgindex]);</span><br><span class="line">        &#125;,10);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    //大相框跟随小相框</span><br><span class="line">    //2. end绑定单击事件</span><br><span class="line">    $(&quot;#end&quot;).click(function () &#123;</span><br><span class="line">        //点击停止按钮后开始按钮可用,停止按钮不可用</span><br><span class="line">        $(&quot;#start&quot;).prop(&quot;disabled&quot;,false);</span><br><span class="line">        $(&quot;#end&quot;).prop(&quot;disabled&quot;,true);</span><br><span class="line">        clearInterval(startTime);</span><br><span class="line">            //2. 同步src属性</span><br><span class="line">        $(&quot;#imgId2&quot;).prop(&quot;src&quot;,imgs[Imgindex]);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插件:增强JQuery的功能</p>
+<ol>
+<li>$.fn.extend(obj):对象插件</li>
+<li>$.extend(obj):全局插件<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//1. 定义JQuery的对象插件</span><br><span class="line">$.fn.extend(&#123;</span><br><span class="line">    check:function () &#123;</span><br><span class="line">        this.prop(&quot;checked&quot;,true);</span><br><span class="line">    &#125;,</span><br><span class="line">    uncheck:function () &#123;</span><br><span class="line">        this.prop(&quot;checked&quot;,false);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">//2. 调用extend</span><br><span class="line">$(function () &#123;</span><br><span class="line">    //获取按钮</span><br><span class="line">    $(&quot;#selectAll&quot;).click(function () &#123;</span><br><span class="line">        $(&quot;input[type=&apos;checkbox&apos;]&quot;).check();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $(&quot;#cancelAll&quot;).click(function () &#123;</span><br><span class="line">        $(&quot;input[type=&apos;checkbox&apos;]&quot;).uncheck();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="AJAX-异步的JavaScript和XML-Ajax无需重新载入整个页面-只需更新部分页面技术"><a href="#AJAX-异步的JavaScript和XML-Ajax无需重新载入整个页面-只需更新部分页面技术" class="headerlink" title="AJAX:异步的JavaScript和XML,Ajax无需重新载入整个页面,只需更新部分页面技术"></a>AJAX:异步的JavaScript和XML,Ajax无需重新载入整个页面,只需更新部分页面技术</h2><ol>
+<li>同步：客户端在发送请求等待服务器响应期间无法进行其他操作</li>
+<li>异步：客户端在发送请求等待服务器响应期间可以进行其他操作</li>
+<li>JQuery对Ajax的实现<ol>
+<li>$.ajax({key:value,…});</li>
+<li>$.get(url,[data],[callback],[type]);</li>
+<li>$.post()<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function fun1() &#123;</span><br><span class="line">    //1. $.ajax(key:value,.....)</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">        url:&quot;ajaxServlet&quot;,  //请求路径</span><br><span class="line">        type:&quot;POST&quot;,        //请求方式</span><br><span class="line">        data:&#123;&quot;username&quot;:&quot;tom&quot;,&quot;age&quot;:20&#125;,   //JSON数据格式</span><br><span class="line">        success:function(data)&#123; //响应成功执行success</span><br><span class="line">            alert(data);</span><br><span class="line">        &#125;,</span><br><span class="line">        error:function (data) &#123; //响应出错执行error</span><br><span class="line">            alert(&quot;Error发生&quot;);</span><br><span class="line">        &#125;,</span><br><span class="line">        dataType:&quot;text&quot;,     //设置响应数据的格式</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    //2. $.get(url,[data],[callback],[type])</span><br><span class="line">    $.get(&quot;ajaxServlet&quot;,&#123;username:Ks-39&#125;,function (data)&#123;</span><br><span class="line">            alert(data);</span><br><span class="line">        &#125;,&quot;text&quot;)</span><br><span class="line"></span><br><span class="line">    //3. $.post(url,[data],[callback],[type])</span><br><span class="line">    $.post(&quot;ajaxServlet&quot;,&#123;username:ks-39&#125;,function (data)&#123;</span><br><span class="line">        alert(data);</span><br><span class="line">    &#125;,&quot;text&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="JSON：JavaScript对象表示法-用于存储和交换文本信息"><a href="#JSON：JavaScript对象表示法-用于存储和交换文本信息" class="headerlink" title="JSON：JavaScript对象表示法(用于存储和交换文本信息)"></a>JSON：JavaScript对象表示法(用于存储和交换文本信息)</h2><ol>
+<li><p>基本语法:</p>
+<ol>
+<li>基本规则:<ol>
+<li>数字:</li>
+<li>字符串:(双引号)</li>
+<li>逻辑值</li>
+<li>数组:([]){“person;[{},{},…]”}</li>
+<li>对象({}){“address”:{“province”:”..”,”city”:”…”}}</li>
+</ol>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Persion p = new Person();</span><br><span class="line">p.setName(&quot;aaa&quot;);</span><br><span class="line">p.setAge(20);</span><br><span class="line"> </span><br><span class="line">var p = &#123;&quot;name&quot;:&quot;张三,&quot;age&quot;:20&#125;;        //JSON数据</span><br><span class="line">var person = &#123;&quot;person&quot;:[</span><br><span class="line">            &#123;&quot;name&quot;:&quot;...&quot;,&quot;age&quot;:20&#125;,</span><br><span class="line">            &#123;&quot;name&quot;:&quot;...&quot;,&quot;age&quot;:21&#125;,</span><br><span class="line">            ]</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>获取JSON数据</p>
+<ol>
+<li>json.key</li>
+<li>json[“key”]</li>
+<li>数组对象[index]<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var person = &#123;&quot;name&quot;:&quot;张三&quot;,&quot;age&quot;:20&#125;;</span><br><span class="line">var name1 = person.name;</span><br><span class="line">var age1 = person.age;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">var persons = &#123;&quot;persons&quot;:[</span><br><span class="line">                &#123;&quot;name&quot;:&quot;李四&quot;,&quot;age&quot;:20&#125;,</span><br><span class="line">                &#123;&quot;name&quot;:&quot;王五&quot;,&quot;age&quot;:21&#125;,</span><br><span class="line">            ]</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">var persons = persons.persons[0];   //获取第一个元素</span><br><span class="line"></span><br><span class="line">var p = [&#123;&quot;name&quot;:&quot;张三&quot;,&quot;age&quot;:20&#125;,</span><br><span class="line">         &#123;&quot;name&quot;:&quot;李四&quot;,&quot;age&quot;:21&#125;,</span><br><span class="line">         &#123;&quot;name&quot;:&quot;王五&quot;,&quot;age&quot;:21&#125;];</span><br><span class="line"></span><br><span class="line">var p  = p[0];// 获取第一个元素</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>Jackson解析器:java对象与json转换</p>
+<ol>
+<li><p>使用步骤:</p>
+<ol>
+<li>导入jackson.jar</li>
+<li>创建ObjectMapper</li>
+<li>调用wrier()方法</li>
+</ol>
+</li>
+<li><p>Java对象转JSON对象</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class JSONTest &#123;</span><br><span class="line">    //1. Java对象转JSON</span><br><span class="line">    //2. List&amp;Map对象转JSON</span><br><span class="line">    </span><br><span class="line">    @Test</span><br><span class="line">    public void test() throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        //创建java对象</span><br><span class="line">        Person p = new Person();</span><br><span class="line">        p.setName(&quot;zhang&quot;);</span><br><span class="line">        p.setAge(20);</span><br><span class="line">        p.setGender(&quot;male&quot;);</span><br><span class="line"></span><br><span class="line">        //创建Jackson对象 ObjectMapper</span><br><span class="line">        ObjectMapper mapper = new ObjectMapper();</span><br><span class="line">        /*</span><br><span class="line">        转换</span><br><span class="line">            1. writeValue(obj)</span><br><span class="line">            2. writeValueAsString(obj)</span><br><span class="line">        */</span><br><span class="line">        // writeValueAsString(obj)</span><br><span class="line">        String JSON = mapper.writeValueAsString(p);</span><br><span class="line">        System.out.println(JSON);</span><br><span class="line"></span><br><span class="line">        // writeValue(obj)</span><br><span class="line">        mapper.writeValue(new File(&quot;E://1.txt&quot;),p);</span><br><span class="line">        </span><br><span class="line">        //创建List集合</span><br><span class="line">        Person p1 = new Person();</span><br><span class="line">        p1.setName(&quot;zhang&quot;);</span><br><span class="line">        p1.setAge(20);</span><br><span class="line">        p1.setGender(&quot;male&quot;);</span><br><span class="line">        List&lt;Person&gt; pList = new ArrayList&lt;&gt;();</span><br><span class="line">        pList.add(p);</span><br><span class="line">        pList.add(p1);</span><br><span class="line"></span><br><span class="line">        //创建Jackson对象</span><br><span class="line">        ObjectMapper mapper1 = new ObjectMapper();</span><br><span class="line">        String pList1 = mapper1.writeValueAsString(pList);</span><br><span class="line">        System.out.println(pList1);</span><br><span class="line"></span><br><span class="line">        // 创建Map集合(key:value)</span><br><span class="line">        Map&lt;String,Object&gt; map = new HashMap&lt;String, Object&gt;();</span><br><span class="line">        map.put(&quot;name&quot;,&quot;zhangsan&quot;);</span><br><span class="line">        map.put(&quot;age&quot;,20);</span><br><span class="line">        map.put(&quot;gender&quot;,&quot;male&quot;);</span><br><span class="line"></span><br><span class="line">        ObjectMapper mapper2 = new ObjectMapper();</span><br><span class="line">        String map1 = mapper2.writeValueAsString(map);</span><br><span class="line">        System.out.println(map1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>案例:注册时检验用户名是否可用</p>
+<ol>
+<li>需求当文本输入框失焦后,发送ajax请求,查询数据库是否存在该用户名</li>
+<li>实现步骤:<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;注册&lt;/title&gt;</span><br><span class="line">    &lt;script src=&quot;jquery-3.3.1.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        //</span><br><span class="line">        $(function () &#123;</span><br><span class="line">        //绑定失焦事件</span><br><span class="line">        $(&quot;#username&quot;).blur(function () &#123;</span><br><span class="line">            //获取文本框输入</span><br><span class="line">            var username = $(this).val();</span><br><span class="line">            //发送ajax请求</span><br><span class="line">            $.get(&quot;RegistServlet&quot;,&#123;username:username&#125;,function (data) &#123;</span><br><span class="line">                //data格式:</span><br><span class="line">                // 存在:&#123;&quot;userExist&quot;:true,&quot;msg&quot;: &quot;该用户名已存在,请更换一个吧&quot;&#125;</span><br><span class="line">                // 不存在:&#123;&quot;userExist&quot;:false,&quot;msg&quot;:&quot;该用户名可用&quot;&#125;</span><br><span class="line">                var span = $(&quot;#msg&quot;);</span><br><span class="line">                if(data.userExist)&#123;</span><br><span class="line">                    //用户名存在</span><br><span class="line">                    span.css(&quot;color&quot;,&quot;red&quot;);</span><br><span class="line">                        span.html(data.msg);</span><br><span class="line">                &#125;else &#123;</span><br><span class="line">                    //用户名不存在</span><br><span class="line">                    span.css(&quot;color&quot;,&quot;green&quot;);</span><br><span class="line">                    span.html(data.msg);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;form&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; id=&quot;username&quot; placeholder=&quot;请输入用户名&quot;&gt;</span><br><span class="line">        &lt;span id=&quot;msg&quot;&gt;&lt;/span&gt;</span><br><span class="line">        &lt;br&gt;</span><br><span class="line">        &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;请输入密码&quot;&gt;&lt;br&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;注册&quot;&gt;&lt;br&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">@WebServlet(&quot;/RegistServlet&quot;)</span><br><span class="line">public class RegistServlet extends HttpServlet &#123;</span><br><span class="line">    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">        //设置服务器响应文本格式为application/json</span><br><span class="line">        response.setContentType(&quot;application/json;charset=utf-8&quot;);</span><br><span class="line">        //1. 获取用户名</span><br><span class="line">        String username = request.getParameter(&quot;username&quot;);</span><br><span class="line">        //2. 调用service层判断用户名是否存在</span><br><span class="line">        Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        if (&quot;tom&quot;.equals(username)) &#123;</span><br><span class="line">            //存在</span><br><span class="line">            map.put(&quot;userExist&quot;, true);</span><br><span class="line">            map.put(&quot;msg&quot;, &quot;该用户名已存在,请更换一个吧&quot;);</span><br><span class="line">            System.out.println(&quot;存在&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            map.put(&quot;userExist&quot;, false);</span><br><span class="line">            map.put(&quot;msg&quot;, &quot;该用户名可用&quot;);</span><br><span class="line">            System.out.println(&quot;不存在&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //3. 将map转为json</span><br><span class="line">        ObjectMapper mapper = new ObjectMapper();</span><br><span class="line">        mapper.writeValue(response.getWriter(),map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">        this.doPost(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/">http://yoursite.com/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/">十月 22日 2019, 11:31:22 中午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/">February 17th 2020, 9:06:49 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" title= "JavaWeb(Redis非关系型数据库)">
+                    <div class="nextTitle">JavaWeb(Redis非关系型数据库)</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" title= "JavaWebs(MVC实战:用户信息管理表)">
+                    <div class="prevTitle">JavaWebs(MVC实战:用户信息管理表)</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Filter"><span class="toc-number">1.</span> <span class="toc-text">Filter:()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JQuery-JavaScript框架-优化Dom操作"><span class="toc-number">2.</span> <span class="toc-text">JQuery:JavaScript框架,优化Dom操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AJAX-异步的JavaScript和XML-Ajax无需重新载入整个页面-只需更新部分页面技术"><span class="toc-number"></span> <span class="toc-text">AJAX:异步的JavaScript和XML,Ajax无需重新载入整个页面,只需更新部分页面技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JSON：JavaScript对象表示法-用于存储和交换文本信息"><span class="toc-number"></span> <span class="toc-text">JSON：JavaScript对象表示法(用于存储和交换文本信息)</span></a>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

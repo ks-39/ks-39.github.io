@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Java学习笔记(Day 4：继承+String+varargs) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Java学习笔记(Day 4：继承+String+varargs)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Java学习笔记(Day 4：继承+String+varargs)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaSe">JavaSe</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/09/02</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="p150-p179"><a href="#p150-p179" class="headerlink" title="p150 - p179"></a>p150 - p179</h1><hr>
+<h2 id="继承-重点"><a href="#继承-重点" class="headerlink" title="继承(重点)"></a>继承(重点)</h2><h3 id="1-子类使用extends关键字继承超类"><a href="#1-子类使用extends关键字继承超类" class="headerlink" title="1. 子类使用extends关键字继承超类"></a>1. 子类使用extends关键字继承超类</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A &#123;</span><br><span class="line">	int i,j;  //定义A的实例变量</span><br><span class="line">	void showij() &#123;  //构造A的方法</span><br><span class="line">		System.out.println(&quot;i and j: &quot;+i+&quot; and &quot;+j);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">	class B extends A&#123;   //B继承A,能够直接访问A的成员(包括实例变量，方法）</span><br><span class="line">		int k;</span><br><span class="line">		void showk() &#123;</span><br><span class="line">			System.out.println(&quot;k: &quot;+k);</span><br><span class="line">		&#125;</span><br><span class="line">		void sum() &#123;</span><br><span class="line">			System.out.println(&quot;i+j+k = &quot;+(i+j+k));  //所以能够在sum方法里直接引用i和j</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">class SimpleHeritance&#123;</span><br><span class="line">	public static void main(String args[]) &#123;</span><br><span class="line">			A superob = new A();  //创建(链接)superob为A的对象</span><br><span class="line">			B subob = new B();   //创建subob为B的对象</span><br><span class="line">			superob.i = 10;   //实例化i为10</span><br><span class="line">			superob.j = 20;</span><br><span class="line">			System.out.println(&quot;contents of superob is :&quot;);</span><br><span class="line">			superob.showij();   //调用了A类中的showij方法</span><br><span class="line">			System.out.println();</span><br><span class="line">			subob.i = 7;  //B类的对象subob能够直接引用A类的i、j，因为它继承自A，包含了A的所有成员</span><br><span class="line">			subob.j = 8;</span><br><span class="line">			subob.k = 9;  //subob初始化自己类中创建的的k</span><br><span class="line">			System.out.println(&quot;contents of subob is :&quot;);</span><br><span class="line">			subob.showij();   //B类的对象subob能够调用A类的方法</span><br><span class="line">			subob.showk();</span><br><span class="line">			System.out.println();</span><br><span class="line">			System.out.println(&quot;sum of i,j,k is :&quot;);</span><br><span class="line">			subob.sum();</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">contents of superob is :</span><br><span class="line">i and j: 10 and 20</span><br><span class="line">contents of subob is :</span><br><span class="line">i and j: 7 and 8</span><br><span class="line">k: 9</span><br><span class="line">sum of i,j,k is :</span><br><span class="line">i+j+k = 24</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-就算子类能继承超类的所有成员，也无法继承超类中被声明为私有的成员。例如："><a href="#2-就算子类能继承超类的所有成员，也无法继承超类中被声明为私有的成员。例如：" class="headerlink" title="2. 就算子类能继承超类的所有成员，也无法继承超类中被声明为私有的成员。例如："></a>2. 就算子类能继承超类的所有成员，也无法继承超类中被声明为私有的成员。例如：</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">	private int a;</span><br><span class="line">	.....</span><br><span class="line">&#125;</span><br><span class="line">class B extends A&#123;</span><br><span class="line">	int b;</span><br><span class="line">	void sum()&#123;</span><br><span class="line">		total = a+b; //这个语句无法被执行，因为a是A类的私有成员</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-使用继承可以拓展类的成员"><a href="#3-使用继承可以拓展类的成员" class="headerlink" title="3. 使用继承可以拓展类的成员"></a>3. 使用继承可以拓展类的成员</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//通过继承拓展Box类的成员属性</span><br><span class="line">class Box&#123;</span><br><span class="line">	double width;</span><br><span class="line">	double height;</span><br><span class="line">	double depth;</span><br><span class="line">	</span><br><span class="line">	Box(double w,double h,double d)&#123;</span><br><span class="line">		width = w;</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">	&#125;</span><br><span class="line">	Box()&#123;</span><br><span class="line">		width = -1;</span><br><span class="line">		height = -1;</span><br><span class="line">		depth = -1;</span><br><span class="line">	&#125;</span><br><span class="line">	Box(double len)&#123;</span><br><span class="line">		width = height = depth = len;</span><br><span class="line">	&#125;</span><br><span class="line">	double volume() &#123;</span><br><span class="line">		return width*height*depth;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Boxadd extends Box &#123;   //定义Boxadd继承自Box</span><br><span class="line">	double weight;</span><br><span class="line">	int color;</span><br><span class="line">	Boxadd(double w,double h,double d,double m,int c)&#123;</span><br><span class="line">		width = w;  //Boxadd拥有Box类的所有成员，重新初始化</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">		weight = m;   //初始化自身的成员</span><br><span class="line">		color = c;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Boxadd mybox1 = new Boxadd(10,20,30,0.5,10);   //如果想要拓展成员的话，必须是实例化对象为Boxadd的对象，因为只有声明为Boxadd的对象才能实例化拓展的成员</span><br><span class="line">		System.out.println(&quot;volume of mybox1 is &quot;+mybox1.volume());</span><br><span class="line">		System.out.println(&quot;weight of mybox1 is &quot;+mybox1.weight);</span><br><span class="line">		System.out.println(&quot;color of mybox1 is &quot;+mybox1.color);  //成功传入weight和color成员变量</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">volume of mybox1 is 6000.0</span><br><span class="line">weight of mybox1 is 0.5</span><br><span class="line">color of mybox1 is 10</span><br></pre></td></tr></table></figure>
+
+<p>一旦创建一个定义对象通用（不是private）的超类，就可以用子类继承这个超类，每个子类在增加自己特有的属性(成员)，这就是继承的本质。</p>
+<h3 id="4-超类变量可以引用子类对象"><a href="#4-超类变量可以引用子类对象" class="headerlink" title="4. 超类变量可以引用子类对象"></a>4. 超类变量可以引用子类对象</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Boxadd extends Box &#123;   //定义Boxadd继承自Box</span><br><span class="line">	double weight;</span><br><span class="line">	Boxadd(double w,double h,double d,double m)&#123;</span><br><span class="line">		width = w;  //Boxadd拥有Box类的所有成员，重新初始化</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">		weight = m;   //初始化自身的成员</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Boxadd weightbox = new Boxadd(10,20,30,5);</span><br><span class="line">		Box clonebox = new Box();</span><br><span class="line">		System.out.println(&quot;volume of weightbox is &quot;+weightbox.volume());</span><br><span class="line">		System.out.println(&quot;weight of weightbox is &quot;+weightbox.weight);</span><br><span class="line">		clonebox = weightbox;  //因为Boxadd是Box的子类，所以可以将weightbox对象的引用赋值给clonebox</span><br><span class="line">		System.out.println(&quot;voulume of clonebox is &quot;+clonebox.volume());</span><br><span class="line">//		System.out.println(&quot;weight of clonebox is &quot;+clonebox.weight()); //该语句无法被执行，因为weight是在Boxadd类中定义的</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当指向子类对象的引用(weightbox)赋值给超类的引用变量(子类和超类共有的width、height、depth)时，只能访问子类与超类共有的部分(也就是只能访问width、height和depth)。因为超类不知道子类添加了什么成员。</p>
+<h3 id="5-超类引用变量可以指向子类对象"><a href="#5-超类引用变量可以指向子类对象" class="headerlink" title="5. 超类引用变量可以指向子类对象"></a>5. 超类引用变量可以指向子类对象</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">	void callme() &#123;</span><br><span class="line">		System.out.println(&quot;in A&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class B extends A&#123;</span><br><span class="line">	void callme() &#123;</span><br><span class="line">		System.out.println(&quot;in B&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class C extends A&#123;</span><br><span class="line">	void callme() &#123;</span><br><span class="line">		System.out.println(&quot;in C&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">public class Dynamic &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		A a = new A();</span><br><span class="line">		B b = new B();</span><br><span class="line">		C c = new C();</span><br><span class="line">		A r;  //声明r为A的引用变量</span><br><span class="line">		r = a;  //将r指向a对象，实现了引用指向对象的操作(回顾声明对象的步骤)，r引用变量引用a对象</span><br><span class="line">		r.callme();   //调用A中的callme方法</span><br><span class="line">		r = b;   //当r引用变量引用b对象时，前提是B类是A类的子类</span><br><span class="line">		r.callme();  //执行B类的callme方法</span><br><span class="line">		r = c;  //当r引用变量引用c对象时 </span><br><span class="line">		r.callme();	  //执行C类中的callme方法</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">in A</span><br><span class="line">in B</span><br><span class="line">in C</span><br></pre></td></tr></table></figure>
+
+<p>在main方法中，声明了a、b、c三个对象，还声明了一个A的引用变量r，当r指向A子类的对象后，就可以使用r引用变量调用子类中的方法</p>
+<h3 id="6-多级继承"><a href="#6-多级继承" class="headerlink" title="6. 多级继承"></a>6. 多级继承</h3><p>假设有A、B、C三个类，C是B的子类，B又是A的子类，那么C就拥有B和A的所有特征。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Box&#123;</span><br><span class="line">	private double width;  //定义私有变量</span><br><span class="line">	private double height;</span><br><span class="line">	private double depth;</span><br><span class="line">	Box(Box ob)&#123;   //定义参数为一个对象</span><br><span class="line">		width = ob.width;    //把对象的值赋值给变量（初始化）</span><br><span class="line">		height = ob.height;</span><br><span class="line">		depth = ob.depth;</span><br><span class="line">	&#125;</span><br><span class="line">	Box(double w,double h,double d)&#123;  </span><br><span class="line">		width = w;</span><br><span class="line">		height = h;</span><br><span class="line">		depth = d;</span><br><span class="line">	&#125;</span><br><span class="line">	Box()&#123;</span><br><span class="line">		width = -1;</span><br><span class="line">		height = -1;</span><br><span class="line">		depth = -1;</span><br><span class="line">	&#125;</span><br><span class="line">	Box(double len)&#123;</span><br><span class="line">		width = height = depth = len;</span><br><span class="line">	&#125;</span><br><span class="line">	double volume() &#123;</span><br><span class="line">		return width*height*depth;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Boxadd extends Box&#123;</span><br><span class="line">	double weight;</span><br><span class="line">	Boxadd(Boxadd ob)&#123;  		//将Boxadd对象作为参数</span><br><span class="line">		super(ob);   //super()必须是子类构造函数中的第一条语句，当参数为一个对象时，匹配调用Box(object)方法</span><br><span class="line">		weight = ob.weight;</span><br><span class="line">	&#125;</span><br><span class="line">	Boxadd(double w,double h,double d,double m)&#123;</span><br><span class="line">		super(w,h,d);  //当实例化对象传入w、h和d实参时，调用super方法，把w、h、d当做参数传给Box(double w,double h,double d)构造函数，让其帮忙初始化</span><br><span class="line">		weight = m;</span><br><span class="line">	&#125;</span><br><span class="line">	Boxadd()&#123;</span><br><span class="line">		super();</span><br><span class="line">		weight = -1;</span><br><span class="line">	&#125;</span><br><span class="line">	Boxadd(double len,double m)&#123;</span><br><span class="line">		super(len);  </span><br><span class="line">		weight = m;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class shipment extends Boxadd&#123;  //</span><br><span class="line">	double cost;</span><br><span class="line">	shipment(shipment ob)&#123;</span><br><span class="line">		super(ob);</span><br><span class="line">		cost = ob.cost;</span><br><span class="line">	&#125;</span><br><span class="line">	shipment(double w,double h,double d,double m,double c)&#123;</span><br><span class="line">		super(w,h,d,m);</span><br><span class="line">		cost = c;</span><br><span class="line">	&#125;</span><br><span class="line">	shipment(double len,double m,double c)&#123;</span><br><span class="line">		super(len,m);</span><br><span class="line">		cost = c;</span><br><span class="line">	&#125;</span><br><span class="line">	shipment()&#123;</span><br><span class="line">		super();</span><br><span class="line">		cost = -1;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class BoxDemo&#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		shipment mybox1 = new shipment(10,20,30,5,30);  </span><br><span class="line">		shipment mybox2 = new shipment(mybox1);</span><br><span class="line">		shipment mybox3 = new shipment();</span><br><span class="line">		shipment mycube = new shipment(6,6,36);</span><br><span class="line">		System.out.println(&quot;volume of mybox1 is &quot;+mybox1.volume());</span><br><span class="line">		System.out.println(&quot;weight of mybox1 is &quot;+mybox1.weight);</span><br><span class="line">		System.out.println(&quot;the price of mybox1 is &quot;+mybox1.cost+&quot;\n&quot;);</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;volume of mybox2 is &quot;+mybox2.volume());</span><br><span class="line">		System.out.println(&quot;weight of mybox2 is &quot;+mybox2.weight);</span><br><span class="line">		System.out.println(&quot;the price of mybox2 is &quot;+mybox2.cost+&quot;\n&quot;);</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;volume of mybox3 is &quot;+mybox3.volume());</span><br><span class="line">		System.out.println(&quot;weight of mybox3 is &quot;+mybox3.weight);</span><br><span class="line">		System.out.println(&quot;the price of mybox3 is &quot;+mybox3.cost+&quot;\n&quot;);</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;volume of mycube is &quot;+mycube.volume());</span><br><span class="line">		System.out.println(&quot;weight of mycube is &quot;+mycube.weight);</span><br><span class="line">		System.out.println(&quot;the price of mybcube is &quot;+mycube.cost+&quot;\n&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">volume of mybox1 is 6000.0</span><br><span class="line">weight of mybox1 is 5.0</span><br><span class="line">the price of mybox1 is 30.0</span><br><span class="line"></span><br><span class="line">volume of mybox2 is 6000.0</span><br><span class="line">weight of mybox2 is 5.0</span><br><span class="line">the price of mybox2 is 30.0</span><br><span class="line"></span><br><span class="line">volume of mybox3 is -1.0</span><br><span class="line">weight of mybox3 is -1.0</span><br><span class="line">the price of mybox3 is -1.0</span><br><span class="line"></span><br><span class="line">volume of mycube is 216.0</span><br><span class="line">weight of mycube is 6.0</span><br><span class="line">the price of mybcube is 36.0</span><br></pre></td></tr></table></figure>
+
+<p>具体步骤形如一级继承，<font color="red">需要注意在super方法传入参数必须要加上Boxadd定义的weight变量，才能调用到Boxadd类中相对应的构造函数。</font></p>
+<hr>
+<h2 id="String类"><a href="#String类" class="headerlink" title="String类"></a>String类</h2><ol>
+<li><p><strong>String是java类库中最常用的类，String类型的对象是不可变的，一旦创建了一个String对象，其内容就不能再改变</strong><br>最简单的创建方式:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">String mystring = &quot;this is a string.&quot;;</span><br><span class="line">System.out.println(mystring);</span><br><span class="line">String类可以通过“+”来连接：</span><br><span class="line">String mystring2 = &quot;this is a string too.&quot;;</span><br><span class="line">System.out.println(&quot;mystring is:&quot;+mystring+&quot;,mystring2 is:&quot;+mystring);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>String类方法：</p>
+<ol>
+<li>equals()方法测试两个字符串是否相等：boolean equals(secondStr)</li>
+<li>length()方法获取字符串长度：int length(mystring) 或者 obj.length()</li>
+<li>charAt()方法获取字符串中指定索引处的字符：char charAt(index),String数组没有charAt方法（因为数组都没有charAt方法）<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class StringDemo &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		String str1 = &quot;first string&quot;;</span><br><span class="line">		String str2 = &quot;second string&quot;;</span><br><span class="line">		String str3 = &quot;third string&quot;;</span><br><span class="line">		String str_array1[] = &#123;&quot;one&quot;,&quot;two&quot;,&quot;three&quot;&#125;;  //字符串数组</span><br><span class="line">		String str_array2[] = &#123;&quot;one&quot;,&quot;two&quot;,&quot;three&quot;&#125;;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;Length of first string:&quot;+str1.length());</span><br><span class="line">		System.out.println(&quot;Length of str_array:&quot;+str_array1.length);</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;char at index 3 in second string:&quot;+str2.charAt(3));</span><br><span class="line">		//System.out.println(&quot;char at index 2 in str_array:&quot;+str_array1.charAt(2));  数组没有charAt方法！！！</span><br><span class="line">		</span><br><span class="line">		if(str1.equals(str2))  //对象与对象比较</span><br><span class="line">			System.out.println(&quot;str1 == str2&quot;);</span><br><span class="line">		else</span><br><span class="line">			System.out.println(&quot;str1 != str2&quot;);</span><br><span class="line">		</span><br><span class="line">		if(str1.equals(str3))</span><br><span class="line">			System.out.println(&quot;str1 == str3&quot;);</span><br><span class="line">		else</span><br><span class="line">			System.out.println(&quot;str1 != str3&quot;);</span><br><span class="line">		</span><br><span class="line">		if(str_array1.equals(str_array2))</span><br><span class="line">			System.out.println(&quot;str_array1 == str_array2&quot;);</span><br><span class="line">		else</span><br><span class="line">			System.out.println(&quot;str_array1 != str_array2&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">Length of first string:12</span><br><span class="line">Length of str_array:3</span><br><span class="line">char at index 3 in second string:o</span><br><span class="line">str1 != str2</span><br><span class="line">str1 != str3</span><br><span class="line">str_array1 != str_array2</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="varargs：可变长度参数：当参数的具体数量不能确定时，一般将参数放入数组中，然后将数组传递给方法。可变长度参数-type-…val-必须放在最后面声明"><a href="#varargs：可变长度参数：当参数的具体数量不能确定时，一般将参数放入数组中，然后将数组传递给方法。可变长度参数-type-…val-必须放在最后面声明" class="headerlink" title="varargs：可变长度参数：当参数的具体数量不能确定时，一般将参数放入数组中，然后将数组传递给方法。可变长度参数(type …val)必须放在最后面声明"></a>varargs：可变长度参数：当参数的具体数量不能确定时，一般将参数放入数组中，然后将数组传递给方法。可变长度参数(type …val)必须放在最后面声明</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Varargs &#123;</span><br><span class="line">	static void vaTest(int v[]) &#123;</span><br><span class="line">		System.out.println(&quot;Number of args:&quot;+v.length+&quot;\ncontents:&quot;);  //当调用方法时先打印了v.length，</span><br><span class="line">	</span><br><span class="line">	for(int x:v)  //使用for-each来用x迭代v数组的元素</span><br><span class="line">		System.out.print(x +&quot; &quot;);  //打印contents</span><br><span class="line">	System.out.println(); //遍历完contents打印换行</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		int n1[] = &#123;10&#125;;</span><br><span class="line">		int n2[] = &#123;1,2,3&#125;;</span><br><span class="line">		int n3[] = &#123;&#125;;</span><br><span class="line">		</span><br><span class="line">		vaTest(n1);</span><br><span class="line">		vaTest(n2);</span><br><span class="line">		vaTest(n3);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">结果：</span><br><span class="line">Number of args:1</span><br><span class="line">contents:</span><br><span class="line">10 </span><br><span class="line">Number of args:3</span><br><span class="line">contents:</span><br><span class="line">1 2 3 </span><br><span class="line">Number of args:0</span><br><span class="line">contents:</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/">http://yoursite.com/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/">九月 2日 2019, 11:15:44 上午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/">February 12th 2020, 11:52:48 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" title= "Java学习笔记(Day 5：重写+重载+抽象类+访问权限）">
+                    <div class="nextTitle">Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" title= "Java学习笔记（Day3：this+成员变量+static+final+super）">
+                    <div class="prevTitle">Java学习笔记（Day3：this+成员变量+static+final+super）</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#p150-p179"><span class="toc-number">1.</span> <span class="toc-text">p150 - p179</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承-重点"><span class="toc-number">1.1.</span> <span class="toc-text">继承(重点)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-子类使用extends关键字继承超类"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 子类使用extends关键字继承超类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-就算子类能继承超类的所有成员，也无法继承超类中被声明为私有的成员。例如："><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 就算子类能继承超类的所有成员，也无法继承超类中被声明为私有的成员。例如：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-使用继承可以拓展类的成员"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 使用继承可以拓展类的成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-超类变量可以引用子类对象"><span class="toc-number">1.1.4.</span> <span class="toc-text">4. 超类变量可以引用子类对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-超类引用变量可以指向子类对象"><span class="toc-number">1.1.5.</span> <span class="toc-text">5. 超类引用变量可以指向子类对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-多级继承"><span class="toc-number">1.1.6.</span> <span class="toc-text">6. 多级继承</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#String类"><span class="toc-number">1.2.</span> <span class="toc-text">String类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#varargs：可变长度参数：当参数的具体数量不能确定时，一般将参数放入数组中，然后将数组传递给方法。可变长度参数-type-…val-必须放在最后面声明"><span class="toc-number">1.3.</span> <span class="toc-text">varargs：可变长度参数：当参数的具体数量不能确定时，一般将参数放入数组中，然后将数组传递给方法。可变长度参数(type …val)必须放在最后面声明</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

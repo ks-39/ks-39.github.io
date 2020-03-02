@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>MySQL基础 · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">MySQL基础</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            MySQL基础
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "MySQL">MySQL</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.3k</span>阅读时长: <span class="post-count reading-time">14 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/10/05</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="Mysql内容："><a href="#Mysql内容：" class="headerlink" title="Mysql内容："></a>Mysql内容：</h2><ol>
+<li><p>卸载：</p>
+<ol>
+<li>删除mysql目录下的my.ini文件中”datadir=”….”</li>
+<li>卸载Mysql</li>
+<li>删除C：//ProgramData目录下的mysql文件夹</li>
+</ol>
+</li>
+<li><p>启动服务<br>cmd:net start mysql;net stop mysql</p>
+</li>
+<li><p>登陆mysql</p>
+<ol>
+<li>本地<br>cmd:mysql -u root -p</li>
+<li>其他<br>cmd:mysql –host=ip –user=root –password=目标密码</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a>SQL语句</h2><h3 id="基础语法规则"><a href="#基础语法规则" class="headerlink" title="基础语法规则"></a>基础语法规则</h3><ol>
+<li>单行或多行书写，分号;结束</li>
+<li>可以使用空格和缩进</li>
+<li>不区分大小写，关键字建议使用大写</li>
+<li>–或#：单行注释语句，/<em>。。。。</em>/多行注释</li>
+</ol>
+<hr>
+<h2 id="SQL语句-1"><a href="#SQL语句-1" class="headerlink" title="SQL语句"></a>SQL语句</h2><h3 id="1-DDL（CREATE、ALTER、DROP-对数据库、表进行操作）"><a href="#1-DDL（CREATE、ALTER、DROP-对数据库、表进行操作）" class="headerlink" title="1. DDL（CREATE、ALTER、DROP)(对数据库、表进行操作）"></a>1. DDL（CREATE、ALTER、DROP)(对数据库、表进行操作）</h3><ol>
+<li>操作数据库（CRUD）<ol>
+<li>C(Create):创建<ol>
+<li>CREATE关键字<ol>
+<li>CREATE database if not exists db1;//如果数据库不存在则创建，如存在则不创建(存在不报错)</li>
+<li>CREATE database db2 character set gbk;//设置数据库格式为gbk</li>
+<li>CREATE database if not exists db3 character set gbk;//判断db3是否存在并设置字符集为gbk</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>R(Retrieve):查询<ol>
+<li>SHOW关键字<ol>
+<li>SHOW databases;//查看数据库</li>
+<li>SHOW create database mysql;//查看创建“mysql”数据库的语句</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>U(Update):修改<ol>
+<li>ALTER关键字<ol>
+<li>ALTER database db3 character set utf8;//将db3的字符集类型改为utf8;</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>D(Delete):删除<ol>
+<li>DROP关键字<ol>
+<li>DROP database if exists db3; //如果存在，删除指定数据库</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>使用数据库<ol>
+<li>SELECT关键字<ol>
+<li>SELECT database();   //查询当前使用的数据库名称</li>
+</ol>
+</li>
+<li>USE关键字<ol>
+<li>USE db1; //使用db1数据库</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>操作表<ol>
+<li>C(CREATE)：创建<br> 1.形式：<br> CREATE table table-name(<pre><code>列1 数据类型1,
+列2 数据类型2,
+....
+列n 数据类型n           //最后一列不需要逗号</code></pre> );<ul>
+<li>SQL数据类型:<ol>
+<li>int</li>
+<li>double:score double(5,2);//一共5位,小数点保留2位</li>
+<li>date:日期,形式:yyyy-MM-dd</li>
+<li>datetime:日期,形式:yyyy-MM-dd  HH:mm:SS:DD</li>
+<li>timestamp:时间戳,形式:yyyy-MM-dd HH:mm:ss.(如不指定则使用当前时间)</li>
+<li>varchar:字符串,形式:name varchar(20);//最大20个字符</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li>CREATE table info(  //创建table名为info的表<br> ID int,<br> name varchar(32),<br> age int,<br> score Double(4,1),<br> birthday date,<br> insert_time timestamp<br>);</li>
+</ol>
+</li>
+<li>R(Retrieve):查询<ol>
+<li>SHOW关键字：<ol>
+<li>SHOW tables;//查看所有表</li>
+</ol>
+</li>
+<li>DESC关键字:<ol>
+<li>DESC table-name; //查询表结构  </li>
+</ol>
+</li>
+</ol>
+</li>
+<li>U(Update):修改<ol>
+<li>修改表名:<ol>
+<li>ALTER table old-name rename to new-name;</li>
+</ol>
+</li>
+<li>修改字符集:<ol>
+<li>SHOW create table Students;//先查看表属性</li>
+<li>ALTER table table-name character set utf8;//将字符集改为utf8;</li>
+</ol>
+</li>
+<li>添加一列:<ol>
+<li>ALTER table table-name add 列名 数据类型;</li>
+</ol>
+</li>
+<li>改列名和数据类型:<ol>
+<li>ALTER table table-name change 原列名 新列名 新数据类型;  //change改列名和数据类型</li>
+<li>ALTER table table-name modify 列名 新数据类型;  //modify只改数据类型</li>
+</ol>
+</li>
+<li>删除列:<ol>
+<li>ALTER table table-name drop 列名;</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>D(Delete):删除<ol>
+<li>DROP table table-name;</li>
+<li>DROP table if exists table-name;</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="2-DML-INSERT、UPDATE、DELETE-增删改语句"><a href="#2-DML-INSERT、UPDATE、DELETE-增删改语句" class="headerlink" title="2. DML(INSERT、UPDATE、DELETE)(增删改语句)"></a>2. DML(INSERT、UPDATE、DELETE)(增删改语句)</h3><ol>
+<li>添加数据<ol>
+<li>insert into 表名(列名1,列名2,…列名n) values(值1,值2,….值n);</li>
+<li>实例:insert int students(id,’name’,age,score,birthdat,insert_time) values(1,”ks-39”,20,90,”1222-12-01”,current_time);</li>
+<li>insert INTO stu(ID,phone_num) VALUES(1,”123456”),(2,”1234566”);  //添加多个数据</li>
+</ol>
+</li>
+<li>删除数据<ol>
+<li>delete from 表名 [where 条件]  //如果不加条件则删除表中所有条件</li>
+<li>实例：<ol>
+<li>delete from students where id = 1;   //删除id=1的列数据</li>
+<li>delete from students;  //删除表格</li>
+</ol>
+</li>
+<li>truncate table 表名;  //删除表并创建一个和原来一样的空表</li>
+<li>实例：<ol>
+<li>truncate table students;//删除表格并创建一个一样的表格</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>修改数据<ol>
+<li>update 表名 set 列名1 = 值1, 列名2 = 值2,…. [where 条件]</li>
+<li>实例：<ol>
+<li>update students set age = 20 where ID = 2;   //将ID=2的列的age数值改为19</li>
+<li>update students set age = 20;        //如果不加where则修改表中所有的age.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="3-DQL-SELECT、WHERE、ORDER-BY、GROUP-BY-查语句"><a href="#3-DQL-SELECT、WHERE、ORDER-BY、GROUP-BY-查语句" class="headerlink" title="3. DQL(SELECT、WHERE、ORDER BY、GROUP BY)(查语句)"></a>3. DQL(SELECT、WHERE、ORDER BY、GROUP BY)(查语句)</h3><ol>
+<li><p>语法</p>
+<ol>
+<li><p>select 字段列表</p>
+</li>
+<li><p>from 表名列表</p>
+</li>
+<li><p>where 条件列表</p>
+</li>
+<li><p>group by 字组字段</p>
+</li>
+<li><p>having 分组之后的条件</p>
+</li>
+<li><p>order by 排序</p>
+</li>
+<li><p>limit 分页限定</p>
+</li>
+</ol>
+</li>
+<li><p>基础查询</p>
+<ol>
+<li>基本查询<br> select <pre><code>name,   -- 姓名
+age     -- 年龄</code></pre> from<pre><code>studnets;</code></pre></li>
+<li>去重<br> select distinct<pre><code>name,
+score   </code></pre> from<pre><code>students;</code></pre></li>
+<li>计算和<br> select name,math,english,iffull(math,0) + english from students;</li>
+<li>起别名<br> select name,math 数学,english 英语,ifNULL(math,0)+ english 总分 from students;</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="4-DCL"><a href="#4-DCL" class="headerlink" title="4. DCL"></a>4. DCL</h3><ol>
+<li>管理用户<ol>
+<li>查询用户<ol>
+<li>use mysql;</li>
+<li>select * from user;</li>
+</ol>
+</li>
+<li>创建用户<ol>
+<li>create user ‘用户名‘@’主机名’ identified by ‘密码’;</li>
+</ol>
+</li>
+<li>删除用户<ol>
+<li>drop user ‘用户名‘@’主机名’;</li>
+</ol>
+</li>
+<li>修改用户密码<ol>
+<li>update user set password = password(‘新密码’) where user = ‘用户名’;</li>
+<li>set password for ‘用户名‘@’主机名’ = password(‘新密码’);</li>
+<li>忘记了密码：<ol>
+<li>（管理员）cmd——&gt; net stop mysql</li>
+<li>使用无验证方式启动mysql服务：mysqld –skip-grant-tables</li>
+<li>新打开一个cmd：直接输入mysql回车登陆mysql</li>
+<li>设置新密码：update user set password = password(‘新密码’) where user = ‘用户名’;</li>
+<li>打开任务管理器，结束mysql进程</li>
+<li>（管理员）cmd——&gt; new start mysql</li>
+<li>使用新的用户名和密码登陆：mysql -u用户名 -p密码</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>权限管理<ol>
+<li>查询权限：<ol>
+<li>show grants for ‘用户名‘@’主机名’;<br>//usage表示可以登陆</li>
+</ol>
+</li>
+<li>授权s<ol>
+<li>grant 权限类型 on 数据库.表名 to ‘用户名‘@’主机名’;</li>
+<li>GRANT SELECT ON db1.account to ‘test’@’localhost’;       //test用户可以查看db1数据库的account表</li>
+<li>grant select,delete,update on db1.account to ‘test’@’localhost’;     //将查看，删除，修改的权限赋给test用户</li>
+<li>grant all on <em>.</em> to  ‘test’@’localhost’;     //全权赋予test用户</li>
+</ol>
+</li>
+<li>撤销权限<ol>
+<li>revoke 权限类型 on 数据库.表名 from ‘用户名‘@’主机名’;</li>
+<li>revoke select on * from ‘test’@’localhost’;        //撤销test用户的查看权限</li>
+<li>revoke all on <em>.</em> from ‘test’@’localhost’;       //撤销全部权限</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="约束：（保证数据正确性、有效性和完整性）"><a href="#约束：（保证数据正确性、有效性和完整性）" class="headerlink" title="约束：（保证数据正确性、有效性和完整性）"></a>约束：（保证数据正确性、有效性和完整性）</h2><ol>
+<li>主键约束：（primary key）（非空且唯一）（一个表格只能有一个主键）<ol>
+<li>创建表时添加主键约束<br> create table stu(<pre><code>id int primary key ,    //记得加空格,id数据必须非空且唯一
+name varchar(32),</code></pre> );</li>
+<li>删除主键约束<br> alter table stu drop primary key;       //不需要指定字段，因为表格只能有一个主键</li>
+<li>添加主键约束<br> alter table stu modify id int primary key;      //如果表格数据有空数据和重复数据，需先更改或删除数据才能执行该语句</li>
+<li>自动增长：如果字段数据类型为数值类型(int)，使用auto_increment自动增长<ol>
+<li>创建表是添加自动增长<br> create table stu(<pre><code>id int primary key auto_increment;  //设置主键为int类型并自动增长，</code></pre> );</li>
+<li>删除自动增长<br> alter table stu modify id int;  //保留主键约束，删除自动增长</li>
+<li>添加自动增长<br> alter table stu modify id int auto_increment;</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>非空约束：（not null）<ol>
+<li>创建表时对字段数据进行约束<br> create table stu(<pre><code>id int,
+name varchar(32) not null       //限制name不能为空</code></pre> );</li>
+<li>删除非空约束：<br> alter table stu modify name varchar(32);    //modify更改name的数据类型</li>
+<li>直接添加非空约束：<br> alter table stu modify name varchar(32) not null;   //modify更改name的数据类型加入not null限制</li>
+</ol>
+</li>
+<li>唯一约束：（unique）（null不做限制）<ol>
+<li>创建表时添加唯一约束<br> create table stu(<pre><code>id int,
+phone_number varchar(32) unique     //限制phonenumber为唯一</code></pre> );</li>
+<li>删除唯一约束<br> alter table stu drop index phone_number;    //drop index 删除唯一约束</li>
+<li>添加唯一约束<br> alter table stu modify phone_number varchar(32) unique;     //先将相同数据删除或修改才能执行</li>
+</ol>
+</li>
+<li>外键约束：（foreign key）（多表）（外键可以为null）<ol>
+<li>创建表时添加外键<br> create table stu(<pre><code>....
+constraint 外键名 foreign key 外键列 reference 主表名(主表主键名)</code></pre> );</li>
+<li>实例：<ol>
+<li>创建部门表<br> create table department(<pre><code>id int primary key auto_increment,
+dep_name varchar(20),
+dep_location varchar(20)</code></pre> );</li>
+<li>创建员工表<br> create table employee(<pre><code>id int primary key auto_increment,
+name varchar(20),
+age int,
+dep_id int,
+constraint emp_dep foreign key (dep_id) references department(id)       //emp_dep为外键名,不可与字段重名.dep_id为外键,关联到department的id字段.</code></pre> );</li>
+<li>添加部门信息<br> insert into department values(null,”研发部”,”广州”),(null,”销售部”,”深圳”);</li>
+<li>添加员工信息<br> insert int employee(name,age,dep_id) values(“张三”,20,1),(“李四”,21,2),(“王五”,20,1);       //1代表研发部，2代表销售部</li>
+<li>无法进行以下操作：<ol>
+<li>删除department的研发部数据:delete from department where id = 1;      //无法执行,因为employee表中的dep_id与之关联</li>
+<li>添加不存在department表的id：insert into employee(name,age,dep_id) values(“www”,20,3);        //无法执行，因为没有dep_id = 3的部门.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>删除外键约束<br> alter table employee drop foreign key emp_dep;  //删除外键名emp_dep</li>
+<li>添加外键约束<br> alter table employee add constraint emp_dep foreign key (dep_id) reference department(id);  //设置外键名为emp_dep，外键为dep_id，关联department表的id值</li>
+</ol>
+</li>
+<li>级联操作：外键随关联的主键而变动<ol>
+<li>添加外键时设置级联更新<ol>
+<li>先删除外键：<br> alter table employee foreign key emp_dep;</li>
+<li>再添加：<br> alter table employee add constraint emp_dep foreign key (dep_id) references department(id) ON UPDATE CASCADE;</li>
+<li>将department中研发部的id改为3，employee中与之关联的dep_id自动变为3<ol>
+<li>update department set id = 1 where id = 3;</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>删除级联：<ol>
+<li>先删除外键：<br> alter table employee foreign key emp_dep;</li>
+<li>添加外键删除级联<br> alter table employee add constraint emp_dep foreign key(dep_id) references department(id) on update cascade on delete cascade;      //on delete cascade删除级联</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="多表关系"><a href="#多表关系" class="headerlink" title="多表关系"></a>多表关系</h2><h3 id="1-一对多：（多的一方为外键，一为主键）"><a href="#1-一对多：（多的一方为外键，一为主键）" class="headerlink" title="1. 一对多：（多的一方为外键，一为主键）"></a>1. 一对多：（多的一方为外键，一为主键）</h3><ol>
+<li>如：上述案例中employee表的dep_id指向department的id.<br>多个员工属于一个部门。</li>
+<li>实现步骤：<ol>
+<li>创建主键表department：create table department();</li>
+<li>创建外键表employee并设置外键关联和级联：</li>
+<li>插入数据</li>
+</ol>
+</li>
+<li>案例：人事部门代号<ol>
+<li>创建主键表department：<ol>
+<li>create table department(<pre><code>id int primary key auto_increment,
+dep_name varchar(20),</code></pre>);</li>
+</ol>
+</li>
+<li>创建外键表employee并设置外键约束和级联操作<ol>
+<li>create table employee(<pre><code>id int primary key auto_increment,
+name varchar(20),
+dep_id int,
+constraint emp_dep foreign key(dep_id) references department(id) on update cascade</code></pre>);</li>
+</ol>
+</li>
+<li>添加部门信息<br> insert into department values(null,”研发部”),(null,”销售部”);</li>
+<li>添加员工信息<br> insert into employee(name,age,dep_id) values(“张三”,1),(“李四”,2),(“王五”,1);       //1代表研发部，2代表销售部</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="2-多对多：（创建第三方表为外键指向主键）"><a href="#2-多对多：（创建第三方表为外键指向主键）" class="headerlink" title="2. 多对多：（创建第三方表为外键指向主键）"></a>2. 多对多：（创建第三方表为外键指向主键）</h3><ol>
+<li>如学生选课</li>
+<li>实现步骤：<ol>
+<li>创建学生表students：create table students();</li>
+<li>创建课程表class：create table class();</li>
+<li>创建第三方中间表student_class：create</li>
+</ol>
+</li>
+<li>案例：<ol>
+<li>创建学生表<br> create table student(<pre><code>id int primary key auto_increment,  //id为主键
+stu_name varchar(20)</code></pre> );</li>
+<li>创建课程表<br> create table class(<pre><code>id int primary key auto_increment,  //id为主键
+class_name varchar(32)</code></pre> );</li>
+<li>创建关系表<br> create table stu_class(<pre><code>s_id int,
+c_id int,
+foreign key(s_id) references student(id),   //设置s_id为外键关联到student表的id值
+foreign key(c_id) references class(id),     //设置c_id为外键关联到class表的id值
+primary key(s_id,c_id)      //设置s_id和c_id为主键</code></pre> );</li>
+<li>插入学生数据<br> insert into student values(null,”a”),(null,”b”),(null,”c”);</li>
+<li>插入课程数据<br> insert into class values(null,”math”),(null,”english”);</li>
+<li>插入选课数据<br> insert into stu_class values(1,1),(1,2),(2,1);  //代号为1的学生选了课程代号为1、2的课</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="数据库设计范式"><a href="#数据库设计范式" class="headerlink" title="数据库设计范式"></a>数据库设计范式</h2><ol>
+<li>第一范式就是原子性，字段不可再分割；</li>
+<li>第二范式就是完全依赖，没有部分依赖；</li>
+<li>第三范式就是没有传递依赖。</li>
+</ol>
+<hr>
+<h2 id="数据库备份和还原"><a href="#数据库备份和还原" class="headerlink" title="数据库备份和还原"></a>数据库备份和还原</h2><ol>
+<li>命令行<ol>
+<li>备份<br> mysqldump -uroot -p密码 指定数据库 &gt; 路径<br> 例如：mysqldump -uroot -p db1 &gt; G://db1.sql;</li>
+<li>还原<ol>
+<li>先创建同名数据库<br> create database db1;</li>
+<li>使用数据库<br> use db1;</li>
+<li>还原数据<br> source G：//db1.sql;</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>图形化工具(navicat)</li>
+</ol>
+<hr>
+<h2 id="多表查询"><a href="#多表查询" class="headerlink" title="多表查询"></a>多表查询</h2><ol>
+<li>笛卡尔积：（取集合的所有组成情况）<ol>
+<li>select * from department,employee;      //两个集合的所有组成情况</li>
+</ol>
+</li>
+<li>内连接查询<ol>
+<li>隐式内连接：使用where提取数据<ol>
+<li>select * from department,employee where employee.dep_id = department.id;    //查询employee和department的对应情况</li>
+<li>select employee.name * from department,employee where employee.dep_id = department.id;       //查询employee表的员工名称和department表的部门名</li>
+<li>select <pre><code>t1.name,
+t2.name</code></pre> from <pre><code>employee t1,    //命名employee表为t1
+department t2   //命名department表为t2</code></pre> where<pre><code>t1.dep_id = t2.id;</code></pre></li>
+</ol>
+</li>
+<li>显示内连接：t1 [inner] join t2 on statement;     //inner可选<ol>
+<li>select * from employee inner join department on employee.dep_id = department.id;    //将employee的数据与department的数据进行比对,提取出与dep_id对应的department数据</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>外连接查询<ol>
+<li>左外连接<br> select 字段 from 表1 left [outer] join 表2 on 条件</li>
+<li>右外连接<br> select 字段 from 表1 right [outer] join 表2 on 条件</li>
+</ol>
+</li>
+<li>子查询<ol>
+<li>结果单行单列<ol>
+<li>select * from employee where employee.salary = (select max(salary) from employee);      //查询employee表中最高salary</li>
+<li>select * from employee where employee.salary &lt; (select avg(salary) from employee);       //查询工资低于平均工资的信息</li>
+</ol>
+</li>
+<li>结果多行单列<ol>
+<li>select * from employee where dep_id in (select id from department where name = “研发部” or name = “销售部”);     //查询employee表中dep_id对应department表中”研发部”和”销售部”的id。如1对应研发部，2对应销售部</li>
+</ol>
+</li>
+<li>多行多列<ol>
+<li>select * from department t1,(select * from employee where employee.age &gt; 20) t2 where t1.id = t2.dep_id;     //查询年龄大于20的员工的信息和其对应部门信息</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><ol>
+<li>操作：<ol>
+<li>开启事务：start transaction;</li>
+<li>回滚：rollback;</li>
+<li>提交：commit;</li>
+</ol>
+</li>
+<li>案例：<br> start transaction;       //开始一个事务,保证多行语句不会出现上一语句执行而下一语句因错误而无法执行的情况<br> update account set balance = balance - 500 where name = “张三”;<br> update account set balance = balance + 500 where name = “李四”;<br> commit;     //如果没有错误，提交事务的语句(即可以执行语句)<br> rollback;       //如果有错误，不执行事务中的语句</li>
+<li>事务的四大特征<ol>
+<li>原子性：不可分割的最小操作单位，要么同时成功，要么同时失败(事务包含的语句要不就执行全部，要不就全都不执行)</li>
+<li>持久性：当事务提交或回滚后，数据库会持久化地保存数据</li>
+<li>隔离性：事务之间相互独立</li>
+<li>一致性：事务操作前后数据总量不变。事务只做数据移动操作。</li>
+</ol>
+</li>
+<li>事务的隔离级别：<ol>
+<li>查询数据库隔离级别<br> select @@tx_isolation;</li>
+<li>设置隔离级别<br> set global transaction isolation level 级别字符串</li>
+</ol>
+</li>
+</ol>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/10/05/MySql/MySQL基础/">http://yoursite.com/2019/10/05/MySql/MySQL基础/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/10/05/MySql/MySQL基础/">十月 5日 2019, 5:00:57 下午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/10/05/MySql/MySQL基础/">February 17th 2020, 6:11:45 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/10/06/JavaSe/JavaSe-JDBD/" title= "JavaSe:JDBD">
+                    <div class="nextTitle">JavaSe:JDBD</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" title= "Java线程同步的三种方式">
+                    <div class="prevTitle">Java线程同步的三种方式</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql内容："><span class="toc-number">1.</span> <span class="toc-text">Mysql内容：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL语句"><span class="toc-number">2.</span> <span class="toc-text">SQL语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础语法规则"><span class="toc-number">2.1.</span> <span class="toc-text">基础语法规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL语句-1"><span class="toc-number">3.</span> <span class="toc-text">SQL语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-DDL（CREATE、ALTER、DROP-对数据库、表进行操作）"><span class="toc-number">3.1.</span> <span class="toc-text">1. DDL（CREATE、ALTER、DROP)(对数据库、表进行操作）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-DML-INSERT、UPDATE、DELETE-增删改语句"><span class="toc-number">3.2.</span> <span class="toc-text">2. DML(INSERT、UPDATE、DELETE)(增删改语句)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-DQL-SELECT、WHERE、ORDER-BY、GROUP-BY-查语句"><span class="toc-number">3.3.</span> <span class="toc-text">3. DQL(SELECT、WHERE、ORDER BY、GROUP BY)(查语句)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-DCL"><span class="toc-number">3.4.</span> <span class="toc-text">4. DCL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#约束：（保证数据正确性、有效性和完整性）"><span class="toc-number">4.</span> <span class="toc-text">约束：（保证数据正确性、有效性和完整性）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多表关系"><span class="toc-number">5.</span> <span class="toc-text">多表关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-一对多：（多的一方为外键，一为主键）"><span class="toc-number">5.1.</span> <span class="toc-text">1. 一对多：（多的一方为外键，一为主键）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-多对多：（创建第三方表为外键指向主键）"><span class="toc-number">5.2.</span> <span class="toc-text">2. 多对多：（创建第三方表为外键指向主键）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库设计范式"><span class="toc-number">6.</span> <span class="toc-text">数据库设计范式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库备份和还原"><span class="toc-number">7.</span> <span class="toc-text">数据库备份和还原</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多表查询"><span class="toc-number">8.</span> <span class="toc-text">多表查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-number">9.</span> <span class="toc-text">事务</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="ks-39">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="ks-39">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="Fake it till you make it">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>JavaWeb(前端三板斧之JavaScript) · ks-39&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >ks-39&#39;s home.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">JavaWeb(前端三板斧之JavaScript)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>ks-39's home.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/background.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            JavaWeb(前端三板斧之JavaScript)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "JavaWeb">JavaWeb</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.9k</span>阅读时长: <span class="post-count reading-time">13 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/10/13</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="内容"><a href="#内容" class="headerlink" title="内容:"></a>内容:</h2><ol>
+<li>JavaScript = ECMAScript + (BOM+DOM)：（控制页面元素，让页面拥有动态效果）</li>
+<li>BOM和DOM的关系<ol>
+<li>BOM是浏览器对象模型，用来获取或设置浏览器的属性、行为，例如：新建窗口、获取屏幕分辨率、浏览器版本号等。</li>
+<li>DOM是文档对象模型，用来获取或设置文档中标签的属性，例如获取或者设置input表单的value值。</li>
+<li>BOM的内容不多，主要还是DOM。由于DOM的操作对象是文档（Document），所以dom和浏览器没有直接关系。</li>
+<li>BOM六大模块:frame，history，navigator，document，location，screen。其中document就是我们所说的DOM。document与其他不同的地方在于，其他四大对象是对浏览器操作。而document是对浏览器中显示的网页做的操作，所以叫做DOM</li>
+</ol>
+</li>
+<li>BOM的核心是window对象(即浏览器页面),其六大核心模块为document(即DOM)/frane/history/location/navigator/screen.<ol>
+<li>window弹窗类效果:alert()/confirm()/prompt()</li>
+<li>window开关页面:close()/open()</li>
+<li>window定时器:setTimeout()/clearTimeout()/setInterval()/clearInterval()</li>
+<li>Location.href:浏览器地址栏网页地址</li>
+</ol>
+</li>
+<li>DOM(即Document对象,控制HTML文档内容)<ol>
+<li>查找HTML元素:getElementById()/getElementByTagName()/getElementByClassName()/getElementByName()</li>
+<li>创建对象:createAttribute()/createElement()</li>
+<li>改变HTML内容:document.getElementById(id).innerHTML() = “new text”;       //仅支持改变文本内容</li>
+<li>改变CSS内容:document.getElementById(id).style.attrubute = “new attribute”;       //改变属性值</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="JavaScript-JavaScript是ECMAScript的一种实现。ECMAScript和JavaScript的关系是-前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和ActionScript）"><a href="#JavaScript-JavaScript是ECMAScript的一种实现。ECMAScript和JavaScript的关系是-前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和ActionScript）" class="headerlink" title="JavaScript:JavaScript是ECMAScript的一种实现。ECMAScript和JavaScript的关系是:前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和ActionScript）"></a>JavaScript:JavaScript是ECMAScript的一种实现。ECMAScript和JavaScript的关系是:前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和ActionScript）</h2><h3 id="1-JavaScript基础概述"><a href="#1-JavaScript基础概述" class="headerlink" title="1. JavaScript基础概述:"></a>1. JavaScript基础概述:</h3><ol>
+<li><p>语法:与HTML的结合方式：（script标签的放置位置会影响解析的先后顺序）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    alert(&quot;弹出警示框&quot;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变量:</p>
+<ol>
+<li><p>var 变量名 = 初始值;</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var num1 = 10;</span><br><span class="line">var num2 = 20;</span><br><span class="line">var sum = num1 + num2;</span><br><span class="line">var str1 = &quot;hello&quot;;</span><br><span class="line">var str2 = &quot;world&quot;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>声明变量但不赋值,变量值为undefined</p>
+</li>
+</ol>
+</li>
+<li><p>数据类型</p>
+<ol>
+<li><p>动态类型,同一个变量可以作为不同类型:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var x;      //undefined</span><br><span class="line">var x = 1;      //number</span><br><span class="line">var x = &quot;hello&quot;;        //String</span><br><span class="line">var x = true;       //boolean</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本数据类型:</p>
+<ol>
+<li>number:数字。整数/小数/NaN(not a number不是数字的数字类型)</li>
+<li>String:字符/字符串</li>
+<li>boolean:</li>
+<li>undefined:无初始值</li>
+</ol>
+</li>
+<li><p>引用数据类型:对象</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var student = &#123;name:&quot;Tom&quot;,age:&quot;20&quot;&#125;;        //对象student拥有属性name和属性age</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>null属于对象类型,与undefined的值相等,但类型不相等.</p>
+</li>
+</ol>
+</li>
+<li><p>运算符:</p>
+<ol>
+<li><p>一元运算符:一个运算数</p>
+<ol>
+<li><p>+(正号)-(负号):如果不是number,自动转换。<br>String转number,如果String的字面值为数字,直接转换,否则NaN。boolean转number,false为0,true为1;</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    var obj = +&quot;abc&quot;;</span><br><span class="line">    alert(typeof(obj));</span><br><span class="line">    alert(b);</span><br><span class="line">    显示:NaN</span><br><span class="line">    ```` </span><br><span class="line">2. 比较运算符:</span><br><span class="line">    1. ==：先进行类型转换，再进行比较</span><br><span class="line">    2. ===(全等于)：先进行类型判断，如果类型不一致，直接false</span><br><span class="line">3. 三元运算符</span><br><span class="line">    1. ?：statement</span><br></pre></td></tr></table></figure>
+
+<p>var a = 1;<br>var b = 2;<br>var c = a &gt; b ? 1:0     //判断a &gt; b的结果，如果true则1，否则0</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    4. 算术运算符:加减乘除</span><br><span class="line">    5. 逻辑运算符:与或非</span><br><span class="line">    6. 类型运算符:</span><br><span class="line">        1. typeof:返回变量类型</span><br><span class="line">        2. instanceof:如果对象是对象类型的实例,返回true</span><br><span class="line">    7. 赋值运算符:+=/-=/*=//=/%=;  ++/--</span><br><span class="line">5. 函数:(后续有详细探讨)</span><br><span class="line">    1. 语法:</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>function myFunction(p1,p2){<br> return p1*p2;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 函数调用:</span><br></pre></td></tr></table></figure>
+
+<p>var x = myFunction(3,4);</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">6. 对象:(后续有详细探讨)</span><br><span class="line">    1. 对象属性:(名称:值被称为属性)</span><br></pre></td></tr></table></figure>
+
+<p>var person = {name:”Bill”,age:”20};</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 对象方法</span><br></pre></td></tr></table></figure>
+
+<p>var person = {<br> name:”Bill”;<br> age:”20”;<br> information:function(){</p>
+<pre><code>return &quot;name:&quot;+this.name+&quot;,&quot;+this.age+&quot;.&quot;;</code></pre><p> }<br>};</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">3. 访问对象属性:obj.attribute</span><br></pre></td></tr></table></figure>
+
+<p>person.name;<br>person[“name”];</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">4. 访问对象方法:obj.method()</span><br></pre></td></tr></table></figure>
+
+<p>Name = person.name();</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">7. 流程控制语句</span><br><span class="line">    1. 分支结构:if...else.../switch         //switch可以接收任意原始数据类型（number、String、boolean、null、undefined)</span><br><span class="line">    2. 循环结构:while/do..while/for</span><br><span class="line">****</span><br><span class="line"></span><br><span class="line">### 2. JavaScript事件</span><br><span class="line">1. onclick单击事件</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<p>将displayDate()函数绑定onclick事件<br><button onclick="displayDate()">现在的时间</button></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">****</span><br><span class="line"></span><br><span class="line">### 3. JavaScript对象(除了原始值,都是对象)</span><br><span class="line">1. 字符串方法</span><br><span class="line">    1. 字符串长度:length</span><br></pre></td></tr></table></figure>
+
+<pre><code>var txt = &quot;abcdefg&quot;;
+var len = txt.length;
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 查找字符索引:indexof()</span><br></pre></td></tr></table></figure>
+
+var str = &quot;abcdefg&quot;;
+var index = str.indexof(&quot;cde&quot;);
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">3. 检索字符串:search()</span><br></pre></td></tr></table></figure>
+
+var str = &quot;abcdefg&quot;;
+var search = str.search(&quot;abcd&quot;);
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 数值</span><br><span class="line">    1. 数字字符串:数字运算会将字符串转换为数字</span><br></pre></td></tr></table></figure>
+
+var x = &quot;1000&quot;;
+var y = &quot;10&quot;;
+var z = x/y;        //z = 100
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. NaN非数值</span><br></pre></td></tr></table></figure>
+
+var x = 100/&quot;a&quot;;        //x = NaN
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">3. 数组</span><br><span class="line">    1. 创建数组(数组文本方法)</span><br></pre></td></tr></table></figure>
+
+var array = [&quot;abc&quot;,&quot;def&quot;,&quot;ghi&quot;];
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 访问数组元素</span><br></pre></td></tr></table></figure>
+
+var first = array[0];       //访问指定索引的元素
+document.getElementById(&quot;demo&quot;).innerHTML = array;      //访问完整数组
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">3. 改变数组元素</span><br></pre></td></tr></table></figure>
+
+array[1] = &quot;DEF&quot;;
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">4. 遍历数组</span><br></pre></td></tr></table></figure>
+
+var i;
+var text = &quot;&lt;ul&gt;&quot;;
+var len = array.length;
+for(i=0;i&lt;len;i++&gt;){
+    text += &quot;&lt;li&gt;&quot; + array[i] + &quot;&lt;/li&gt;&quot;;
+}
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">5. 数组属性和方法</span><br></pre></td></tr></table></figure>
+
+var len = array.length;     //长度属性
+var sort = array.sort();        //排序方法
+var push = array.push(&quot;jkl&quot;);       //添加元素到末尾
+document.getElementById(&quot;demo&quot;).innerHTML = array.toString();       //toString()方法将数组转换为字符串,使用,分隔
+document.getElementById(&quot;demo&quot;).innerHTML = array.join(&quot;/&quot;);       //join()方法将数组转换为字符串,使用指定符号分隔
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">4. 日期</span><br><span class="line">    1. 创建日期:var d = new Date()</span><br><span class="line">    2. 方法</span><br><span class="line">        1. toLocaleString():返回本地字符串格式</span><br><span class="line">        2. getTime():获取毫秒值,currenttime - 1970年</span><br><span class="line">5. Math:直接使用</span><br><span class="line">    1. 方法：</span><br><span class="line">        1. random():0-1的随机数</span><br><span class="line">        2. cell(x):向上取整</span><br><span class="line">        3. floor(x):向下取整</span><br><span class="line">6. RegExp(正则表达式)</span><br><span class="line">    1. 创建</span><br><span class="line">        1. var reg1 = new RegExp(&quot;正则&quot;);</span><br><span class="line">        2. var reg2 = /正则/;       //不能使用双引号</span><br><span class="line">    2. 单个字符:[a] [ab] [a-zA-Z0-9];    a-z/A-Z/0-9</span><br><span class="line">        1. \d：单个数字字符 [0-9]</span><br><span class="line">        2. \w：单个单词字符 [a-zA-Z]</span><br><span class="line">    3. 量词符号</span><br><span class="line">        1. *:0或多次.   /w*</span><br><span class="line">        2. ?:0或1次     </span><br><span class="line">        3. +:1或多次</span><br><span class="line">        4. &#123;m,n&#125;:m&lt;=数量&lt;=n</span><br><span class="line">    4. 起始结束</span><br><span class="line">        1. ^:开始</span><br><span class="line">        2. $:结束</span><br><span class="line">    5. 方法</span><br><span class="line">        1. test(String):验证String是否符合正则</span><br><span class="line">7. Global:</span><br><span class="line">    1. 方法可以直接调用</span><br><span class="line">    2. 方法：</span><br><span class="line">        1. encodeURI():URL编码,</span><br><span class="line">        2. decodeURI():URL解码</span><br><span class="line">        3. encodeURIComponent():URL编码</span><br><span class="line">        4. encodeUIRComponent():URL解码</span><br></pre></td></tr></table></figure>
+
+    // 6.1 方法：encodedURI/decodeURI
+    var str1 = &quot;Global方法&quot;;        //1汉字3字节,1字节8二进制,1字节1十六进制
+    document.write(encodeURI(str1)+&quot;&lt;br&gt;&quot;);
+    document.write(decodeURI(&quot;Global%E6%96%B9%E6%B3%95 &quot;)+&quot;&lt;br&gt;&quot;);
+    // 6.1 方法：encodeURICompont/decodeURIComponent
+    var str2 = &quot;Global方法&quot;;
+    document.write(encodeURIComponent(str2));
+    document.write(decodeURIComponent(&quot;Global%E6%96%B9%E6%B3%95undefined&quot;)+&quot;&lt;br&gt;&quot;);
+    <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">5. parseInt():将字符串转为数字.判断字符串中数据，直到不是数字为止，将前边的数字部分字符串转换为number</span><br></pre></td></tr></table></figure>
+
+    // 6.2 parseInt()
+    var str3 = &quot;1234abcd123&quot;;
+    var number = parseInt(str3);        //只将1234转换为数字
+    document.write(number+&quot;&lt;br&gt;&quot;);
+    <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">6. eval(jscode):将jscode定义的javascript语句执行</span><br></pre></td></tr></table></figure>
+
+    var jscode = &quot;alert(123)&quot;;
+    eval(jscode);
+    <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    3. GBK：8字节，1字节8二进制，将4个二进制数转换为十六进制，以%为分隔符</span><br><span class="line">7. Function</span><br><span class="line">    1. 创建Function对象</span><br><span class="line">        1. function funname()&#123;&#125;</span><br><span class="line">        2. var funname = new function()&#123;&#125;</span><br><span class="line">    2. 调用Function:只与方法名有关，与参数无关</span><br><span class="line">        1. fun1(1,2)</span><br><span class="line">        2. fun1()</span><br><span class="line">        3. fun1(1,2,3)</span><br><span class="line">    3. 属性:fun.length：参数数量</span><br><span class="line">    4. 内置对象arguments封装所有实参</span><br><span class="line">****</span><br><span class="line"></span><br><span class="line">## 函数</span><br><span class="line">1. 函数声明</span><br></pre></td></tr></table></figure></code></pre><p>function myFunction(a,b){<br>    return a<em>b;<br>}<br>function muFunction(a,b){return a</em>b};     //函数表达式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 函数调用</span><br><span class="line">    1. 函数形式调用</span><br></pre></td></tr></table></figure>
+
+<pre><code>function myFunction(a,b){
+    return a*b;
+}
+myFunction(2,3);
+window.myFunction(2,3);
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. 方法调用:将函数定义为对象方法</span><br></pre></td></tr></table></figure>
+
+var person = {
+    name:&quot;tom&quot;;
+    age:&quot;20&quot;;
+    info:function(){
+        return &quot;name:&quot;+this.name+&quot;,age:&quot;+this.age;
+    }
+}
+person.info();
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">3. 函数构造器调用</span><br></pre></td></tr></table></figure>
+
+function myFunction(a,b){
+    this.name=a;
+    this.age=b;
+}
+var x = new myFunction(&quot;tom&quot;,&quot;20&quot;);
+x.name;
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">****</span><br><span class="line"></span><br><span class="line">## BOM与DOM</span><br><span class="line">1. BOM是浏览器对象模型，用来获取或设置浏览器的属性、行为，例如：新建窗口、获取屏幕分辨率、浏览器版本号等。</span><br><span class="line">2. DOM是文档对象模型，用来获取或设置文档中标签的属性，例如获取或者设置input表单的value值。</span><br><span class="line">3. BOM的内容不多，主要还是DOM。由于DOM的操作对象是文档（Document），所以dom和浏览器没有直接关系。</span><br><span class="line">4. BOM六大模块:frame，history，navigator，document，location，screen。其中document就是我们所说的DOM。document与其他不同的地方在于，其他五大对象是对浏览器操作。而document是对浏览器中显示的网页做的操作，所以叫做DOM</span><br><span class="line">****</span><br><span class="line"></span><br><span class="line">## BOM：核心:window对象,6大核心模块:document/frane/history/location/navigator/screen.</span><br><span class="line">1. Window核心对象:(代表浏览器窗口)</span><br><span class="line">    1. 获取对象</span><br><span class="line">        1. window.location</span><br><span class="line">        2. window.history</span><br><span class="line">    1. 弹窗类:</span><br><span class="line">        1. alert():警告框</span><br><span class="line">        2. confirm():选择框</span><br><span class="line">        3. prompt():文本输入框</span><br><span class="line">    2. 打开关闭</span><br><span class="line">        1. close():关闭浏览器窗口</span><br><span class="line">        2. open():打开浏览器窗口</span><br><span class="line">    3. 定时器：</span><br><span class="line">        1. setTimeout(jscode,time);     //单次执行</span><br><span class="line">        2. clearTimeout(setTimeoutname)</span><br><span class="line">        3. setInterval(jscode,time)     //循环执行</span><br><span class="line">        4. clearInterval(setIntervalname)</span><br></pre></td></tr></table></figure>
+
+// 弹窗类方法:
+// confirm():选择框
+var flag = confirm(&quot;确认退出?&quot;);
+if(flag){
+    close();
+}else{
+    open(&quot;http://www.baidu.com/&quot;)
+}
+// prompt():文本输入框
+var username = prompt(&quot;请输入用户名:&quot;);
+if(username==&quot;ks-39&quot;){
+    alert(username)
+}else{
+    alert(&quot;用户名错误&quot;);
+}
+
+// 打开关闭类
+// 打开网页按钮
+var openweb = document.getElementById(&quot;open&quot;);
+var newWindow;  //定义新窗口的名称,便于控制
+openweb.onclick = function(){
+    newWindow = open(&quot;https://www.bilibili.com&quot;);
+}
+// 关闭新网页按钮
+var closeweb = document.getElementById(&quot;close&quot;);
+closeweb.onclick = function(){
+    newWindow.close();
+}
+
+// 定时器方法
+// setTimeout(jscode,time):单次执行
+var settimeout = setTimeout(timeout,200);   
+function timeout(){
+    alert(&quot;boom&quot;);
+}
+// clearTimeout():
+clearTimeout(settimeout);
+// setInterval(jscode,time):循环执行
+var setinterval = setInterval(timeout,200);         // clearInterval():
+clearInterval(setinterval);
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">4. 循环轮播图案例:</span><br></pre></td></tr></table></figure>
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;script&gt;
+            // 定义轮播方法,修改src
+            var num = 1;
+            function chang_img(){
+                if(num&gt;5){
+                    num=1;
+                }
+                var img = document.getElementById(&quot;img&quot;);
+                img.src = num+++&quot;.jpg&quot;;
+            }
+            // 定义定时器
+            setInterval(chang_img,2000);
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;img src=&quot;1.jpg&quot; width=&quot;100%&quot; id=&quot;img&quot;&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2. Location</span><br><span class="line">    1. 方法：</span><br><span class="line">        1. reload():重新加载当前文档(刷新)</span><br><span class="line">    2. 属性:</span><br><span class="line">        1. href:网页地址</span><br><span class="line">    3. 自动跳转页面案例:</span><br></pre></td></tr></table></figure>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;自动跳转&lt;/title&gt;
+    &lt;style&gt;
+        p{
+            text-align: center;
+        }
+        span{
+            color: red;
+        }
+    &lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;
+        &lt;span id=&quot;time&quot;&gt;5&lt;/span&gt;秒后自动跳转到首页.....
+    &lt;/p&gt;
+
+    &lt;script&gt;
+        var second = 5;
+        var time = document.getElementById(&quot;time&quot;);
+
+        function showtime() {
+            second--;
+            if(second&lt;=0){
+                //改变地址栏地址
+                location.href=&quot;http://www.baidu.com&quot;;
+            }
+            //实时改变time的值,实现倒计时效果
+            time.innerHTML = second+&quot;&quot;;
+        }
+
+        setInterval(showtime,1000);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">****</span><br><span class="line"></span><br><span class="line">## DOM:即Document对象,控制HTML的文档内容</span><br><span class="line">1. Document文档对象：</span><br><span class="line">    1. 创建:window.document/document</span><br><span class="line">    2. 查找元素方式:</span><br><span class="line">        1. document.getElementById(&quot;id值&quot;):返回单一变量</span><br><span class="line">        2. document.getElementByTagName(&quot;tagname&quot;):返回数组</span><br><span class="line">        3. document.getElementByClassName(&quot;class&quot;值):返回数组</span><br><span class="line">        4. document.getElementByName(&quot;name属性&quot;):返回数组</span><br><span class="line">    3. 创建其它对象</span><br><span class="line">        1. createAttribute(name)</span><br><span class="line">        2. createComment()</span><br><span class="line">        3. createElement()</span><br><span class="line">        4. createTextNote()</span><br><span class="line">    4. 改变HTML内容:document.getElementById(id).innerHTML。     //参考自动页面跳转案例</span><br><span class="line">    5. 改变CSS内容:document.getElementById(id).style.attrubute</span><br><span class="line">    6. 案例:通过事件来改变页面内容,改变HTML和CSS内容</span><br></pre></td></tr></table></figure>
+
+&lt;!-- 插入图片 --&gt;
+&lt;img src=&quot;1.jpg&quot; id=&quot;img&quot; onclick=&quot;img_change();&quot;&gt;
+&lt;script&gt;
+    // 1. 获取图片对象
+    var img = document.getElementById(&quot;img&quot;);
+    // 2. 绑定单击事件
+    var num = 1;
+    img.onclick = function(){
+        img.src=num+++&quot;.jpg&quot;;
+    }
+&lt;/script&gt;
+````</code></pre>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://yoursite.com">ks-39</a>
+            <p>原文链接：<a href="http://yoursite.com/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/">http://yoursite.com/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/">十月 13日 2019, 9:05:18 上午</a>
+            <p>更新日期：<a href="http://yoursite.com/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/">February 17th 2020, 8:39:31 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" title= "JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))">
+                    <div class="nextTitle">JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" title= "JavaWeb(前端三板斧之CSS)">
+                    <div class="prevTitle">JavaWeb(前端三板斧之CSS)</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:842189357@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/ks-39" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-number">1.</span> <span class="toc-text">内容:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript-JavaScript是ECMAScript的一种实现。ECMAScript和JavaScript的关系是-前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和ActionScript）"><span class="toc-number">2.</span> <span class="toc-text">JavaScript:JavaScript是ECMAScript的一种实现。ECMAScript和JavaScript的关系是:前者是后者的规格，后者是前者的一种实现（另外的ECMAScript方言还有Jscript和ActionScript）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-JavaScript基础概述"><span class="toc-number">2.1.</span> <span class="toc-text">1. JavaScript基础概述:</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 41
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/SpringBoot/SpringBoot/" >SpringBoot</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href= "/2020/03/02/Git/Git/" >Git</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/2020/02/29/Linux/Linux（Day1：基本命令/" >Linux(基本命令)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href= "/2020/02/28/SSM/SSM框架整合/" >SSM框架整合</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/2019/11/23/SSM/SpringMVC/SpringMVC-Day2/" >SpringMVC(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span><a class="archive-post-title" href= "/2019/11/22/SSM/SpringMVC/SpringMVC-Day1/" >SpringMVC(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href= "/2019/11/21/SSM/Spring/Spring-Day3-声明式事务/" >Spring(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href= "/2019/11/20/SSM/Spring/Spring-Day2-AOP/" >Spring(Day2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2019/11/19/SSM/Spring/Spring-Day1-Spring简介、Spring模块、IOC、DI、B/" >Spring(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/MyBatis-Day4-缓存、插件、原理/" >MyBatis(Day4)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2019/11/18/SSM/Mybatis/Mybatis-Day2-关联查询/" >Mybatis(关联映射)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/SSM/Mybatis/Mybatis-Day1-基础知识/" >Mybatis(Day1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2019/11/16/log4j日志/Log4j日志/" >Log4j日志</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href= "/2019/11/15/SSM/Mybatis/Mybatis-Day3-动态Sql/" >Mybatis(Day3)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2019/10/24/JavaWeb/JavaWeb-Redis非关系型数据库/" >JavaWeb(Redis非关系型数据库)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/JavaWeb/JavaWeb(Filter、JQuery、Json、Ajax)/" >JavaWeb(Filter、JQuery、Json、Ajax)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2019/10/20/JavaWeb/JavaWeb-实战-用户信息管理表/" >JavaWebs(MVC实战:用户信息管理表)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/JavaWeb/JavaWeb(客户端会话技术：Cookie、Sessioin、JSP、EL)/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2019/10/15/JavaWeb/JavaWeb(TomCat、Servlet、HTTP(Request、Response、ServletContext))/" >JavaWeb(TomCat、Servlet、HTTP(Request/Response/ServletContext))</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2019/10/13/JavaWeb/JavaWeb-前端(JavaScript)/" >JavaWeb(前端三板斧之JavaScript)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2019/10/12/JavaWeb/JavaWeb-前端(CSS)/" >JavaWeb(前端三板斧之CSS)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href= "/2019/10/10/JavaWeb/JavaWeb-前端(HTML5)/" >JavaWeb(前端三板斧之HTML5)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span><a class="archive-post-title" href= "/2019/10/09/JavaWeb/JavaWeb-Junit白盒测试、反射和注解/" >JavaWeb(Junit白盒测试、反射和注解)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href= "/2019/10/06/JavaSe/JavaSe-JDBD/" >JavaSe:JDBD</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span><a class="archive-post-title" href= "/2019/10/05/MySql/MySQL基础/" >MySQL基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2019/09/24/JavaSe/Java线程同步的三种方式/" >Java线程同步的三种方式</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/JavaSe/Java学习笔记(Day：15Java并发)/" >Java学习笔记(Day 15:Java并发)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span><a class="archive-post-title" href= "/2019/09/21/JavaSe/Java学习笔记(Day 14：NIO)/" >Java学习笔记(Day 14:NIO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2019/09/17/JavaSe/Java学习笔记(Day 13Java.IO)/" >Java学习笔记(Day 13:Java.IO)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2019/09/15/JavaSe/Java学习笔记(Day 12：Java.util集合框架)/" >Java学习笔记(Day 12：Java.util:集合框架)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2019/09/10/JavaSe/Java学习笔记(Day 11：lambda表达式)/" >Java学习笔记(Day 11：lambda表达式)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2019/09/09/JavaSe/Java学习笔记(Day 10：泛型)/" >Java学习笔记(Day 11：泛型)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2019/09/08/JavaSe/Java学习笔记(Day 9：注解）/" >Java学习笔记(Day 10:注解）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2019/09/07/JavaSe/Java学习笔记(Day 8：枚举)/" >Java学习笔记(Day 9：枚举)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href= "/2019/09/05/JavaSe/Java学习笔记(Day 7：多线程）/" >Java学习笔记(Day 7:多线程)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2019/09/04/JavaSe/Java学习笔记(Day 6：接口+异常)/" >Java学习笔记(Day 6:接口+异常)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/2019/09/03/JavaSe/Java学习笔记(Day 5：重写+重载+抽象类+访问权限）/" >Java学习笔记(Day 5：重写+重载+抽象类+访问权限）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2019/09/02/JavaSe/Java学习笔记(Day 4：继承+String+varargs/" >Java学习笔记(Day 4：继承+String+varargs)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href= "/2019/09/01/JavaSe/Java学习笔记(Day3：this+成员变量+static关键字)/" >Java学习笔记（Day3：this+成员变量+static+final+super）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 1：数组+常用语句+二分查找)/" >Java学习笔记(Day 1：数组+常用语句+二分查找)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href= "/2019/08/31/JavaSe/Java学习笔记(Day 2：跳转语句+类+方法)/" >Java学习笔记(Day 2:跳转语句+类+方法+构造函数+封装)</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Git"><span class="iconfont-archer">&#xe606;</span>Git</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaSe"><span class="iconfont-archer">&#xe606;</span>JavaSe</span>
+    
+        <span class="sidebar-tag-name" data-tags="Java"><span class="iconfont-archer">&#xe606;</span>Java</span>
+    
+        <span class="sidebar-tag-name" data-tags="JDBC"><span class="iconfont-archer">&#xe606;</span>JDBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="JavaWeb"><span class="iconfont-archer">&#xe606;</span>JavaWeb</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSM整合"><span class="iconfont-archer">&#xe606;</span>SSM整合</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="Log4j"><span class="iconfont-archer">&#xe606;</span>Log4j</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringBoot"><span class="iconfont-archer">&#xe606;</span>SpringBoot</span>
+    
+        <span class="sidebar-tag-name" data-tags="Mybatis"><span class="iconfont-archer">&#xe606;</span>Mybatis</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spring"><span class="iconfont-archer">&#xe606;</span>Spring</span>
+    
+        <span class="sidebar-tag-name" data-tags="SpringMVC"><span class="iconfont-archer">&#xe606;</span>SpringMVC</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "ks-39"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
